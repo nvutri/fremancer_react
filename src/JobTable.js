@@ -11,8 +11,7 @@ class JobTable extends Component {
 
   componentDidMount() {
     const self = this;
-    fetch('/api/contracts/').then((response) => response.json()).then(
-      (response) => {
+    $.getJSON('/api/contracts/').then((response) => {
         self.setState({data: response.results})
       }
     )
