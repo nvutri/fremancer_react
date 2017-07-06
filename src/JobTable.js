@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class JobTable extends Component {
@@ -16,6 +17,7 @@ class JobTable extends Component {
       }
     )
   }
+
   render() {
     return (
       <BootstrapTable data={this.state.data} striped={true} hover={true}>
