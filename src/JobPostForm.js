@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
 import { Button } from 'react-bootstrap'
-import { FormsyText } from 'formsy-material-ui/lib';
+import FRC from 'formsy-react-components';
+const { Input, Textarea, Select } = FRC;
+
 
 class JobTable extends Component {
   constructor(props) {
@@ -12,66 +11,96 @@ class JobTable extends Component {
     this.state = {
       canSubmit: false
     };
-    this.errorMessages = {
-       'wordsError': "Please only use letters",
-       'numericError': "Please provide a number",
-       'urlError': "Please provide a valid URL",
-    };
-  }
-
-  submitForm(data) {
-    alert(JSON.stringify(data, null, 4));
-  }
-
-  notifyFormError(data) {
-    console.error('Form error:', data);
   }
 
   render() {
-    let { wordsError, numericError, urlError } = this.errorMessages;
-
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <Formsy.Form
-          onValid={(e) => this.setState({canSubmit: true})}
-          onInvalid={(e) => this.setState({canSubmit: false})}
-          onValidSubmit={this.submitForm.bind(this)}
-          onInvalidSubmit={this.notifyFormError.bind(this)}
-        >
-          <FormsyText
-            name="title"
-            validations={{
-              isWords: true,
-              minLength: 8
-            }}
-            validationErrors={{
-              isWords: 'Only use alphanumeric characters',
-              minLength: 'Title minimum length is 8'
-            }}
-            hintText="What is your project title?"
-            floatingLabelText="Title"
-            required
+      <FRC.Form>
+        <fieldset>
+          <Input
+              name="title"
+              label="Title"
+              validations={{
+                isWords: true,
+                minLength: 8
+              }}
+              validationErrors={{
+                isWords: 'Only use alphanumeric characters',
+                minLength: 'Title minimum length is 8'
+              }}
+              placeholder="What is your project title?"
+              required/>
+          <Textarea
+              name="description"
+              validations={{
+                isWords: true,
+                minLength: 50
+              }}
+              validationErrors={{
+                isWords: 'Only use alphanumeric characters',
+                minLength: 'Description minimum length is 50'
+              }}
+              placeholder="What is your project description?"
+              label="Description"
+              required/>
+          <Input
+              name="hourly_rate"
+              validations={{
+                isNumeric: true,
+              }}
+              validationErrors={{
+                isNumeric: 'Only use number.',
+              }}
+              placeholder="Project hourly rate? (20, 30 ..)"
+              label="Hourly Rate"
+              required/>
+              <Input
+                name="max_weekly_hours"
+                validations={{
+                  isNumeric: true,
+                }}
+                validationErrors={{
+                  isNumeric: 'Only use number.',
+                }}
+                placeholder="Project Weekly Hours Cap"
+                label="Max Weekly Hours"
+                required/>
+          <br/>
+          <Input
+              name="total_budget"
+              validations={{
+                isNumeric: true,
+              }}
+              validationErrors={{
+                isNumeric: 'Only use number.',
+              }}
+              placeholder="Project Budget? (20,000, 30,000 ..)"
+              label="Project Budget"
+              required/>
+          <Select
+              name="duration"
+              label="Anticipating Duration"
+              options={[
+                {value: 'short_term', label: 'Short Term (About 1 month or less)'},
+                {value: 'long_term', label: 'Long Term (More than 1 month)'}
+              ]}
+              required
           />
-          <br/>
-          <FormsyText
-            name="description"
-            validations={{
-              isWords: true,
-              minLength: 50
-            }}
-            validationErrors={{
-              isWords: 'Only use alphanumeric characters',
-              minLength: 'Description minimum length is 50'
-            }}
-            hintText="What is your project description?"
-            floatingLabelText="Description"
-            required
+          <Select
+              name="budget_type"
+              label="Budget Type"
+              options={[
+                {value: 'hourly', label: 'Hourly - Pay by Hour'},
+                {value: 'fixed', label: 'Fixed - Pay a fixed amount'}
+              ]}
+              required
           />
-          <br/>
-          <Button type="submit">Submit</Button>
-          <br/>
-        </Formsy.Form>
-      </MuiThemeProvider>
+        <br/>
+        </fieldset>
+        <fieldset>
+          <input className="btn btn-primary" formNoValidate={true} type="submit" defaultValue="Submit" />
+        </fieldset>
+      </FRC.Form>
     );
   }
 }
