@@ -3,6 +3,7 @@ import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 
 import './App.css';
 import JobTable from './JobTable'
+import JobPostForm from './JobPostForm'
 
 class App extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class App extends Component {
             <Modal.Title>Post New Job</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <JobPostForm/>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.closeModal.bind(this)}>Close</Button>
