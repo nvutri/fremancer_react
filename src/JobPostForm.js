@@ -1,21 +1,45 @@
+import request from 'request';
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import { Button } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
+import DjangoCSRFToken from 'django-react-csrftoken'
+
 const { Input, Textarea, Select } = FRC;
+var r = request.defaults({
+  baseUrl: 'http://localhost:8000',
+  auth: {
+    'user': 'freelancer@gmail.com',
+    'pass': 'Thisisfreelancing',
+    'sendImmediately': true
+  }
+});
 
-
-class JobTable extends Component {
+class JobPostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      canSubmit: false
+      canSubmit: false,
+      hirer: document.getElementById('userID').value
     };
   }
-
+  submit(data) {
+    data['hirer'] = this.state.hirer;
+    console.log(data);
+    return r.post('/api/contracts/').form(data)
+    .on('data', function(data) {
+      // decompressed data as it is received
+      console.log('decoded chunk: ' + data)
+    })
+    .on('error', function(error) {
+      console.log('ERROR: ' + error);
+    })
+  }
   render() {
+    var self = this;
     return (
-      <FRC.Form>
+      <FRC.Form
+        onSubmit={this.submit.bind(this)}>
         <fieldset>
           <Input
               name="title"
@@ -81,28 +105,25 @@ class JobTable extends Component {
               name="duration"
               label="Anticipating Duration"
               options={[
-                {value: 'short_term', label: 'Short Term (About 1 month or less)'},
-                {value: 'long_term', label: 'Long Term (More than 1 month)'}
+                {value: 'short', label: 'Short Term (About 1 month or less)'},
+                {value: 'long', label: 'Long Term (More than 1 month)'}
               ]}
-              required
           />
           <Select
               name="budget_type"
               label="Budget Type"
               options={[
                 {value: 'hourly', label: 'Hourly - Pay by Hour'},
-                {value: 'fixed', label: 'Fixed - Pay a fixed amount'}
               ]}
-              required
           />
         <br/>
         </fieldset>
         <fieldset>
-          <input className="btn btn-primary" formNoValidate={true} type="submit" defaultValue="Submit" />
+          <Button className="btn btn-primary" formNoValidate={true} type="submit">Submit</Button>
         </fieldset>
       </FRC.Form>
     );
   }
 }
 
-export default JobTable;
+export default JobPostForm;

@@ -1,32 +1,27 @@
 import React, { Component } from 'react';
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
+import request from 'request'
 
 import './App.css';
-import JobTable from './JobTable'
-import JobPostForm from './JobPostForm'
+import LoginForm from './LoginForm'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      requestConfig: {
+        baseUrl: 'http://localhost:8000'
+      }
     };
   }
 
-  openModal() {
+  setAuth(requestConfig) {
     this.setState({
-      showModal: true
+      requestConfig: requestConfig,
+      requestInstance: request.defaults(requestConfig)
     })
   }
-
-  closeModal() {
-    this.setState({
-      showModal: false
-    })
-  };
-
   render() {
-    const self = this;
     return (
       <div className="App">
         <div className="App-header">
@@ -34,25 +29,15 @@ class App extends Component {
         </div>
         <Jumbotron>
           <Row>
-            <Col md={2}>
-              <Button bsStyle="default" bsSize="large" block onClick={this.openModal.bind(this)}>New Job</Button>
-            </Col>
+            <Col md={2}/>
             <Col md={8}>
-              <JobTable/>
+              <LoginForm
+                requestConfig={this.state.requestConfig}
+                setAuth={this.setAuth.bind(this)}
+              />
             </Col>
           </Row>
         </Jumbotron>
-        <Modal show={self.state.showModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Post New Job</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <JobPostForm/>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.closeModal.bind(this)}>Close</Button>
-          </Modal.Footer>
-        </Modal>
       </div>
     );
   }
