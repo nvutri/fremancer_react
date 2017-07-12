@@ -3,21 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.16.2",
     "django-react-csrftoken": "^1.0.1",
-    "formsy-material-ui": "^0.5.4",
-    "formsy-react": "^0.18.0",
+    "formsy-react": "^0.19.5",
     "formsy-react-components": "^0.10.1",
     "jquery": "^3.2.1",
-    "material-ui": "^0.16.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
     "react-bootstrap-table": "^3.4.3",
     "react-dom": "^15.6.1",
-    "react-event-listener": "^0.4.5",
     "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
     "react-scripts": "1.0.10",
-    "react-tap-event-plugin": "^1.0.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
   },
@@ -26,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "watch": "watchify -t [ babelify --presets [ es2015 react ] ] -p [ css-modulesify -o ../fremancer/static/app.css ] src/index.js -o ../fremancer/static/js/app.js"
+    "watch": "watchify -v -t [ babelify --presets [ es2015 react ] ] -p [ css-modulesify -o ../fremancer/static/app.css ] src/index.js -o ../fremancer/static/js/app.js"
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",

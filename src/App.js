@@ -1,46 +1,28 @@
 import React, { Component } from 'react';
-import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
-import request from 'request-promise'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
 
-import './App.css';
-import LoginForm from './LoginForm'
+import Home from './Home';
+import LoginForm from './LoginForm';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      requestConfig: {
-        baseUrl: 'http://localhost:8000',
-        json: true
-      }
-    };
-  }
-  setAuth(requestConfig, user) {
-    this.setState({
-      requestConfig: requestConfig,
-      requestInstance: request.defaults(requestConfig),
-      user: user
-    })
-  }
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Fremancer</h2>
+      <Router>
+        <div>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/login">Login</Link></li>
+          </ul>
+          <hr/>
+          <Route exact path="/" component={Home}/>
+          <Route path="/login" component={LoginForm}/>
         </div>
-        <Jumbotron>
-          <Row>
-            <Col md={2}/>
-            <Col md={8}>
-              <LoginForm
-                requestConfig={this.state.requestConfig}
-                setAuth={this.setAuth.bind(this)}
-              />
-            </Col>
-          </Row>
-        </Jumbotron>
-      </div>
-    );
+      </Router>
+    )
   }
 }
 

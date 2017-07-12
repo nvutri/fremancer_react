@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap'
-import FRC from 'formsy-react-components';
+import { Input, Form } from 'formsy-react-components';
 import request from 'request-promise'
-
-const { Input } = FRC;
 
 
 class LoginForm extends Component {
@@ -26,7 +24,7 @@ class LoginForm extends Component {
   render() {
     var self = this;
     return (
-      <FRC.Form
+      <Form
         onSubmit={this.submit.bind(this)}>
         <fieldset>
           <Input
@@ -52,7 +50,7 @@ class LoginForm extends Component {
         <fieldset>
           <Button className="btn btn-primary" formNoValidate={true} type="submit">Login</Button>
         </fieldset>
-      </FRC.Form>
+      </Form>
     );
   }
 }
