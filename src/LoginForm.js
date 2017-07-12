@@ -17,7 +17,7 @@ class LoginForm extends Component {
     this.props.requestConfig['auth'] = data;
     const requestInstance = request.defaults(this.props.requestConfig);
     return requestInstance.get('/api/users/').then(function (response) {
-      self.props.setAuth(response)
+      self.props.setAuth(self.props.requestConfig, response);
       return response;
     }).catch(function (err) {
       console.log(err);

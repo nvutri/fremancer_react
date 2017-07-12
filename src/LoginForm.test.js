@@ -11,7 +11,7 @@ describe('Login Form Test', () => {
       'username': 'freelancer@gmail.com',
       'password': 'Thisisfreelancing',
     };
-    const setAuth = function(data) {
+    const setAuth = function(requestConfig, data) {
       expect(data.username).toBe(testUser.username);
       expect(data.id).toBeGreaterThanOrEqual(0);
     };

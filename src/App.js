@@ -15,10 +15,11 @@ class App extends Component {
       }
     };
   }
-  setAuth(requestConfig) {
+  setAuth(requestConfig, user) {
     this.setState({
       requestConfig: requestConfig,
-      requestInstance: request.defaults(requestConfig)
+      requestInstance: request.defaults(requestConfig),
+      user: user
     })
   }
   render() {
