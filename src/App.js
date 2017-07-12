@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
-import request from 'request'
+import request from 'request-promise'
 
 import './App.css';
 import LoginForm from './LoginForm'
@@ -10,11 +10,11 @@ class App extends Component {
     super(props);
     this.state = {
       requestConfig: {
-        baseUrl: 'http://localhost:8000'
+        baseUrl: 'http://localhost:8000',
+        json: true
       }
     };
   }
-
   setAuth(requestConfig) {
     this.setState({
       requestConfig: requestConfig,

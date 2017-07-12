@@ -8,22 +8,22 @@ describe('Login Form Test', () => {
 
   it('Fill and submit authentication', async () => {
     const testUser = {
-      'user': 'freelancer@gmail.com',
-      'pass': 'Thisisfreelancing',
+      'username': 'freelancer@gmail.com',
+      'password': 'Thisisfreelancing',
     };
     const setAuth = function(data) {
       expect(data.username).toBe(testUser.username);
-      expect(data.password).toBe(testUser.password);
+      expect(data.id).toBeGreaterThanOrEqual(0);
     };
     const wrapper = shallow(
       <LoginForm
         setAuth={setAuth}
         requestConfig={{
-          baseUrl: 'http://localhost:8000'
+          baseUrl: 'http://localhost:8000',
+          json: true
         }}
       />
     );
-    const submitPromise = await wrapper.instance().submit(testUser);
-    expect(submitPromise).toBe()
+    const userResult = await wrapper.instance().submit(testUser);
   });
 });

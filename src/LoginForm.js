@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import request from 'request'
+import request from 'request-promise'
 
 const { Input } = FRC;
 
@@ -12,15 +12,16 @@ class LoginForm extends Component {
     this.state = {};
   }
   submit(data) {
+    const self = this;
     data['sendImmediately'] = true;
     this.props.requestConfig['auth'] = data;
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.get('/api/users/', function (error, response, body) {
-      console.log('error:', error); // Print the error if one occurred
-      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-      console.log('body:', body); // Print the HTML for the Google homepage.
-      return response
-    });
+    return requestInstance.get('/api/users/').then(function (response) {
+      self.props.setAuth(response)
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });;
   }
   render() {
     var self = this;
