@@ -29,14 +29,14 @@ class LoginForm extends Component {
         <fieldset>
           <Input
               name="username"
-              label="Username"
+              label="Email"
               validations={{
                 isEmail: true
               }}
               validationErrors={{
                 isEmail: 'Please enter a valid email address'
               }}
-              placeholder="What is username?"
+              placeholder="What is email address?"
               required/>
           <br/>
           <Input
