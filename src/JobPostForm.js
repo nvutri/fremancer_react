@@ -6,14 +6,7 @@ import FRC from 'formsy-react-components';
 import DjangoCSRFToken from 'django-react-csrftoken'
 
 const { Input, Textarea, Select } = FRC;
-var r = request.defaults({
-  baseUrl: 'http://localhost:8000',
-  auth: {
-    'user': 'freelancer@gmail.com',
-    'pass': 'Thisisfreelancing',
-    'sendImmediately': true
-  }
-});
+
 
 class JobPostForm extends Component {
   constructor(props) {

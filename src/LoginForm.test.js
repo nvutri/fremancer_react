@@ -3,25 +3,18 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import LoginForm from './LoginForm';
+import {RequestConfig, TestUser} from './TestConfig';
 
 describe('Login Form Test', () => {
-
   it('Fill and submit authentication', async () => {
-    const testUser = {
-      'username': 'freelancer@gmail.com',
-      'password': 'Thisisfreelancing',
-    };
     const setAuth = function(requestConfig, data) {
-      expect(data.username).toBe(testUser.username);
+      expect(data.username).toBe(TestUser.username);
       expect(data.id).toBeGreaterThanOrEqual(0);
     };
     const wrapper = shallow(
       <LoginForm
         setAuth={setAuth}
-        requestConfig={{
-          baseUrl: 'http://localhost:8000',
-          json: true
-        }}
+        requestConfig={RequestConfig}
       />
     );
     const userResult = await wrapper.instance().submit(testUser);

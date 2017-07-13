@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron } from 'react-bootstrap'
-import { Input, Form, Select } from 'formsy-react-components';
 import request from 'request-promise'
 
 
@@ -8,14 +6,29 @@ class DailySheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      day: '',
       hours: '',
       summary: ''
     };
   }
-  save(data) {
+  componentDidMount() {
+    const self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.post('/api/dailysheets/').then(function (response) {
+    requestInstance.get(`/api/dailysheets/${this.props.id}/`).then(function (response) {
+      self.setState(response);
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });
+  }
+  save() {
+    const data = {
+      timesheet: this.props.timesheet,
+      report_date: this.props.report_date,
+      hours: this.state.hours,
+      summary: this.state.summary
+    };
+    const requestInstance = request.defaults(this.props.requestConfig);
+    return requestInstance.post(`/api/dailysheets/${this.props.id}`).form(data).then(function (response) {
       return response;
     }).catch(function (err) {
       console.log(err);
@@ -24,18 +37,14 @@ class DailySheet extends Component {
   render() {
     return (
       <fieldset>
-        <legend className="text-center">this.state.day</legend>
-        <Input
+        <legend className="text-center">this.props.day</legend>
+        <input
             name="hours"
             type="number"
-            label=""
-            validations={{
-              isNumeric: true
-            }}
             value={this.state.hours}
             onChange={ (e) => {this.setState({hours: e.target.value})}}
         />
-        <Input
+        <input
             name="summary"
             type="text"
             label="Note"
