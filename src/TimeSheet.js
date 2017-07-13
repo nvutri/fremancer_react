@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import request from 'request-promise';
 import moment from 'moment';
 
@@ -45,6 +45,10 @@ class TimeSheet extends Component {
       console.log(err);
     });
   }
+  submit() {
+    this.state.submitted = true;
+    this.save();
+  }
   render() {
     const self = this;
     const daily_sheets = this.state.daily_sheets.map( (daily_data) => {
@@ -63,6 +67,11 @@ class TimeSheet extends Component {
             value={this.state.summary}
             onChange={ (e) => {this.setState({summary: e.target.value})}}
         />
+        <Button onClick={this.save.bind(this)} className="">Save</Button>
+        { this.state.submitted ?
+          <Button bsStyle="default" disalbed>Submitted</Button>:
+          <Button bsStyle="primary" onClick={this.submit.bind(this)}>Submit</Button>
+        }
       </fieldset>
     )
   }
