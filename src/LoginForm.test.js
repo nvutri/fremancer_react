@@ -17,6 +17,6 @@ describe('Login Form Test', () => {
         requestConfig={RequestConfig}
       />
     );
-    const userResult = await wrapper.instance().submit(testUser);
+    const userResult = await wrapper.instance().submit(TestUser);
   });
 });

@@ -1,6 +1,7 @@
 const TestUser = {
   'username': 'freelancer@gmail.com',
   'password': 'Thisisfreelancing',
+  'id': 6
 };
 
 const RequestConfig = {

@@ -1,11 +1,9 @@
-// Link.react-test.js
 import React from 'react';
 import { shallow } from 'enzyme';
-import FRC from 'formsy-react-components';
+import { Input } from 'formsy-react-components';
 
 import JobPostForm from './JobPostForm';
-
-const { Input, Textarea, Select } = FRC;
+import { RequestConfig, TestUser } from './TestConfig';
 
 describe('Job Post Form', () => {
   it('renders three <Input/> components', () => {
@@ -14,7 +12,11 @@ describe('Job Post Form', () => {
     expect(wrapper.find(Input)).toHaveLength(4)
   });
   it('Fill and submit forms', async () => {
-    const jobForm = shallow(<JobPostForm/>);
+    const jobForm = shallow(<JobPostForm
+      requestConfig={RequestConfig}
+      user={TestUser}
+      id={1}
+    />);
     const titleInput = jobForm.find({'name': 'title'}).first();
     expect(titleInput.exists());
     titleInput.value = 'Test Input Title';

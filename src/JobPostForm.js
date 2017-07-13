@@ -1,9 +1,8 @@
-import request from 'request';
+import request from 'request-promise';
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import { Button } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import DjangoCSRFToken from 'django-react-csrftoken'
 
 const { Input, Textarea, Select } = FRC;
 
@@ -13,20 +12,17 @@ class JobPostForm extends Component {
     super(props);
     this.state = {
       canSubmit: false,
-      hirer: document.getElementById('userID').value
     };
   }
   submit(data) {
-    data['hirer'] = this.state.hirer;
-    console.log(data);
-    return r.post('/api/contracts/').form(data)
-    .on('data', function(data) {
-      // decompressed data as it is received
-      console.log('decoded chunk: ' + data)
-    })
-    .on('error', function(error) {
-      console.log('ERROR: ' + error);
-    })
+    data['hirer'] = this.props.user.id;
+    const requestInstance = request.defaults(this.props.requestConfig);
+    const url = '/api/contracts/' + this.props.id ? this.props.id.toString() : '';
+    return requestInstance.post(url).form(data).then(function (response) {
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });
   }
   render() {
     var self = this;
@@ -112,7 +108,7 @@ class JobPostForm extends Component {
         <br/>
         </fieldset>
         <fieldset>
-          <Button className="btn btn-primary" formNoValidate={true} type="submit">Submit</Button>
+          <Button bsStyle="primary" formNoValidate={true} type="submit">Submit</Button>
         </fieldset>
       </FRC.Form>
     );
