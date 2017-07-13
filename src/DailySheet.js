@@ -6,8 +6,8 @@ class DailySheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hours: '',
-      summary: ''
+      'hours': props.hours,
+      'summary': props.summary
     };
   }
   componentDidMount() {

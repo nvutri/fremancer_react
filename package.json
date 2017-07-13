@@ -7,6 +7,7 @@
     "formsy-react": "^0.19.5",
     "formsy-react-components": "^0.10.1",
     "jquery": "^3.2.1",
+    "moment": "^2.18.1",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
     "react-bootstrap-table": "^3.4.3",

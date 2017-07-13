@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Jumbotron } from 'react-bootstrap'
 import request from 'request-promise';
+import moment from 'moment';
 
 import DailySheet from './DailySheet';
 
@@ -15,7 +16,8 @@ class TimeSheet extends Component {
       start_date: '',
       submitted: false,
       invoiced: false,
-      contract: null
+      contract: null,
+      daily_sheets: []
     };
   }
   componentDidMount() {
@@ -23,6 +25,12 @@ class TimeSheet extends Component {
     const requestInstance = request.defaults(this.props.requestConfig);
     requestInstance.get(`/api/timesheets/${this.props.id}/`).then(function (response) {
       self.setState(response);
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });
+    requestInstance.get(`/api/dailysheets/?timesheet=${this.props.id}`).then(function (response) {
+      self.setState({daily_sheets: response.results});
       return response;
     }).catch(function (err) {
       console.log(err);
@@ -38,8 +46,17 @@ class TimeSheet extends Component {
     });
   }
   render() {
+    const self = this;
+    const daily_sheets = this.state.daily_sheets.map( (daily_data) => {
+      daily_data['requestConfig'] = self.props.requestConfig;
+      daily_data['key'] = `daily_${daily_data.id}`;
+      return <DailySheet
+        {...daily_data}
+      />
+    });
     return (
       <fieldset>
+        {daily_sheets}
         <input
             name="summary"
             type="text"
