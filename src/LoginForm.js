@@ -19,7 +19,7 @@ class LoginForm extends Component {
       return response;
     }).catch(function (err) {
       console.log(err);
-    });;
+    });
   }
   render() {
     var self = this;

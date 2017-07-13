@@ -17,7 +17,7 @@ class SignUpForm extends Component {
       return response;
     }).catch(function (err) {
       console.log(err);
-    });;
+    });
   }
   render() {
     return (
