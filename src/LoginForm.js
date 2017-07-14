@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap'
 import { Input, Form } from 'formsy-react-components';
-import request from 'request-promise'
 
 
 class LoginForm extends Component {
@@ -9,23 +8,10 @@ class LoginForm extends Component {
     super(props);
     this.state = {};
   }
-  submit(data) {
-    const self = this;
-    data['sendImmediately'] = true;
-    this.props.requestConfig['auth'] = data;
-    const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.get('/api/users/').then(function (response) {
-      self.props.setAuth(self.props.requestConfig, response);
-      return response;
-    }).catch(function (err) {
-      console.log(err);
-    });
-  }
   render() {
-    var self = this;
     return (
       <Form
-        onSubmit={this.submit.bind(this)}>
+        onSubmit={this.props.setAuth}>
         <fieldset>
           <Input
               name="username"

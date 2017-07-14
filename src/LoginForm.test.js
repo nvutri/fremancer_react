@@ -1,22 +1,17 @@
 // Link.react-test.js
 import React from 'react';
-import { shallow } from 'enzyme';
+import ReactDOM from 'react-dom';
 
 import LoginForm from './LoginForm';
-import {RequestConfig, TestUser} from './TestConfig';
+import { RequestConfig } from './TestConfig';
 
 describe('Login Form Test', () => {
-  it('Fill and submit authentication', async () => {
-    const setAuth = function(requestConfig, data) {
-      expect(data.username).toBe(TestUser.username);
-      expect(data.id).toBeGreaterThanOrEqual(0);
-    };
-    const wrapper = shallow(
-      <LoginForm
-        setAuth={setAuth}
-        requestConfig={RequestConfig}
-      />
-    );
-    const userResult = await wrapper.instance().submit(TestUser);
+
+  it('renders without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<LoginForm
+      requestConfig={RequestConfig}
+      />, div);
   });
+
 });

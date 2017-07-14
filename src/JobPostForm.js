@@ -28,7 +28,7 @@ class JobPostForm extends Component {
     var self = this;
     return (
       <FRC.Form
-        onSubmit={this.submit.bind(this)}>
+        onValidSubmit={this.submit.bind(this)}>
         <fieldset>
           <Input
               name="title"
@@ -108,7 +108,7 @@ class JobPostForm extends Component {
         <br/>
         </fieldset>
         <fieldset>
-          <Button bsStyle="primary" formNoValidate={true} type="submit">Submit</Button>
+          <Button bsStyle="primary" className="center-block" formNoValidate={true} type="submit">Submit</Button>
         </fieldset>
       </FRC.Form>
     );

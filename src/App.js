@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  Switch
 } from 'react-router-dom'
 import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
+import request from 'request-promise'
+import store from 'store'
 
 import Home from './Home';
 import LoginForm from './LoginForm';
@@ -27,18 +30,38 @@ class App extends Component {
     }
     this.state = Object.assign({}, this.initialState);
   }
-  setAuth(requestConfig, user) {
-    this.setState({
-      authenticated: true,
-      requestConfig: requestConfig,
-      user: user
-    })
+  componentDidMount() {
+    const authData = store.get('auth');
+    if (authData) {
+      this.setAuth(authData);
+    }
+  }
+  setAuth(authData) {
+    authData['sendImmediately'] = true;
+    // Create an request config based on the given authentication data.
+    var requestConfig = Object.assign({'auth': authData}, this.state.requestConfig);
+    var self = this;
+    // Create a request instance based on the current configuration.
+    const requestInstance = request.defaults(requestConfig);
+    return requestInstance.get('/api/users/').then(function (response) {
+      // Save authentication data in the local storage for later re-login.
+      store.set('auth', authData);
+      // Set the authentication state.
+      self.setState({
+        authenticated: true,
+        requestConfig: requestConfig,
+        user: response
+      });
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });
   }
   removeAuth() {
+    store.remove('auth');
     this.setState(this.initialState);
   }
   render() {
-    console.log(this.state);
     return (
       <Router>
         <div>
@@ -60,18 +83,20 @@ class App extends Component {
                 <LinkContainer to="/jobs">
                  <NavItem eventKey={3}>Job Board</NavItem>
                 </LinkContainer>
-                { this.state.authenticated ?
-                  <LinkContainer to="/postjobs">
-                    <NavItem eventKey={4}>Post Job</NavItem>
-                  </LinkContainer> : ''
-                }
               </Nav>
+              {this.state.authenticated ?
+                <Nav pullRight>
+                  <NavItem eventKey={1} href="#">{this.state.user.username}</NavItem>
+                </Nav>
+                :
+                ''
+              }
             </Navbar.Collapse>
           </Navbar>
-          <hr/>
           <Route exact path="/" component={Home}/>
           <Route path="/login" render={() =>
             <LoginForm
+              ref={ (instance) => { this.loginForm = instance; } }
               requestConfig={this.state.requestConfig}
               setAuth={this.setAuth.bind(this)}
             />
@@ -83,19 +108,19 @@ class App extends Component {
             />
           }/>
           <Route path="/jobs" render={() =>
-            <JobTable
-              requestConfig={this.state.requestConfig}
-            />
+            <Switch>
+              <Route exact path='/jobs' render={ () =>
+                <JobTable
+                  requestConfig={this.state.requestConfig}
+                />
+              }/>
+              <Route exact path='/jobs/create' render={ () =>
+                <JobPostForm
+                  requestConfig={this.state.requestConfig}
+                />
+              }/>
+            </Switch>
           }/>
-          { this.state.authenticated ?
-            <Route path="/postjobs" render={() =>
-              <JobPostForm
-                requestConfig={this.state.requestConfig}
-                user={this.state.user}
-              />
-            }/> :
-            <div/>
-          }
         </div>
       </Router>
     )

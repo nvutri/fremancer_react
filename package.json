@@ -18,7 +18,8 @@
     "react-scripts": "1.0.10",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "sinon": "^2.3.7"
+    "sinon": "^2.3.7",
+    "store": "^2.0.12"
   },
   "scripts": {
     "start": "react-scripts start",

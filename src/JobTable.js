@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap';
 
 
 class JobTable extends Component {
@@ -22,7 +23,6 @@ class JobTable extends Component {
       console.log(err);
     });
   }
-
   render() {
     const selectRow = {
       clickToSelect: true
@@ -32,7 +32,7 @@ class JobTable extends Component {
         <Row>
           <Col md={2}></Col>
           <Col md={8}>
-            <a role="button" href="/postjobs">Create Job</a>
+            <Button href="/jobs/create/" bsStyle="primary">Create Job</Button>
             <BootstrapTable
               data={this.state.data} striped={true} hover={true}
               selectRow={ selectRow }
