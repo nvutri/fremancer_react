@@ -11,11 +11,20 @@ class JobPostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      canSubmit: false,
+      title: '',
+      description: '',
+      hourly_rate: '',
+      max_weekly_hours: '',
+      hirer: this.props.user ? this.props.user.id : '',
+      total_budget: '',
+      duration: '',
+      budget_type: '',
+      application_type: '',
+      accepted: false
     };
   }
   submit(data) {
-    data['hirer'] = this.props.user.id;
+    data['hirer'] = this.state.hirer;
     const requestInstance = request.defaults(this.props.requestConfig);
     const url = '/api/contracts/' + this.props.id ? this.props.id.toString() : '';
     return requestInstance.post(url).form(data).then(function (response) {
@@ -23,6 +32,19 @@ class JobPostForm extends Component {
     }).catch(function (err) {
       console.log(err);
     });
+  }
+  componentDidMount() {
+    if (this.props.id) {
+      var self = this;
+      const requestInstance = request.defaults(this.props.requestConfig);
+      const url = `/api/contracts/${this.props.id}/`;
+      return requestInstance.get(url).then(function (response) {
+        self.setState(response);
+        return response;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
   }
   render() {
     var self = this;
@@ -42,6 +64,8 @@ class JobPostForm extends Component {
                 minLength: 'Title minimum length is 8'
               }}
               placeholder="What is your project title?"
+              value={this.state.title}
+              onChange={ (e) => {this.setState({title: e.target.value})}}
               required/>
           <Textarea
               name="description"
@@ -55,6 +79,8 @@ class JobPostForm extends Component {
               }}
               placeholder="What is your project description?"
               label="Description"
+              value={this.state.description}
+              onChange={ (e) => {this.setState({description: e.target.value})}}
               required/>
           <Input
               name="hourly_rate"
@@ -66,18 +92,22 @@ class JobPostForm extends Component {
               }}
               placeholder="Project hourly rate? (20, 30 ..)"
               label="Hourly Rate"
+              value={this.state.hourly_rate}
+              onChange={ (e) => {this.setState({hourly_rate: e.target.value})}}
               required/>
-              <Input
-                name="max_weekly_hours"
-                validations={{
-                  isNumeric: true,
-                }}
-                validationErrors={{
-                  isNumeric: 'Only use number.',
-                }}
-                placeholder="Project Weekly Hours Cap"
-                label="Max Weekly Hours"
-                required/>
+          <Input
+              name="max_weekly_hours"
+              validations={{
+                isNumeric: true,
+              }}
+              validationErrors={{
+                isNumeric: 'Only use number.',
+              }}
+              placeholder="Project Weekly Hours Cap"
+              label="Max Weekly Hours"
+              value={this.state.max_weekly_hours}
+              onChange={ (e) => {this.setState({max_weekly_hours: e.target.value})}}
+              required/>
           <br/>
           <Input
               name="total_budget"
@@ -89,6 +119,8 @@ class JobPostForm extends Component {
               }}
               placeholder="Project Budget? (20,000, 30,000 ..)"
               label="Project Budget"
+              value={this.state.total_budget}
+              onChange={ (e) => {this.setState({total_budget: e.target.value})}}
               required/>
           <Select
               name="duration"
@@ -97,6 +129,8 @@ class JobPostForm extends Component {
                 {value: 'short', label: 'Short Term (About 1 month or less)'},
                 {value: 'long', label: 'Long Term (More than 1 month)'}
               ]}
+              value={this.state.duration}
+              onChange={ (e) => {this.setState({duration: e.target.value})}}
           />
           <Select
               name="budget_type"
@@ -104,6 +138,8 @@ class JobPostForm extends Component {
               options={[
                 {value: 'hourly', label: 'Hourly - Pay by Hour'},
               ]}
+              value={this.state.budget_type}
+              onChange={ (e) => {this.setState({budget_type: e.target.value})}}
           />
         <br/>
         </fieldset>

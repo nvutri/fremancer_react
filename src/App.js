@@ -114,10 +114,18 @@ class App extends Component {
                   requestConfig={this.state.requestConfig}
                 />
               }/>
-              <Route exact path='/jobs/create' render={ () =>
+              <Route exact path='/jobs/create' render={ (props) =>
                 <JobPostForm
                   requestConfig={this.state.requestConfig}
+                  {...props.match.params}
                 />
+              }/>
+              <Route path='/jobs/:id/' render={ (props) =>
+                <JobPostForm
+                    requestConfig={this.state.requestConfig}
+                    user={this.state.user}
+                    {...props.match.params}
+                  />
               }/>
             </Switch>
           }/>

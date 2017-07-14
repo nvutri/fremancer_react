@@ -1,13 +1,18 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { Input } from 'formsy-react-components';
+import sinon from 'sinon';
 
 import JobPostForm from './JobPostForm';
 import { RequestConfig, TestUser } from './TestConfig';
 
 describe('Job Post Form', () => {
   it('renders three <Input/> components', () => {
-    const wrapper = shallow(<JobPostForm/>);
+    const wrapper = shallow(<JobPostForm
+      requestConfig={RequestConfig}
+      user={TestUser}
+      id={1}
+    />);
     expect(wrapper.find(Input).exists());
     expect(wrapper.find(Input)).toHaveLength(4)
   });
@@ -31,4 +36,13 @@ describe('Job Post Form', () => {
       'budget_type': 'hourly'
     });
   })
+  it('Load Value from Server', () => {
+    sinon.spy(JobPostForm.prototype, 'componentDidMount');
+    var wrapper = mount(<JobPostForm
+      requestConfig={RequestConfig}
+      id={1}
+      user={TestUser}
+    />);
+    expect(JobPostForm.prototype.componentDidMount.calledOnce).toBe(true);
+  });
 });
