@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import { Button } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
+import DjangoCSRFToken from 'django-react-csrftoken'
 
 const { Input, Textarea, Select } = FRC;
 
@@ -15,29 +16,45 @@ class JobPostForm extends Component {
       description: '',
       hourly_rate: '',
       max_weekly_hours: '',
-      hirer: this.props.user ? this.props.user.id : '',
+      hirer: this.props.user ? this.props.user.id : null,
       total_budget: '',
       duration: '',
       budget_type: '',
       application_type: '',
-      accepted: false
+      accepted: false,
+      id: this.props.params ? this.props.params.id : null
     };
   }
   submit(data) {
+    var self = this;
+    // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     const requestInstance = request.defaults(this.props.requestConfig);
-    const url = '/api/contracts/' + this.props.id ? this.props.id.toString() : '';
-    return requestInstance.post(url).form(data).then(function (response) {
-      return response;
-    }).catch(function (err) {
-      console.log(err);
-    });
+    if (this.state.id) {
+      // Update an existing job by PUT request with the ID..
+      const url = `/api/contracts/${this.state.id}/`;
+      return requestInstance.put(url).form(data).then(function (response) {
+        return response;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
+    else {
+      // Create a new job.
+      const url = '/api/contracts/';
+      return requestInstance.post(url).form(data).then(function (response) {
+        self.setState({id : response.id});
+        return response;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
   }
   componentDidMount() {
-    if (this.props.id) {
+    if (this.props.params) {
       var self = this;
       const requestInstance = request.defaults(this.props.requestConfig);
-      const url = `/api/contracts/${this.props.id}/`;
+      const url = `/api/contracts/${this.props.params.id}/`;
       return requestInstance.get(url).then(function (response) {
         self.setState(response);
         return response;
@@ -52,6 +69,7 @@ class JobPostForm extends Component {
       <FRC.Form
         onValidSubmit={this.submit.bind(this)}>
         <fieldset>
+          <DjangoCSRFToken ref={ (token) => { this.csrfToken = token; } }/>
           <Input
               name="title"
               label="Title"
@@ -65,7 +83,6 @@ class JobPostForm extends Component {
               }}
               placeholder="What is your project title?"
               value={this.state.title}
-              onChange={ (e) => {this.setState({title: e.target.value})}}
               required/>
           <Textarea
               name="description"
@@ -80,7 +97,6 @@ class JobPostForm extends Component {
               placeholder="What is your project description?"
               label="Description"
               value={this.state.description}
-              onChange={ (e) => {this.setState({description: e.target.value})}}
               required/>
           <Input
               name="hourly_rate"
@@ -93,7 +109,6 @@ class JobPostForm extends Component {
               placeholder="Project hourly rate? (20, 30 ..)"
               label="Hourly Rate"
               value={this.state.hourly_rate}
-              onChange={ (e) => {this.setState({hourly_rate: e.target.value})}}
               required/>
           <Input
               name="max_weekly_hours"
@@ -106,7 +121,6 @@ class JobPostForm extends Component {
               placeholder="Project Weekly Hours Cap"
               label="Max Weekly Hours"
               value={this.state.max_weekly_hours}
-              onChange={ (e) => {this.setState({max_weekly_hours: e.target.value})}}
               required/>
           <br/>
           <Input
@@ -120,7 +134,6 @@ class JobPostForm extends Component {
               placeholder="Project Budget? (20,000, 30,000 ..)"
               label="Project Budget"
               value={this.state.total_budget}
-              onChange={ (e) => {this.setState({total_budget: e.target.value})}}
               required/>
           <Select
               name="duration"
@@ -130,7 +143,6 @@ class JobPostForm extends Component {
                 {value: 'long', label: 'Long Term (More than 1 month)'}
               ]}
               value={this.state.duration}
-              onChange={ (e) => {this.setState({duration: e.target.value})}}
           />
           <Select
               name="budget_type"
@@ -139,7 +151,6 @@ class JobPostForm extends Component {
                 {value: 'hourly', label: 'Hourly - Pay by Hour'},
               ]}
               value={this.state.budget_type}
-              onChange={ (e) => {this.setState({budget_type: e.target.value})}}
           />
         <br/>
         </fieldset>
