@@ -68,7 +68,8 @@ describe('Job Post Form', () => {
       'max_weekly_hours': '20',
       'total_budget': '2000',
       'duration': 'short',
-      'budget_type': 'hourly'
+      'budget_type': 'hourly',
+      'freelancer': 6
     });
     expect(submitResult.id).toBe(1);
     expect(submitResult.title).toBe('This is update the exiting job');

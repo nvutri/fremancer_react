@@ -29,6 +29,7 @@ class JobTable extends Component {
       `<a href=/jobs/${row.id}/>${row.title}</a>`
     );
   }
+
   render() {
     return (
       <Jumbotron>
