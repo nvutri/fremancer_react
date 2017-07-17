@@ -23,10 +23,13 @@ class JobTable extends Component {
       console.log(err);
     });
   }
+
+  linkFormatter(cell, row) {
+    return (
+      `<a href=/jobs/${row.id}/>${row.title}</a>`
+    );
+  }
   render() {
-    const selectRow = {
-      clickToSelect: true
-    };
     return (
       <Jumbotron>
         <Row>
@@ -35,10 +38,9 @@ class JobTable extends Component {
             <Button href="/jobs/create/" bsStyle="primary">Create Job</Button>
             <BootstrapTable
               data={this.state.data} striped={true} hover={true}
-              selectRow={ selectRow }
             >
-                <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>Job ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="id" isKey={true}>Job ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="title" dataSort={true} dataFormat={ this.linkFormatter }>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="description" dataSort={true}>Description</TableHeaderColumn>
                 <TableHeaderColumn dataField="hourly_rate" dataSort={true}>Rate</TableHeaderColumn>
                 <TableHeaderColumn dataField="total_budget" dataSort={true}>Budget</TableHeaderColumn>

@@ -74,13 +74,13 @@ class App extends Component {
             </Navbar.Header>
             <Navbar.Collapse>
               <Nav>
-                <LinkContainer to="/login">
+                <LinkContainer to="/login/">
                  <NavItem eventKey={1}>Login</NavItem>
                 </LinkContainer>
-                <LinkContainer to="/signup">
+                <LinkContainer to="/signup/">
                  <NavItem eventKey={2}>Sign Up</NavItem>
                 </LinkContainer>
-                <LinkContainer to="/jobs">
+                <LinkContainer to="/jobs/">
                  <NavItem eventKey={3}>Job Board</NavItem>
                 </LinkContainer>
               </Nav>
@@ -101,30 +101,31 @@ class App extends Component {
               setAuth={this.setAuth.bind(this)}
             />
           }/>
-          <Route path="/signup" render={() =>
+          <Route path="/signup/" render={() =>
             <SignUpForm
               requestConfig={this.state.requestConfig}
               setAuth={this.setAuth.bind(this)}
             />
           }/>
-          <Route path="/jobs" render={() =>
+          <Route path="/jobs/" render={() =>
             <Switch>
-              <Route exact path='/jobs' render={ () =>
-                <JobTable
+              <Route exact path='/jobs' render={ (props) => {
+                return <JobTable
                   requestConfig={this.state.requestConfig}
+                  {...props.match}
                 />
+              }
               }/>
-              <Route exact path='/jobs/create' render={ (props) =>
+              <Route exact path='/jobs/create/' render={ (props) =>
                 <JobPostForm
                   requestConfig={this.state.requestConfig}
-                  {...props.match.params}
                 />
               }/>
               <Route path='/jobs/:id/' render={ (props) =>
                 <JobPostForm
                     requestConfig={this.state.requestConfig}
                     user={this.state.user}
-                    {...props.match.params}
+                    {...props.match}
                   />
               }/>
             </Switch>
