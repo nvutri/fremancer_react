@@ -1,7 +1,7 @@
 import request from 'request-promise';
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
-import { Button, Col } from 'react-bootstrap'
+import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
 import Select from 'react-select';
 
@@ -10,6 +10,8 @@ class JobPostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      view: true,
+      editable: false,
       title: '',
       description: '',
       hourly_rate: '',
@@ -56,6 +58,11 @@ class JobPostForm extends Component {
       const requestInstance = request.defaults(this.props.requestConfig);
       const url = `/api/contracts/${this.props.params.id}/`;
       return requestInstance.get(url).then(function (response) {
+        console.log(self.props);
+        if (self.props.user) {
+          // Make edit switch visible if the user is the job creator.
+          response['editable'] = self.props.user.id == response.hirer;
+        }
         self.setState(response);
         return response;
       }).catch(function (err) {
@@ -82,113 +89,147 @@ class JobPostForm extends Component {
       console.log(err);
     });
   }
+  toggleEdit() {
+    console.log(this.state.view);
+    this.setState({
+      view: !this.state.view
+    });
+  }
   render() {
     var self = this;
-    return (
-      <FRC.Form
-        onValidSubmit={this.submit.bind(this)}>
-        <fieldset>
-          <FRC.Input
-              name="title"
-              label="Title"
-              validations={{
-                isWords: true,
-                minLength: 8
-              }}
-              validationErrors={{
-                isWords: 'Only use alphanumeric characters',
-                minLength: 'Title minimum length is 8'
-              }}
-              placeholder="What is your project title?"
-              value={this.state.title}
-              required/>
-          <FRC.Textarea
-              name="description"
-              validations={{
-                isWords: true,
-                minLength: 50
-              }}
-              validationErrors={{
-                isWords: 'Only use alphanumeric characters',
-                minLength: 'Description minimum length is 50'
-              }}
-              placeholder="What is your project description?"
-              label="Description"
-              value={this.state.description}
-              required/>
-          <FRC.Input
-              name="hourly_rate"
-              validations={{
-                isNumeric: true,
-              }}
-              validationErrors={{
-                isNumeric: 'Only use number.',
-              }}
-              placeholder="Project hourly rate? (20, 30 ..)"
-              label="Hourly Rate"
-              value={this.state.hourly_rate}
-              required/>
-          <FRC.Input
-              name="max_weekly_hours"
-              validations={{
-                isNumeric: true,
-              }}
-              validationErrors={{
-                isNumeric: 'Only use number.',
-              }}
-              placeholder="Project Weekly Hours Cap"
-              label="Max Weekly Hours"
-              value={this.state.max_weekly_hours}
-              required/>
-          <br/>
-          <FRC.Input
-              name="total_budget"
-              validations={{
-                isNumeric: true,
-              }}
-              validationErrors={{
-                isNumeric: 'Only use number.',
-              }}
-              placeholder="Project Budget? (20,000, 30,000 ..)"
-              label="Project Budget"
-              value={this.state.total_budget}
-              required/>
-          <FRC.Select
-              name="duration"
-              label="Anticipating Duration"
-              options={[
-                {value: 'short', label: 'Short Term (About 1 month or less)'},
-                {value: 'long', label: 'Long Term (More than 1 month)'}
-              ]}
-              value={this.state.duration}
-          />
-          <FRC.Select
-              name="budget_type"
-              label="Budget Type"
-              options={[
-                {value: 'hourly', label: 'Hourly - Pay by Hour'},
-              ]}
-              value={this.state.budget_type}
-          />
-          <FRC.Row>
-            <label className="control-label col-sm-3">
-              Freelancer
-            </label>
-            <Col sm={9}>
-              <Select.Async
-                  name="freelancer"
-                  value={this.state.freelancer}
-                  loadOptions={this.loadFreelancers.bind(this)}
-                  onChange={ (selectedOption) => { this.setState({freelancer: selectedOption.value})} }
-              />
-            </Col>
-          </FRC.Row>
+    var frcForm = <FRC.Form
+      onValidSubmit={this.submit.bind(this)}>
+      {
+        this.state.editable ?
+        <FRC.Row>
+          <Button bsStyle="default" className="pull-right" formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
+            {
+              this.state.view ?
+              'Edit': 'View'
+            }
+          </Button>
+        </FRC.Row>:
+        ''
+      }
+      <fieldset>
+        <FRC.Input
+            name="title"
+            label="Title"
+            validations={{
+              isWords: true,
+              minLength: 8
+            }}
+            validationErrors={{
+              isWords: 'Only use alphanumeric characters',
+              minLength: 'Title minimum length is 8'
+            }}
+            placeholder="What is your project title?"
+            value={this.state.title}
+            disabled={this.state.view}
+            required/>
+        <FRC.Textarea
+            name="description"
+            validations={{
+              isWords: true,
+              minLength: 50
+            }}
+            validationErrors={{
+              isWords: 'Only use alphanumeric characters',
+              minLength: 'Description minimum length is 50'
+            }}
+            placeholder="What is your project description?"
+            label="Description"
+            value={this.state.description}
+            disabled={this.state.view}
+            required/>
+        <FRC.Input
+            name="hourly_rate"
+            validations={{
+              isNumeric: true,
+            }}
+            validationErrors={{
+              isNumeric: 'Only use number.',
+            }}
+            placeholder="Project hourly rate? (20, 30 ..)"
+            label="Hourly Rate"
+            value={this.state.hourly_rate}
+            disabled={this.state.view}
+            required/>
+        <FRC.Input
+            name="max_weekly_hours"
+            validations={{
+              isNumeric: true,
+            }}
+            validationErrors={{
+              isNumeric: 'Only use number.',
+            }}
+            placeholder="Project Weekly Hours Cap"
+            label="Max Weekly Hours"
+            value={this.state.max_weekly_hours}
+            disabled={this.state.view}
+            required/>
         <br/>
-        </fieldset>
-        <fieldset>
-          <Button bsStyle="primary" className="center-block" formNoValidate={true} type="submit">Submit</Button>
-        </fieldset>
-      </FRC.Form>
+        <FRC.Input
+            name="total_budget"
+            validations={{
+              isNumeric: true,
+            }}
+            validationErrors={{
+              isNumeric: 'Only use number.',
+            }}
+            placeholder="Project Budget? (20,000, 30,000 ..)"
+            label="Project Budget"
+            value={this.state.total_budget}
+            disabled={this.state.view}
+            required/>
+        <FRC.Select
+            name="duration"
+            label="Anticipating Duration"
+            options={[
+              {value: 'short', label: 'Short Term (About 1 month or less)'},
+              {value: 'long', label: 'Long Term (More than 1 month)'}
+            ]}
+            value={this.state.duration}
+            disabled={this.state.view}
+        />
+        <FRC.Select
+            name="budget_type"
+            label="Budget Type"
+            options={[
+              {value: 'hourly', label: 'Hourly - Pay by Hour'},
+            ]}
+            value={this.state.budget_type}
+            disabled={this.state.view}
+        />
+        <FRC.Row>
+          <label className="control-label col-sm-3">
+            Freelancer
+          </label>
+          <Col sm={9}>
+            <Select.Async
+                name="freelancer"
+                value={this.state.freelancer}
+                loadOptions={this.loadFreelancers.bind(this)}
+                onChange={ (selectedOption) => { this.setState({freelancer: selectedOption.value})} }
+                disabled={this.state.view}
+            />
+          </Col>
+        </FRC.Row>
+      <br/>
+      </fieldset>
+      { this.state.view ? '':
+      <fieldset>
+        <Button bsStyle="primary" className="center-block" formNoValidate={true} type="submit">Submit</Button>
+      </fieldset>
+      }
+    </FRC.Form>;
+    return (
+      <Row>
+        <Col md={1}></Col>
+        <Col md={10}>
+          {frcForm}
+        </Col>
+      </Row>
     );
   }
 }
