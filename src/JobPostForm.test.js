@@ -15,7 +15,6 @@ describe('Job Post Form', () => {
       id={1}
     />);
     expect(wrapper.find(Input).exists());
-    expect(wrapper.find(Input)).toHaveLength(4)
   });
   it('Test Form filling', () => {
     var jobForm = shallow(<JobPostForm
@@ -75,12 +74,21 @@ describe('Job Post Form', () => {
     expect(submitResult.title).toBe('This is update the exiting job');
   });
   it('Load Value from Server', () => {
-    sinon.spy(JobPostForm.prototype, 'componentDidMount');
+    sinon.spy(JobPostForm.prototype, 'componentWillReceiveProps');
     var wrapper = mount(<JobPostForm
       requestConfig={RequestConfig}
-      id={1}
+      params={{id: 1}}
       user={TestUser}
     />);
-    expect(JobPostForm.prototype.componentDidMount.calledOnce).toBe(true);
+  });
+  it('Test Editability for Owner and non-owner', () => {
+    var jobForm = shallow(<JobPostForm
+      requestConfig={RequestConfig}
+      user={TestUser}
+      params={{id: 1}}
+    />);
+    expect(jobForm.find({'name': 'edit-button'}).exists());
+    expect(jobForm.find({'name': 'accept-button'}).exists());
+    expect(jobForm.find({'name': 'submit-button'}).exists());
   });
 });

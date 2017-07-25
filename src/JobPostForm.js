@@ -12,6 +12,7 @@ class JobPostForm extends Component {
     this.state = {
       view: true,
       editable: false,
+      acceptable: false,
       title: '',
       description: '',
       hourly_rate: '',
@@ -31,11 +32,13 @@ class JobPostForm extends Component {
     // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
+    data['accepted'] = this.state.accepted;
     const requestInstance = request.defaults(this.props.requestConfig);
     if (this.state.id) {
       // Update an existing job by PUT request with the ID..
       const url = `/api/contracts/${this.state.id}/`;
       return requestInstance.put(url).form(data).then(function (response) {
+        self.setState({view : true});
         return response;
       }).catch(function (err) {
         console.log(err);
@@ -45,23 +48,26 @@ class JobPostForm extends Component {
       // Create a new job.
       const url = '/api/contracts/';
       return requestInstance.post(url).form(data).then(function (response) {
-        self.setState({id : response.id});
+        self.setState({
+          id : response.id,
+          view: true
+        });
         return response;
       }).catch(function (err) {
         console.log(err);
       });
     }
   }
-  componentDidMount() {
-    if (this.props.params) {
-      var self = this;
-      const requestInstance = request.defaults(this.props.requestConfig);
-      const url = `/api/contracts/${this.props.params.id}/`;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params) {
+      const self = this;
+      const requestInstance = request.defaults(nextProps.requestConfig);
+      const url = `/api/contracts/${nextProps.params.id}/`;
       return requestInstance.get(url).then(function (response) {
-        console.log(self.props);
         if (self.props.user) {
           // Make edit switch visible if the user is the job creator.
-          response['editable'] = self.props.user.id == response.hirer;
+          response['editable'] = nextProps.user.id == response.hirer;
+          response['acceptable'] = (nextProps.user.id == response.freelancer) && (!response.accepted);
         }
         self.setState(response);
         return response;
@@ -90,10 +96,13 @@ class JobPostForm extends Component {
     });
   }
   toggleEdit() {
-    console.log(this.state.view);
     this.setState({
       view: !this.state.view
     });
+  }
+  acceptProject() {
+    this.state.accepted = true;
+    this.submit(this.state);
   }
   render() {
     var self = this;
@@ -102,10 +111,11 @@ class JobPostForm extends Component {
       {
         this.state.editable ?
         <FRC.Row>
-          <Button bsStyle="default" className="pull-right" formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
+          <Button bsStyle="default" className="pull-right"
+            name="edit-button"
+            formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
             {
-              this.state.view ?
-              'Edit': 'View'
+              this.state.view ? 'Edit': 'View'
             }
           </Button>
         </FRC.Row>:
@@ -215,12 +225,33 @@ class JobPostForm extends Component {
             />
           </Col>
         </FRC.Row>
+        <FRC.Input
+            name="accepted"
+            label="Accept Status"
+            value={this.state.accepted}
+            disabled/>
       <br/>
       </fieldset>
-      { this.state.view ? '':
-      <fieldset>
-        <Button bsStyle="primary" className="center-block" formNoValidate={true} type="submit">Submit</Button>
-      </fieldset>
+      { !this.state.view ?
+        <fieldset>
+          <Button bsStyle="primary" className="center-block"
+            name="submit-button"
+            formNoValidate={true} type="submit">Submit</Button>
+        </fieldset>
+        : ''
+      }
+      {
+        this.state.acceptable && !this.state.accepted ?
+          <fieldset>
+            <Button bsStyle="primary" className="center-block"
+              name="accept-button"
+              formNoValidate={true} type="submit"
+              onClick={this.acceptProject.bind(this)}
+              disabled={this.state.accepted}>
+              Accept Project Contract
+            </Button>
+          </fieldset>
+          : ''
       }
     </FRC.Form>;
     return (
