@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import Select from 'react-select';
+import { LinkContainer } from 'react-router-bootstrap';
+import Select from 'react-select'
 
 
 class JobPostForm extends Component {
@@ -58,16 +59,17 @@ class JobPostForm extends Component {
       });
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.params) {
+  componentDidMount() {
+    if (this.props.params) {
       const self = this;
-      const requestInstance = request.defaults(nextProps.requestConfig);
-      const url = `/api/contracts/${nextProps.params.id}/`;
+      const requestInstance = request.defaults(this.props.requestConfig);
+      const url = `/api/contracts/${this.props.params.id}/`;
       return requestInstance.get(url).then(function (response) {
         if (self.props.user) {
           // Make edit switch visible if the user is the job creator.
-          response['editable'] = nextProps.user.id == response.hirer;
-          response['acceptable'] = (nextProps.user.id == response.freelancer) && (!response.accepted);
+          response['editable'] = self.props.user.id == response.hirer;
+          response['is_freelancer'] = self.props.user.id == response.freelancer
+          response['acceptable'] = response.is_freelancer && (!response.accepted);
         }
         self.setState(response);
         return response;
@@ -108,19 +110,30 @@ class JobPostForm extends Component {
     var self = this;
     var frcForm = <FRC.Form
       onValidSubmit={this.submit.bind(this)}>
-      {
-        this.state.editable ?
-        <FRC.Row>
-          <Button bsStyle="default" className="pull-right"
-            name="edit-button"
-            formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
-            {
-              this.state.view ? 'Edit': 'View'
-            }
-          </Button>
-        </FRC.Row>:
-        ''
-      }
+      <Row>
+        {
+          this.state.is_freelancer ?
+            <LinkContainer to={`/timesheets/${this.state.id}/`}>
+              <Button bsStyle="primary"
+                name="timesheet-button"
+                formNoValidate={true} type="button">
+                Open TimeSheet
+              </Button>
+            </LinkContainer>
+            : ''
+        }
+        {
+          this.state.editable ?
+            <Button bsStyle="default"
+              name="edit-button"
+              formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
+              {
+                this.state.view ? 'Edit': 'View'
+              }
+            </Button>
+          : ''
+        }
+      </Row>
       <fieldset>
         <FRC.Input
             name="title"

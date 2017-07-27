@@ -29,13 +29,16 @@ class App extends Component {
         json: true
       },
       authenticated: false,
-      user: null
     }
   }
   componentWillMount() {
     const authData = store.get('auth');
     if (authData) {
       this.setAuth(authData);
+    }
+    const userData = store.get('user');
+    if (userData) {
+      this.state.user = userData;
     }
   }
   setAuth(authData) {
@@ -48,6 +51,7 @@ class App extends Component {
     return requestInstance.get('/api/users/').then(function (response) {
       // Save authentication data in the local storage for later re-login.
       store.set('auth', authData);
+      store.set('user', response);
       // Set the authentication state.
       self.setState({
         authenticated: true,
@@ -60,6 +64,7 @@ class App extends Component {
   }
   removeAuth() {
     store.remove('auth');
+    store.remove('user');
   }
   render() {
     return (

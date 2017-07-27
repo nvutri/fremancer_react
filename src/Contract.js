@@ -16,7 +16,6 @@ class Contract extends Component {
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
-    console.log(this.props);
     if (this.props.user) {
       const membership = this.props.user.membership;
       const url = `/api/contracts/?${membership}=${this.props.user.id}`
@@ -31,7 +30,9 @@ class Contract extends Component {
 
   linkFormatter(cell, row) {
     return (
-      `<a href=/jobs/${row.id}/>${row.title}</a>`
+      <LinkContainer to={`/jobs/${row.id}/`}>
+        <a href="#">{row.title}</a>
+      </LinkContainer>
     );
   }
 

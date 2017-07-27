@@ -26,7 +26,9 @@ class JobTable extends Component {
 
   linkFormatter(cell, row) {
     return (
-      `<a href=/jobs/${row.id}/>${row.title}</a>`
+      <LinkContainer to={`/jobs/${row.id}/`}>
+        <a href="#">{row.title}</a>
+      </LinkContainer>
     );
   }
 
@@ -38,8 +40,7 @@ class JobTable extends Component {
           <Col md={8}>
             <Button href="/jobs/create/" bsStyle="primary">Create Job</Button>
             <BootstrapTable
-              data={this.state.data} striped={true} hover={true}
-            >
+              data={this.state.data} striped={true} hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true}>Job ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="title" dataSort={true} dataFormat={ this.linkFormatter }>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="description" dataSort={true}>Description</TableHeaderColumn>
