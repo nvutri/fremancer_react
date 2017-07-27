@@ -15,22 +15,24 @@ import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import JobTable from './JobTable';
 import JobPostForm from './JobPostForm';
+import TimeSheet from './TimeSheet';
+import Contract from './Contract';
 
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.initialState = {
+    this.state = {
       requestConfig: {
         baseUrl: 'http://localhost:8000',
         json: true
       },
-      authenticated: false
+      authenticated: false,
+      user: null
     }
-    this.state = Object.assign({}, this.initialState);
   }
-  componentDidMount() {
+  componentWillMount() {
     const authData = store.get('auth');
     if (authData) {
       this.setAuth(authData);
@@ -39,17 +41,16 @@ class App extends Component {
   setAuth(authData) {
     authData['sendImmediately'] = true;
     // Create an request config based on the given authentication data.
-    var requestConfig = Object.assign({'auth': authData}, this.state.requestConfig);
+    this.state.requestConfig['auth'] = authData;
     var self = this;
     // Create a request instance based on the current configuration.
-    const requestInstance = request.defaults(requestConfig);
+    const requestInstance = request.defaults(this.state.requestConfig);
     return requestInstance.get('/api/users/').then(function (response) {
       // Save authentication data in the local storage for later re-login.
       store.set('auth', authData);
       // Set the authentication state.
       self.setState({
         authenticated: true,
-        requestConfig: requestConfig,
         user: response
       });
       return response;
@@ -59,7 +60,6 @@ class App extends Component {
   }
   removeAuth() {
     store.remove('auth');
-    this.setState(this.initialState);
   }
   render() {
     return (
@@ -82,6 +82,9 @@ class App extends Component {
                 </LinkContainer>
                 <LinkContainer to="/jobs/">
                  <NavItem eventKey={3}>Job Board</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/contracts/">
+                 <NavItem eventKey={4}>Contracts</NavItem>
                 </LinkContainer>
               </Nav>
               {this.state.authenticated ?
@@ -109,12 +112,11 @@ class App extends Component {
           }/>
           <Route path="/jobs/" render={() =>
             <Switch>
-              <Route exact path='/jobs' render={ (props) => {
-                return <JobTable
+              <Route exact path='/jobs' render={ (props) =>
+                <JobTable
                   requestConfig={this.state.requestConfig}
                   {...props.match}
                 />
-              }
               }/>
               <Route exact path='/jobs/create/' render={ (props) =>
                 <JobPostForm
@@ -129,6 +131,19 @@ class App extends Component {
                   />
               }/>
             </Switch>
+          }/>
+          <Route path="/contracts/" render={ (props) =>
+            <Contract
+              requestConfig={this.state.requestConfig}
+              user={this.state.user}
+            />
+          }/>
+          <Route path="/timesheets/:contract/:id/" render={ (props) =>
+            <TimeSheet
+              requestConfig={this.state.requestConfig}
+              user={this.state.user}
+              {...props.match}
+            />
           }/>
         </div>
       </Router>

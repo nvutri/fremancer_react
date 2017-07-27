@@ -5,7 +5,7 @@ import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 
 
-class JobTable extends Component {
+class Contract extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,12 +16,17 @@ class JobTable extends Component {
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
-    requestInstance.get('/api/contracts/').then(function (response) {
-      self.setState({data: response.results});
-      return response;
-    }).catch(function (err) {
-      console.log(err);
-    });
+    console.log(this.props);
+    if (this.props.user) {
+      const membership = this.props.user.membership;
+      const url = `/api/contracts/?${membership}=${this.props.user.id}`
+      requestInstance.get(url).then(function (response) {
+        self.setState({data: response.results});
+        return response;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
   }
 
   linkFormatter(cell, row) {
@@ -36,11 +41,9 @@ class JobTable extends Component {
         <Row>
           <Col md={2}></Col>
           <Col md={8}>
-            <Button href="/jobs/create/" bsStyle="primary">Create Job</Button>
             <BootstrapTable
-              data={this.state.data} striped={true} hover={true}
-            >
-                <TableHeaderColumn dataField="id" isKey={true}>Job ID</TableHeaderColumn>
+              data={this.state.data} striped={true} hover={true}>
+                <TableHeaderColumn dataField="id" isKey={true}>Contract ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="title" dataSort={true} dataFormat={ this.linkFormatter }>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="description" dataSort={true}>Description</TableHeaderColumn>
                 <TableHeaderColumn dataField="hourly_rate" dataSort={true}>Rate</TableHeaderColumn>
@@ -55,4 +58,4 @@ class JobTable extends Component {
   }
 }
 
-export default JobTable;
+export default Contract;
