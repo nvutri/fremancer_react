@@ -3,7 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import LoginForm from './LoginForm';
-import { RequestConfig } from './TestConfig';
+
+const RequestConfig = {
+  baseUrl: 'http://localhost:8000',  // Test Server.
+  json: true,
+  auth: null
+};
 
 describe('Login Form Test', () => {
 

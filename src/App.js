@@ -5,7 +5,7 @@ import {
   Link,
   Switch
 } from 'react-router-dom'
-import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
 import store from 'store'
@@ -29,6 +29,7 @@ class App extends Component {
         json: true
       },
       authenticated: false,
+      auth: null
     }
   }
   componentWillMount() {
@@ -41,14 +42,25 @@ class App extends Component {
       this.state.user = userData;
     }
   }
+  authenticate(authData) {
+    var requestInstance = request.defaults(this.state.requestConfig);
+    var self = this;
+    return requestInstance.post('/authenticate/').form(authData).then( (res) => {
+      console.log(res);
+      if (res.success) {
+        self.setAuth(authData);
+      }
+      return res;
+    });
+  }
   setAuth(authData) {
     authData['sendImmediately'] = true;
     // Create an request config based on the given authentication data.
     this.state.requestConfig['auth'] = authData;
-    var self = this;
     // Create a request instance based on the current configuration.
     const requestInstance = request.defaults(this.state.requestConfig);
-    return requestInstance.get('/api/users/').then(function (response) {
+    const self = this;
+    return requestInstance.get('/api/users/').then( (response) => {
       // Save authentication data in the local storage for later re-login.
       store.set('auth', authData);
       store.set('user', response);
@@ -65,6 +77,10 @@ class App extends Component {
   removeAuth() {
     store.remove('auth');
     store.remove('user');
+    this.setState({
+      authenticated: false,
+      user: null
+    })
   }
   render() {
     return (
@@ -78,13 +94,8 @@ class App extends Component {
               <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
+              { this.state.authenticated ?
               <Nav>
-                <LinkContainer to="/login/">
-                 <NavItem eventKey={1}>Login</NavItem>
-                </LinkContainer>
-                <LinkContainer to="/signup/">
-                 <NavItem eventKey={2}>Sign Up</NavItem>
-                </LinkContainer>
                 <LinkContainer to="/jobs/">
                  <NavItem eventKey={3}>Job Board</NavItem>
                 </LinkContainer>
@@ -92,27 +103,40 @@ class App extends Component {
                  <NavItem eventKey={4}>Contracts</NavItem>
                 </LinkContainer>
               </Nav>
-              {this.state.authenticated ?
+              : ''
+              }
+              { this.state.authenticated ?
                 <Nav pullRight>
-                  <NavItem eventKey={1} href="#">{this.state.user.username}</NavItem>
+                  <NavDropdown eventKey="1" title={this.state.user.username} id="nav-dropdown">
+                    <MenuItem eventKey="1.1" onClick={this.removeAuth.bind(this)}>Log Out</MenuItem>
+                  </NavDropdown>
                 </Nav>
-                :
-                ''
+                  :
+                <Nav pullRight>
+                  <LinkContainer to="/login/">
+                   <NavItem eventKey={1}>Login</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/signup/">
+                   <NavItem eventKey={2}>Sign Up</NavItem>
+                  </LinkContainer>
+                </Nav>
               }
             </Navbar.Collapse>
           </Navbar>
           <Route exact path="/" component={Home}/>
-          <Route path="/login" render={() =>
+          <Route path="/login" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
               requestConfig={this.state.requestConfig}
-              setAuth={this.setAuth.bind(this)}
+              authenticate={this.authenticate.bind(this)}
+              {...props}
             />
           }/>
-          <Route path="/signup/" render={() =>
+          <Route path="/signup/" render={ (props) =>
             <SignUpForm
               requestConfig={this.state.requestConfig}
-              setAuth={this.setAuth.bind(this)}
+              authenticate={this.authenticate.bind(this)}
+              {...props}
             />
           }/>
           <Route path="/jobs/" render={() =>

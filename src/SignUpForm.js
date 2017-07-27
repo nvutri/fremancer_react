@@ -7,13 +7,26 @@ import request from 'request-promise'
 class SignUpForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      validationErrors: {}
+    };
   }
   submit(data) {
     const self = this;
+    data['email'] = data['username']
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.post('/api/users/').then(function (response) {
-      self.props.setAuth(self.props.requestConfig, response);
+    return requestInstance.post('/api/users/').form(data).then(function (response) {
+      if (response.errors) {
+        self.setState({validationErrors: response.errors});
+      } else {
+        const authResponse = self.props.authenticate({
+          'username': data['username'],
+          'password': data['password']
+        });
+        if (authResponse.success) {
+          self.props.history.push('/');
+        }
+      }
       return response;
     }).catch(function (err) {
       console.log(err);
@@ -22,7 +35,7 @@ class SignUpForm extends Component {
   render() {
     return (
       <Jumbotron>
-        <Form onSubmit={this.submit.bind(this)}>
+        <Form onSubmit={this.submit.bind(this)} validationErrors={this.state.validationErrors}>
           <fieldset>
             <Input
                 name="username"
@@ -74,11 +87,11 @@ class SignUpForm extends Component {
                 name="membership"
                 label="Membership"
                 help="Select your membership type."
+                value="worker"
                 options={[
                   {'value': 'hirer', 'label': 'Hirer'},
-                  {'value': 'worker', 'label': 'Worker'}
+                  {'value': 'freelancer', 'label': 'Freelancer'}
                 ]}
-                required
             />
           </fieldset>
           <fieldset>

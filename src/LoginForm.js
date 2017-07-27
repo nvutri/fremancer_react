@@ -8,10 +8,18 @@ class LoginForm extends Component {
     super(props);
     this.state = {};
   }
+  handleLogIn(authData) {
+    const self = this;
+    this.props.authenticate(authData).then(function (response) {
+      if (response.success) {
+        self.props.history.push('/');
+      }
+    });
+  }
   render() {
     return (
       <Form
-        onSubmit={this.props.setAuth}>
+        onSubmit={this.handleLogIn.bind(this)}>
         <fieldset>
           <Input
               name="username"
