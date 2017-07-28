@@ -12,20 +12,18 @@ class SignUpForm extends Component {
     };
   }
   submit(data) {
-    const self = this;
-    data['email'] = data['username']
+    var self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.post('/api/users/').form(data).then(function (response) {
+    return requestInstance.post('/api/users/').form(data).then( (response) => {
       if (response.errors) {
         self.setState({validationErrors: response.errors});
       } else {
-        const authResponse = self.props.authenticate({
-          'username': data['username'],
+        self.props.authenticate({
+          'username': data['email'],
           'password': data['password']
-        });
-        if (authResponse.success) {
+        }).then( () => {
           self.props.history.push('/');
-        }
+        })
       }
       return response;
     }).catch(function (err) {
@@ -38,7 +36,7 @@ class SignUpForm extends Component {
         <Form onSubmit={this.submit.bind(this)} validationErrors={this.state.validationErrors}>
           <fieldset>
             <Input
-                name="username"
+                name="email"
                 label="Email"
                 validations={{
                   isEmail: true

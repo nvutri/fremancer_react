@@ -6,20 +6,28 @@ import { Input, Form } from 'formsy-react-components';
 class LoginForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      validationErrors: {}
+    };
   }
   handleLogIn(authData) {
     const self = this;
     this.props.authenticate(authData).then(function (response) {
       if (response.success) {
         self.props.history.push('/');
+      } else {
+        self.setState({
+          validationErrors: {
+            password: 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
+          }
+        })
       }
     });
   }
   render() {
     return (
       <Form
-        onSubmit={this.handleLogIn.bind(this)}>
+        onSubmit={this.handleLogIn.bind(this)} validationErrors={this.state.validationErrors}>
         <fieldset>
           <Input
               name="username"

@@ -46,7 +46,6 @@ class App extends Component {
     var requestInstance = request.defaults(this.state.requestConfig);
     var self = this;
     return requestInstance.post('/authenticate/').form(authData).then( (res) => {
-      console.log(res);
       if (res.success) {
         self.setAuth(authData);
       }
