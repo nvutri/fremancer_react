@@ -7,25 +7,21 @@ import { LinkContainer } from 'react-router-bootstrap';
 import Select from 'react-select'
 
 
-class JobPostForm extends Component {
+class JobCreateForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: true,
-      editable: false,
-      acceptable: false,
       title: '',
       description: '',
       hourly_rate: '',
       max_weekly_hours: '',
-      hirer: this.props.user ? this.props.user.id : null,
+      hirer: this.props.user.id,
       freelancer: null,
       total_budget: '',
       duration: '',
       budget_type: '',
       application_type: '',
-      accepted: false,
-      id: this.props.match && this.props.match.params ? this.props.match.params.id : null,
+      accepted: false
     };
   }
   submit(data) {
@@ -33,37 +29,15 @@ class JobPostForm extends Component {
     // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
-    data['accepted'] = this.state.accepted;
     const requestInstance = request.defaults(this.props.requestConfig);
-    if (this.state.id) {
-      // Update an existing job by PUT request with the ID..
-      const url = `/api/contracts/${this.state.id}/`;
-      return requestInstance.put(url).form(data).then(function (response) {
-        self.setState({view : true});
-        return response;
-      }).catch(function (err) {
-        console.log(err);
-      });
-    }
-  }
-  componentDidMount() {
-    if (this.props.params) {
-      const self = this;
-      const requestInstance = request.defaults(this.props.requestConfig);
-      const url = `/api/contracts/${this.props.params.id}/`;
-      return requestInstance.get(url).then(function (response) {
-        if (self.props.user) {
-          // Make edit switch visible if the user is the job creator.
-          response['editable'] = self.props.user.id == response.hirer;
-          response['is_freelancer'] = self.props.user.id == response.freelancer
-          response['acceptable'] = response.is_freelancer && (!response.accepted);
-        }
-        self.setState(response);
-        return response;
-      }).catch(function (err) {
-        console.log(err);
-      });
-    }
+    // Create a new job.
+    const url = '/api/contracts/';
+    return requestInstance.post(url).form(data).then(function (response) {
+      self.props.history.push('/jobs/');
+      return response;
+    }).catch(function (err) {
+      console.log(err);
+    });
   }
   loadFreelancers() {
     const requestInstance = request.defaults(this.props.requestConfig);
@@ -84,43 +58,10 @@ class JobPostForm extends Component {
       console.log(err);
     });
   }
-  toggleEdit() {
-    this.setState({
-      view: !this.state.view
-    });
-  }
-  acceptProject() {
-    this.state.accepted = true;
-    this.submit(this.state);
-  }
   render() {
     var self = this;
     var frcForm = <FRC.Form
       onValidSubmit={this.submit.bind(this)}>
-      <Row>
-        {
-          this.state.is_freelancer ?
-            <LinkContainer to={`/timesheets/${this.state.id}/`}>
-              <Button bsStyle="primary"
-                name="timesheet-button"
-                formNoValidate={true} type="button">
-                Open TimeSheet
-              </Button>
-            </LinkContainer>
-            : ''
-        }
-        {
-          this.state.editable ?
-            <Button bsStyle="default"
-              name="edit-button"
-              formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
-              {
-                this.state.view ? 'Edit': 'View'
-              }
-            </Button>
-          : ''
-        }
-      </Row>
       <fieldset>
         <FRC.Input
             name="title"
@@ -225,34 +166,13 @@ class JobPostForm extends Component {
             />
           </Col>
         </FRC.Row>
-        <FRC.Input
-            name="accepted"
-            label="Accept Status"
-            value={this.state.accepted}
-            disabled/>
       <br/>
       </fieldset>
-      { !this.state.view ?
-        <fieldset>
-          <Button bsStyle="primary" className="center-block"
-            name="submit-button"
-            formNoValidate={true} type="submit">Submit</Button>
-        </fieldset>
-        : ''
-      }
-      {
-        this.state.acceptable && !this.state.accepted ?
-          <fieldset>
-            <Button bsStyle="primary" className="center-block"
-              name="accept-button"
-              formNoValidate={true} type="submit"
-              onClick={this.acceptProject.bind(this)}
-              disabled={this.state.accepted}>
-              Accept Project Contract
-            </Button>
-          </fieldset>
-          : ''
-      }
+      <fieldset>
+        <Button bsStyle="primary" className="center-block"
+          name="submit-button"
+          formNoValidate={true} type="submit">Submit</Button>
+      </fieldset>
     </FRC.Form>;
     return (
       <Row>
@@ -265,4 +185,4 @@ class JobPostForm extends Component {
   }
 }
 
-export default JobPostForm;
+export default JobCreateForm;

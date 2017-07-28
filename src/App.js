@@ -15,6 +15,7 @@ import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import JobTable from './JobTable';
 import JobPostForm from './JobPostForm';
+import JobCreateForm from './JobCreateForm';
 import TimeSheet from './TimeSheet';
 import Contract from './Contract';
 
@@ -110,7 +111,7 @@ class App extends Component {
             </Navbar.Collapse>
           </Navbar>
           <Route exact path="/" component={Home}/>
-          <Route path="/login" render={ (props) =>
+          <Route path="/login/" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
               requestConfig={this.state.requestConfig}
@@ -127,22 +128,24 @@ class App extends Component {
           }/>
           <Route path="/jobs/" render={() =>
             <Switch>
-              <Route exact path='/jobs' render={ (props) =>
+              <Route exact path='/jobs/' render={ (props) =>
                 <JobTable
                   requestConfig={this.state.requestConfig}
-                  {...props.match}
+                  {...props}
                 />
               }/>
               <Route exact path='/jobs/create/' render={ (props) =>
-                <JobPostForm
+                <JobCreateForm
                   requestConfig={this.state.requestConfig}
+                  user={this.state.user}
+                  {...props}
                 />
               }/>
               <Route path='/jobs/:id/' render={ (props) =>
                 <JobPostForm
                     requestConfig={this.state.requestConfig}
                     user={this.state.user}
-                    {...props.match}
+                    {...props}
                   />
               }/>
             </Switch>
@@ -157,7 +160,7 @@ class App extends Component {
             <TimeSheet
               requestConfig={this.state.requestConfig}
               user={this.state.user}
-              {...props.match}
+              {...props}
             />
           }/>
         </div>
