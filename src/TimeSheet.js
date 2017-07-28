@@ -17,19 +17,20 @@ class TimeSheet extends Component {
       submitted: false,
       invoiced: false,
       contract: null,
-      daily_sheets: []
+      daily_sheets: [],
+      id: this.props.match ? this.props.match.params.id : null
     };
   }
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
-    requestInstance.get(`/api/timesheets/${this.props.id}/`).then(function (response) {
+    requestInstance.get(`/api/timesheets/${this.state.id}/`).then(function (response) {
       self.setState(response);
       return response;
     }).catch(function (err) {
       console.log(err);
     });
-    requestInstance.get(`/api/dailysheets/?timesheet=${this.props.id}`).then(function (response) {
+    requestInstance.get(`/api/dailysheets/?timesheet=${this.state.id}`).then(function (response) {
       self.setState({daily_sheets: response.results});
       return response;
     }).catch(function (err) {

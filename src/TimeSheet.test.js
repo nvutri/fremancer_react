@@ -18,7 +18,7 @@ describe('TimeSheet', () => {
     sinon.spy(TimeSheet.prototype, 'componentDidMount');
     var wrapper = mount(<TimeSheet
       requestConfig={RequestConfig}
-      id={1}
+      match={{params: {id:1}}}
     />);
     expect(TimeSheet.prototype.componentDidMount.calledOnce).toBe(true);
   });
