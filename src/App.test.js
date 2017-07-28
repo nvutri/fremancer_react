@@ -13,7 +13,7 @@ it('Fill and submit authentication', async () => {
   const wrapper = shallow(
     <App/>
   );
-  const userResult = await wrapper.instance().setAuth(TestUser);
-  expect(userResult.username).toBe(TestUser.username);
-  expect(userResult.id).toBeGreaterThanOrEqual(0);
+  const userResult = await wrapper.instance().authenticate(TestUser);
+  expect(userResult.user.username).toBe(TestUser.username);
+  expect(userResult.user.id).toBeGreaterThanOrEqual(0);
 });

@@ -28,14 +28,13 @@ class App extends Component {
         baseUrl: 'http://localhost:8000',
         json: true
       },
-      authenticated: false,
-      auth: null
+      authenticated: false
     }
   }
   componentWillMount() {
     const authData = store.get('auth');
     if (authData) {
-      this.setAuth(authData);
+      this.authenticate(authData);
     }
     const userData = store.get('user');
     if (userData) {
@@ -47,30 +46,17 @@ class App extends Component {
     var self = this;
     return requestInstance.post('/authenticate/').form(authData).then( (res) => {
       if (res.success) {
-        self.setAuth(authData);
+        // Save authentication data in the local storage for later re-login.
+        store.set('auth', authData);
+        store.set('user', res.user);
+        // Set the authentication state.
+        self.state.requestConfig['auth'] = authData;
+        self.setState({
+          authenticated: true,
+          user: res.user
+        });
       }
       return res;
-    });
-  }
-  setAuth(authData) {
-    authData['sendImmediately'] = true;
-    // Create an request config based on the given authentication data.
-    this.state.requestConfig['auth'] = authData;
-    // Create a request instance based on the current configuration.
-    const requestInstance = request.defaults(this.state.requestConfig);
-    const self = this;
-    return requestInstance.get('/api/users/').then( (response) => {
-      // Save authentication data in the local storage for later re-login.
-      store.set('auth', authData);
-      store.set('user', response);
-      // Set the authentication state.
-      self.setState({
-        authenticated: true,
-        user: response
-      });
-      return response;
-    }).catch(function (err) {
-      console.log(err);
     });
   }
   removeAuth() {
@@ -80,6 +66,7 @@ class App extends Component {
       authenticated: false,
       user: null
     })
+    window.location = '/login/';
   }
   render() {
     return (
