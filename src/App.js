@@ -10,14 +10,15 @@ import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
 import store from 'store'
 
-import Home from './Home';
+import Contract from './Contract';
 import LoginForm from './LoginForm';
-import SignUpForm from './SignUpForm';
 import JobTable from './JobTable';
 import JobPostForm from './JobPostForm';
 import JobCreateForm from './JobCreateForm';
+import Home from './Home';
+import SignUpForm from './SignUpForm';
 import TimeSheet from './TimeSheet';
-import Contract from './Contract';
+import TimeSheetTable from './TimeSheetTable';
 
 
 class App extends Component {
@@ -89,6 +90,9 @@ class App extends Component {
                 <LinkContainer to="/contracts/">
                  <NavItem eventKey={4}>Contracts</NavItem>
                 </LinkContainer>
+                <LinkContainer to="/timesheets/">
+                 <NavItem eventKey={5}>TimeSheets</NavItem>
+                </LinkContainer>
               </Nav>
               : ''
               }
@@ -156,12 +160,30 @@ class App extends Component {
               user={this.state.user}
             />
           }/>
-          <Route path="/timesheets/:contract/:id/" render={ (props) =>
-            <TimeSheet
-              requestConfig={this.state.requestConfig}
-              user={this.state.user}
-              {...props}
-            />
+          <Route path="/timesheets/" render={ () =>
+            <Switch>
+              <Route exact path='/timesheets/' render={ (props) =>
+                <TimeSheetTable
+                  requestConfig={this.state.requestConfig}
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route exact path="/timesheets/create/" render={ (props) =>
+                <TimeSheet
+                  requestConfig={this.state.requestConfig}
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route path="/timesheets/:id/" render={ (props) =>
+                <TimeSheet
+                  requestConfig={this.state.requestConfig}
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
           }/>
         </div>
       </Router>

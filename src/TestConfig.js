@@ -1,3 +1,5 @@
+import React from 'react';
+
 const TestUser = {
   'username': 'freelancer@gmail.com',
   'password': 'Thisisfreelancing',
@@ -10,7 +12,27 @@ const RequestConfig = {
   auth: TestUser
 };
 
+const MockFunction = function () {
+};
+
+const RouterContext = {
+  context: {
+    router: {
+      history : {
+          createHref: MockFunction,
+          push: MockFunction,
+          replace: MockFunction
+      },
+      route: {
+        location : {}
+      }
+    }
+  },
+  childContextTypes: {router: React.PropTypes.object}
+};
+
 module.exports = {
   TestUser,
-  RequestConfig
+  RequestConfig,
+  RouterContext
 };

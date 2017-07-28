@@ -37,7 +37,7 @@ class DailySheet extends Component {
   render() {
     return (
       <fieldset>
-        <legend className="text-center">this.props.day</legend>
+        <legend className="text-center">{this.props.day}</legend>
         <input
             name="hours"
             type="number"

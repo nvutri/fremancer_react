@@ -47,10 +47,10 @@ class JobPostForm extends Component {
     }
   }
   componentDidMount() {
-    if (this.props.params) {
-      const self = this;
+    const self = this;
+    if (this.state.id) {
       const requestInstance = request.defaults(this.props.requestConfig);
-      const url = `/api/contracts/${this.props.params.id}/`;
+      const url = `/api/contracts/${this.state.id}/`;
       return requestInstance.get(url).then(function (response) {
         if (self.props.user) {
           // Make edit switch visible if the user is the job creator.
