@@ -33,7 +33,9 @@ class SignUpForm extends Component {
   render() {
     return (
       <Jumbotron>
-        <Form onSubmit={this.submit.bind(this)} validationErrors={this.state.validationErrors}>
+        <Form
+          onSubmit={this.submit.bind(this)}
+          validationErrors={this.state.validationErrors}>
           <fieldset>
             <Input
                 name="email"

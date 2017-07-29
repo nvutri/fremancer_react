@@ -12,15 +12,14 @@ class LoginForm extends Component {
   }
   handleLogIn(authData) {
     const self = this;
-    this.props.authenticate(authData).then(function (response) {
-      if (response.success) {
-        self.props.history.push('/');
-      } else {
+    this.props.authenticate(authData).then( (response) => {
+      console.log(response);
+      if (response.error) {
         self.setState({
-          validationErrors: {
-            password: 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
-          }
-        })
+          validationErrors: response.error
+        });
+      } else {
+        self.props.history.push('/');
       }
     });
   }

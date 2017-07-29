@@ -47,18 +47,18 @@ class App extends Component {
     var requestInstance = request.defaults(this.state.requestConfig);
     var self = this;
     return requestInstance.post('/authenticate/').form(authData).then( (res) => {
-      if (res.success) {
-        // Save authentication data in the local storage for later re-login.
-        store.set('auth', authData);
-        store.set('user', res.user);
-        // Set the authentication state.
-        self.state.requestConfig['auth'] = authData;
-        self.setState({
-          authenticated: true,
-          user: res.user
-        });
-      }
+      // Save authentication data in the local storage for later re-login.
+      store.set('auth', authData);
+      store.set('user', res);
+      // Set the authentication state.
+      self.state.requestConfig['auth'] = authData;
+      self.setState({
+        authenticated: true,
+        user: res
+      });
       return res;
+    }).catch( (errors) => {
+      return errors
     });
   }
   removeAuth() {

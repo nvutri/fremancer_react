@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount, shallow } from 'enzyme';
+import request from 'request-promise'
 
 import SignUpForm from './SignUpForm';
 
@@ -20,13 +21,13 @@ describe('SignUp Form Test', async () => {
       />, div);
   });
   it('Create and update New user', async () => {
+    const authenticate = function(authData) {
+      var requestInstance = request.defaults(RequestConfig);
+      return requestInstance.post('/authenticate/').form(authData);
+    };
     var signUpForm = shallow(<SignUpForm
       requestConfig={RequestConfig}
-      authenticate={ (response) => {
-        return {
-          success: true
-        }
-      }}
+      authenticate={authenticate}
       history={[]}
     />);
     var signUpInstance = signUpForm.instance();
