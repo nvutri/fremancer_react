@@ -40,6 +40,7 @@ class TimeSheetCreate extends Component {
     const requestInstance = request.defaults(this.props.requestConfig);
     const self = this;
     return requestInstance.post('/api/timesheets/').form(data).then(function (response) {
+      self.props.history.push(`/timesheets/${response.id}/`);
       return response;
     }).catch(function (err) {
       self.setState({validationErrors: err});
@@ -54,6 +55,7 @@ class TimeSheetCreate extends Component {
           <FRC.Input
               name="start_date"
               type="date"
+              label="Week"
               value={this.state.start_date}
               placeholder="start_date"
               onChange={ (e) => {this.setState({summary: e.start_date.value})}}
@@ -61,7 +63,6 @@ class TimeSheetCreate extends Component {
           <FRC.Select
               name="contract"
               label="Contract"
-              help="Attached to contract."
               options={this.state.contractOptions}
               required
           />
