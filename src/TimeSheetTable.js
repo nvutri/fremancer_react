@@ -44,6 +44,7 @@ class TimeSheetTable extends Component {
             <BootstrapTable
               data={this.state.data} striped={true} hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true}>TimeSheet ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="contract">Contract ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="start_date" dataFormat={ this.linkFormatter } dataSort={true} >Week</TableHeaderColumn>
                 <TableHeaderColumn dataField="summary" dataSort={true}>Summary</TableHeaderColumn>
                 <TableHeaderColumn dataField="total_hours" dataSort={true}>Total Hours</TableHeaderColumn>

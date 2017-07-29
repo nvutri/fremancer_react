@@ -18,6 +18,7 @@ import JobCreateForm from './JobCreateForm';
 import Home from './Home';
 import SignUpForm from './SignUpForm';
 import TimeSheet from './TimeSheet';
+import TimeSheetCreate from './TimeSheetCreate';
 import TimeSheetTable from './TimeSheetTable';
 
 
@@ -170,7 +171,7 @@ class App extends Component {
                 />
               }/>
               <Route exact path="/timesheets/create/" render={ (props) =>
-                <TimeSheet
+                <TimeSheetCreate
                   requestConfig={this.state.requestConfig}
                   user={this.state.user}
                   {...props}
