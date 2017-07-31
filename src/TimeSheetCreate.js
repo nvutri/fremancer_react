@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap'
+import { Button, Col, Alert, Row } from 'react-bootstrap'
 import request from 'request-promise';
 import moment from 'moment';
 import FRC from 'formsy-react-components';
+import DatePicker from 'react-datepicker';
 
 
 class TimeSheetCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      start_date: '',
+      date: moment(),
       id: null,
       contractOptions: [],
-      validationErrors: {}
+      validationErrors: {},
+      msg: ''
     };
   }
   componentDidMount() {
@@ -40,32 +42,57 @@ class TimeSheetCreate extends Component {
     const requestInstance = request.defaults(this.props.requestConfig);
     const self = this;
     return requestInstance.post('/api/timesheets/').form(data).then(function (response) {
-      self.props.history.push(`/timesheets/${response.id}/`);
+      if (self.props.history) {
+        self.props.history.push(`/timesheets/${response.id}/`);
+      }
       return response;
     }).catch(function (err) {
-      self.setState({validationErrors: err});
+      self.setState({validationErrors: err.error});
+      if (err.message) {
+        self.setState({msg: err.message});
+      }
+      return err;
     });
   }
   render() {
     return (
       <FRC.Form
-        onValidSubmit={this.create.bind(this)}
+        onValidSubmit={ (data) => {
+          data['start_date'] = this.state.date.format('YYYY-MM-DD');
+          this.create(data);
+        }}
         validationErrors={this.state.validationErrors}>
         <fieldset>
-          <FRC.Input
-              name="start_date"
-              type="date"
-              label="Week"
-              value={this.state.start_date}
-              placeholder="start_date"
-              onChange={ (e) => {this.setState({summary: e.start_date.value})}}
-          />
+          <FRC.Row>
+            <label className="control-label col-sm-3">
+              Week
+            </label>
+            <Col sm={9}>
+              <DatePicker
+                  inline
+                  showWeekNumbers
+                  selected={this.state.date}
+                  onChange={ (date) => {this.setState({date: date})} }
+              />
+            </Col>
+          </FRC.Row>
           <FRC.Select
               name="contract"
               label="Contract"
               options={this.state.contractOptions}
               required
           />
+          { this.state.msg ?
+            <Row>
+              <Col sm={3}/>
+              <Col sm={9}>
+                <Alert bsStyle="danger">
+                  {this.state.msg}
+                </Alert>
+              </Col>
+            </Row>
+            : ''
+          }
           <Button bsStyle="primary" className="center-block"
             name="submit-button"
             formNoValidate={true} type="submit">Create TimeSheet</Button>
