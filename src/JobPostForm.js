@@ -1,4 +1,5 @@
 import request from 'request-promise';
+import moment from 'moment';
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
@@ -26,6 +27,8 @@ class JobPostForm extends Component {
       application_type: '',
       accepted: false,
       id: this.props.match && this.props.match.params ? this.props.match.params.id : null,
+      validationErrors: {},
+      timesheet: ''
     };
   }
   submit(data) {
@@ -42,16 +45,62 @@ class JobPostForm extends Component {
         self.setState({view : true});
         return response;
       }).catch(function (err) {
-        console.log(err);
+        self.setState({validationErrors: err.error});
       });
     }
   }
+  /**
+   * Create TimeSheet of the latest one.
+   * @param  {String} lastMonday a start_date of the latest Monday.
+   * @return {[type]}            [description]
+   */
+  createLatestTimeSheet(lastMonday) {
+    const self = this;
+    const data = {
+      contract: this.state.id,
+      start_date: lastMonday
+    };
+    const requestInstance = request.defaults(this.props.requestConfig);
+    return requestInstance.post('/api/timesheets/').form(data).then( (response) => {
+      self.setState({timesheet: response.id})
+      return response;
+    });
+  }
+  /**
+   * Load timesheet ID of this week.
+   * Create a new timesheet if needs to.
+   * @return {[Promise]} A promise of the AJAX request for opening timesheet.
+   */
+  loadTimeSheet() {
+    const requestInstance = request.defaults(this.props.requestConfig);
+    const url = `/api/timesheets/?contract=${this.state.id}`;
+    const self = this;
+    return requestInstance.get(url).then( (response) => {
+      if (response.count > 0) {
+        return response.results[0];
+      } else {
+        return null;
+      }
+    }).then( (response) => {
+      const lastMonday = moment().day('Monday').format('YYYY-MM-DD');
+      if (lastMonday === response.start_date) {
+        self.setState({timesheet: response.id});
+        return response;
+      } else {
+        return self.createLatestTimeSheet(lastMonday);
+      }
+    });
+  }
+  /**
+   * Get related data of this job post.
+   * @return {Promise} a promise of the given AJAX data.
+   */
   componentDidMount() {
     const self = this;
     if (this.state.id) {
       const requestInstance = request.defaults(this.props.requestConfig);
       const url = `/api/contracts/${this.state.id}/`;
-      return requestInstance.get(url).then(function (response) {
+      const result = requestInstance.get(url).then( (response) => {
         if (self.props.user) {
           // Make edit switch visible if the user is the job creator.
           response['editable'] = self.props.user.id == response.hirer;
@@ -59,12 +108,20 @@ class JobPostForm extends Component {
           response['acceptable'] = response.is_freelancer && (!response.accepted);
         }
         self.setState(response);
+        if (response.is_freelancer) {
+          self.loadTimeSheet();
+        }
         return response;
-      }).catch(function (err) {
-        console.log(err);
+      }).catch( (err) => {
+        self.setState({validationErrors: err.error});
       });
+      return result;
     }
   }
+  /**
+   * Load freelancer to selector input.
+   * @return {[Object.{'value': String, 'label': String}]} a list of options.
+   */
   loadFreelancers() {
     const requestInstance = request.defaults(this.props.requestConfig);
     const url = '/api/profiles/?membership=freelancer';
@@ -96,11 +153,12 @@ class JobPostForm extends Component {
   render() {
     var self = this;
     var frcForm = <FRC.Form
-      onValidSubmit={this.submit.bind(this)}>
+      onValidSubmit={this.submit.bind(this)}
+      validationErrors={this.state.validationErrors}>
       <Row>
         {
           this.state.is_freelancer ?
-            <LinkContainer to={`/timesheets/${this.state.id}/`}>
+            <LinkContainer to={`/timesheets/${this.state.timesheet}/`}>
               <Button bsStyle="primary"
                 name="timesheet-button"
                 formNoValidate={true} type="button">
