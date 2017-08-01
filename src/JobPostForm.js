@@ -58,11 +58,12 @@ class JobPostForm extends Component {
     const self = this;
     const data = {
       contract: this.state.id,
-      start_date: lastMonday
+      start_date: lastMonday,
+      user: this.props.user.id
     };
     const requestInstance = request.defaults(this.props.requestConfig);
     return requestInstance.post('/api/timesheets/').form(data).then( (response) => {
-      self.setState({timesheet: response.id})
+      self.setState({timesheet: response.id});
       return response;
     });
   }
@@ -79,7 +80,7 @@ class JobPostForm extends Component {
       if (response.count > 0) {
         return response.results[0];
       } else {
-        return null;
+        return {};
       }
     }).then( (response) => {
       const lastMonday = moment().day('Monday').format('YYYY-MM-DD');
@@ -157,7 +158,7 @@ class JobPostForm extends Component {
       validationErrors={this.state.validationErrors}>
       <Row>
         {
-          this.state.is_freelancer ?
+          this.state.is_freelancer && this.state.timesheet ?
             <LinkContainer to={`/timesheets/${this.state.timesheet}/`}>
               <Button bsStyle="primary"
                 name="timesheet-button"
