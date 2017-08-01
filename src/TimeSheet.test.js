@@ -4,14 +4,14 @@ import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
 
 import TimeSheet from './TimeSheet';
-import { RequestConfig } from './TestConfig';
+import { RequestConfig, RouterContext } from './TestConfig';
 
 
 describe('TimeSheet', () => {
   it('Renders Components', () => {
     const wrapper = shallow(<TimeSheet
       requestConfig={RequestConfig}
-      id={1}/>);
+      id={1}/>, RouterContext);
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
@@ -19,7 +19,7 @@ describe('TimeSheet', () => {
     var wrapper = mount(<TimeSheet
       requestConfig={RequestConfig}
       match={{params: {id:1}}}
-    />);
+    />, RouterContext);
     expect(TimeSheet.prototype.componentDidMount.calledOnce).toBe(true);
   });
 });

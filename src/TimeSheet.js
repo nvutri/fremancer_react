@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap'
 import request from 'request-promise';
 import moment from 'moment';
 
+import React, { Component } from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Alert, Button, Row, Col } from 'react-bootstrap'
+import FRC from 'formsy-react-components';
+import DatePicker from 'react-datepicker';
+
 import DailySheet from './DailySheet';
 
+const DOW = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 class TimeSheet extends Component {
   constructor(props) {
@@ -18,62 +23,120 @@ class TimeSheet extends Component {
       invoiced: false,
       contract: null,
       daily_sheets: [],
-      id: this.props.match ? this.props.match.params.id : null
+      id: this.props.match ? this.props.match.params.id : null,
+      prev_timesheet: '',
+      next_timesheet: '',
+      msg: null,
+      focused_id: null
     };
   }
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(this.props.requestConfig);
+    // Get Timesheet data.
     requestInstance.get(`/api/timesheets/${this.state.id}/`).then(function (response) {
       self.setState(response);
       return response;
     }).catch(function (err) {
-      console.log(err);
+      self.setState({msg: err.message});
     });
+    // Get DailySheet data.
     requestInstance.get(`/api/dailysheets/?timesheet=${this.state.id}`).then(function (response) {
       self.setState({daily_sheets: response.results});
       return response;
     }).catch(function (err) {
-      console.log(err);
+      self.setState({msg: err.message});
     });
   }
-  save() {
-    const data = Objects.assign({'id': this.props.id}, this.state);
+
+  submit(data) {
+    this.state.submitted = true;
     const requestInstance = request.defaults(this.props.requestConfig);
     return requestInstance.post(`/api/timesheets/${this.props.id}`).form(data).then(function (response) {
       return response;
     }).catch(function (err) {
-      console.log(err);
+      self.setState({validationErrors: err.error});
+      self.setState({msg: err.message});
     });
   }
-  submit() {
-    this.state.submitted = true;
-    this.save();
-  }
+
   render() {
-    const self = this;
-    const daily_sheets = this.state.daily_sheets.map( (daily_data) => {
-      daily_data['requestConfig'] = self.props.requestConfig;
-      daily_data['key'] = `daily_${daily_data.id}`;
-      return <DailySheet
-        {...daily_data}
-      />
-    });
     return (
-      <fieldset>
-        {daily_sheets}
-        <input
-            name="summary"
-            type="text"
-            value={this.state.summary}
-            onChange={ (e) => {this.setState({summary: e.target.value})}}
-        />
-        <Button onClick={this.save.bind(this)} className="">Save</Button>
-        { this.state.submitted ?
-          <Button bsStyle="default" disalbed>Submitted</Button>:
-          <Button bsStyle="primary" onClick={this.submit.bind(this)}>Submit</Button>
-        }
-      </fieldset>
+      <Row>
+        <Col sm={1}/>
+        <Col sm={10}>
+          <Row>
+            { this.state.prev_timesheet ?
+              <LinkContainer to={`/timesheets/${this.state.prev_timesheet}/`}>
+                <Button bsStyle="primary" className="pull-left" name="last-week-button">
+                  Prev Week
+                </Button>
+              </LinkContainer>
+              : ''
+            }
+            { this.state.next_timesheet ?
+              <LinkContainer to={`/timesheets/${this.state.next_timesheet}/`}>
+                <Button bsStyle="primary" className="pull-right" name="next-week-button">
+                  Next Week
+                </Button>
+              </LinkContainer>
+              : ''
+            }
+          </Row>
+          <Row>
+          {
+            this.state.daily_sheets.map( (daily_data, index) =>
+              <Col
+                key={`daily_${daily_data.id}`}
+                sm={ this.state.focused_id === daily_data.id ? 5 : 3 }
+                onFocus={(e) => this.setState({focused_id: daily_data.id})}>
+                <DailySheet
+                  requestConfig={this.props.requestConfig}
+                  id={daily_data.id}
+                  dow={DOW[index]}
+                />
+              </Col>
+            )
+          }
+          </Row>
+          <FRC.Form
+            onValidSubmit={ (data) => {
+              data['start_date'] = this.state.start_date.format('YYYY-MM-DD');
+              this.submit(data);
+            }}
+            validationErrors={this.state.validationErrors}>
+            <FRC.Textarea
+                name="summary"
+                validations={{
+                  isAlphanumeric: true,
+                  minLength: 50
+                }}
+                validationErrors={{
+                  isAlphanumeric: 'Only use alphanumeric characters',
+                  minLength: 'Summary minimum length is 50'
+                }}
+                placeholder="What is your project description?"
+                label="Summary"
+                value={this.state.summary}
+            />
+            <Button bsStyle="primary" className="center-block" name="submit-button"
+              formNoValidate={true} type="submit" disabled={this.state.submitted}>
+              Submit
+            </Button>
+          </FRC.Form>
+          { this.state.msg ?
+            <Row>
+              <Col sm={3}/>
+              <Col sm={9}>
+                <Alert bsStyle="danger">
+                  {this.state.msg}
+                </Alert>
+              </Col>
+            </Row>
+            : ''
+          }
+        </Col>
+      </Row>
     )
   }
 }
