@@ -65,6 +65,7 @@ class DailySheet extends Component {
           <FRC.Textarea
               name="summary"
               label="Note"
+              placeholder={`${this.props.dow} Note`}
               value={this.state.summary ? this.state.summary : ''}
               onChange={ (e) => {this.setState({summary: e.target.value})}}/>
         </fieldset>

@@ -27,7 +27,8 @@ class TimeSheet extends Component {
       prev_timesheet: '',
       next_timesheet: '',
       msg: null,
-      focused_id: null
+      focused_id: null,
+      contract: {}
     };
   }
   componentDidMount() {
@@ -115,7 +116,7 @@ class TimeSheet extends Component {
                   isAlphanumeric: 'Only use alphanumeric characters',
                   minLength: 'Summary minimum length is 50'
                 }}
-                placeholder="What is your project description?"
+                placeholder="Weekly Summary"
                 label="Summary"
                 value={this.state.summary}
             />
