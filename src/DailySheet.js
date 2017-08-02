@@ -7,9 +7,6 @@ class DailySheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      'hours': props.hours,
-      'summary': props.summary,
-      'report_date': props.report_date,
       'validationErrors': {},
       'msg': '',
     };
@@ -42,20 +39,20 @@ class DailySheet extends Component {
               name="report_date"
               label="Date"
               type="date"
-              value={this.state.report_date}
+              value={this.props.report_date}
               disabled/>
           <FRC.Input
               name="hours"
               type="number"
               label="Hours"
-              value={this.state.hours}
-              onChange={ (e) => {this.setState({hours: e.target.value})}}/>
+              ref={(instance) => {this.hoursInput = instance}}
+              value={this.props.hours}
+              onKeyUp={ this.props.addTotal }/>
           <FRC.Textarea
               name="summary"
               label="Note"
               placeholder={`${this.props.dow} Note`}
-              value={this.state.summary ? this.state.summary : ''}
-              onChange={ (e) => {this.setState({summary: e.target.value})}}/>
+              value={this.state.summary ? this.state.summary : ''}/>
         </fieldset>
         { this.state.msg ?
           <Row>

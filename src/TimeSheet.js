@@ -30,6 +30,7 @@ class TimeSheet extends Component {
       focused_id: null,
       contract: {}
     };
+    this.daily_sheets = [];
   }
   componentDidMount() {
     const self = this;
@@ -43,17 +44,35 @@ class TimeSheet extends Component {
     });
   }
 
-  submit(data) {
-    this.state.submitted = true;
+  save(data) {
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.post(`/api/timesheets/${this.props.id}`).form(data).then(function (response) {
+    return requestInstance.post(`/api/timesheets/${this.state.id}`).form(data).then(function (response) {
       return response;
-    }).catch(function (err) {
+    }).catch((err) => {
       self.setState({validationErrors: err.error});
       self.setState({msg: err.message});
     });
   }
 
+  /**
+   * Add total hours of all the daily sheets.
+   */
+  addTotal() {
+    // Get all the hours value.
+    const hours = this.daily_sheets.map( (ds) => {
+      return parseFloat(ds.hoursInput.getValue());
+    });
+    // Calculate the the total of all these hours.
+    const total_hours = hours.reduce( (sum, value) => {
+      return isNaN(value) ? sum : sum + value;
+    }, 0);
+    if (total_hours) {
+      this.setState({
+        total_hours: total_hours,
+        total_amount: this.state.contract.hourly_rate * total_hours
+      });
+    }
+  }
   render() {
     return (
       <Row>
@@ -85,50 +104,68 @@ class TimeSheet extends Component {
                 sm={ this.state.focused_id === daily_data.id ? 5 : 3 }
                 onFocus={(e) => this.setState({focused_id: daily_data.id})}>
                 <DailySheet
-                  requestConfig={this.props.requestConfig}
-                  dow={DOW[index]}
-                  {...daily_data}
-                />
+                    ref={(instance) => {this.daily_sheets[index] = instance} }
+                    requestConfig={this.props.requestConfig}
+                    dow={DOW[index]}
+                    addTotal={this.addTotal.bind(this)}
+                    {...daily_data}
+                  />
               </Col>
             )
           }
           </Row>
           <FRC.Form
-            onValidSubmit={ (data) => {
-              data['start_date'] = this.state.start_date.format('YYYY-MM-DD');
-              this.submit(data);
-            }}
+            onValidSubmit={this.save.bind(this)}
             validationErrors={this.state.validationErrors}>
             <FRC.Input
               name="total_hours"
               label="Total Hours"
               type="number"
               value={this.state.total_hours}
+              disabled
+              />
+            <FRC.Input
+              name="hourly_rate"
+              label="Hourly Rate"
+              type="number"
+              value={this.state.contract.hourly_rate}
+              disabled
               />
             <FRC.Input
               name="total_amount"
               label="Total Amount"
               type="number"
               value={this.state.total_amount}
+              disabled
               />
             <FRC.Textarea
                 name="summary"
                 validations={{
-                  isAlphanumeric: true,
                   minLength: 50
                 }}
                 validationErrors={{
-                  isAlphanumeric: 'Only use alphanumeric characters',
                   minLength: 'Summary minimum length is 50'
                 }}
                 placeholder="Weekly Summary"
                 label="Summary"
                 value={this.state.summary}
             />
-            <Button bsStyle="primary" className="center-block" name="submit-button"
-              formNoValidate={true} type="submit" disabled={this.state.submitted}>
-              Submit
-            </Button>
+            <Row>
+              <Col sm={2}>
+                <Button bsStyle="warning" className="btn-block" name="submit-button"
+                  formNoValidate={true} disabled={this.state.submitted}>
+                  Submit
+                </Button>
+              </Col>
+              <Col sm={3}/>
+              <Col sm={3}>
+                <Button bsStyle="primary" className="btn-block" name="save-button"
+                  formNoValidate={true} type="submit">
+                  Save
+                </Button>
+              </Col>
+
+            </Row>
           </FRC.Form>
           { this.state.msg ?
             <Row>
