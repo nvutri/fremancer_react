@@ -7,24 +7,12 @@ class DailySheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      'hours': '',
-      'summary': '',
+      'hours': props.hours,
+      'summary': props.summary,
+      'report_date': props.report_date,
       'validationErrors': {},
       'msg': '',
-      'week_day': ''
     };
-  }
-  componentDidMount() {
-    const self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
-    requestInstance.get(`/api/dailysheets/${this.props.id}/`).then(function (response) {
-      self.setState(response);
-      return response;
-    }).catch(function (err) {
-      self.setState({
-        msg: err.message
-      });
-    });
   }
   save() {
     const data = {

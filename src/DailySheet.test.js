@@ -11,7 +11,6 @@ describe('DailySheet', () => {
   it('Renders <input/> Components', () => {
     const wrapper = shallow(<DailySheet/>);
     expect(wrapper.find('input').exists());
-    expect(wrapper.find('input')).toHaveLength(2)
   });
   it('Set State Change Hours', () => {
     const wrapper = shallow(<DailySheet/>);
@@ -32,16 +31,6 @@ describe('DailySheet', () => {
     var summaryInput = wrapper.find({'name': 'summary'}).first();
     summaryInput.simulate('change', {target: {value: 'Good day'}});
     expect(wrapper.state('summary')).toBe('Good day');
-  });
-  it('Load Value from Server', () => {
-    sinon.spy(DailySheet.prototype, 'componentDidMount');
-    var wrapper = mount(<DailySheet
-      requestConfig={RequestConfig}
-      timesheet={1}
-      report_date={'2017-06-16'}
-      id={1}
-    />);
-    expect(DailySheet.prototype.componentDidMount.calledOnce).toBe(true);
   });
   it('Save changes', () => {
     const wrapper = shallow(<DailySheet

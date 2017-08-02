@@ -41,13 +41,6 @@ class TimeSheet extends Component {
     }).catch(function (err) {
       self.setState({msg: err.message});
     });
-    // Get DailySheet data.
-    requestInstance.get(`/api/dailysheets/?timesheet=${this.state.id}`).then(function (response) {
-      self.setState({daily_sheets: response.results});
-      return response;
-    }).catch(function (err) {
-      self.setState({msg: err.message});
-    });
   }
 
   submit(data) {
@@ -93,8 +86,8 @@ class TimeSheet extends Component {
                 onFocus={(e) => this.setState({focused_id: daily_data.id})}>
                 <DailySheet
                   requestConfig={this.props.requestConfig}
-                  id={daily_data.id}
                   dow={DOW[index]}
+                  {...daily_data}
                 />
               </Col>
             )
@@ -106,6 +99,18 @@ class TimeSheet extends Component {
               this.submit(data);
             }}
             validationErrors={this.state.validationErrors}>
+            <FRC.Input
+              name="total_hours"
+              label="Total Hours"
+              type="number"
+              value={this.state.total_hours}
+              />
+            <FRC.Input
+              name="total_amount"
+              label="Total Amount"
+              type="number"
+              value={this.state.total_amount}
+              />
             <FRC.Textarea
                 name="summary"
                 validations={{
