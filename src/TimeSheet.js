@@ -34,11 +34,17 @@ class TimeSheet extends Component {
     };
     this.daily_sheets = [];
   }
-  componentWillReceiveProps(nextProps) {
+
+  /**
+   * Load timesheet from server.
+   * @param  {[type]} timesheetID [description]
+   * @return {[type]}             [description]
+   */
+  loadTimeSheet(timesheetID) {
     const self = this;
-    const requestInstance = request.defaults(nextProps.requestConfig);
+    const requestInstance = request.defaults(this.props.requestConfig);
     // Get Timesheet data.
-    requestInstance.get(`/api/timesheets/${nextProps.match.params.id}/`).then(function (response) {
+    requestInstance.get(`/api/timesheets/${timesheetID}/`).then(function (response) {
       self.setState(response);
       return response;
     }).catch(function (err) {
@@ -46,6 +52,20 @@ class TimeSheet extends Component {
     });
   }
 
+  componentDidMount() {
+    this.loadTimeSheet(this.state.id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.loadTimeSheet(nextProps.match.params.id);
+  }
+
+  /**
+   * Save form data to server.
+   * Save daily sheets as well as this timesheet.
+   * @param  {[type]} formData [description]
+   * @return {[type]}          [description]
+   */
   save(formData) {
     this.setState({saving: true});
     const data = update(formData, {$merge: {
