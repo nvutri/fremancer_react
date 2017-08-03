@@ -1,5 +1,6 @@
 import request from 'request-promise';
 import moment from 'moment';
+import update from 'react-addons-update';
 
 import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -28,7 +29,8 @@ class TimeSheet extends Component {
       next_timesheet: '',
       msg: null,
       focused_id: null,
-      contract: {}
+      contract: {},
+      saving: false
     };
     this.daily_sheets = [];
   }
@@ -44,13 +46,31 @@ class TimeSheet extends Component {
     });
   }
 
-  save(data) {
+  save(formData) {
+    this.setState({saving: true});
+    const data = update(formData, {$merge: {
+      contract: this.state.contract.id,
+      start_date: this.state.start_date,
+      user: this.state.user
+    }});
     const requestInstance = request.defaults(this.props.requestConfig);
-    return requestInstance.post(`/api/timesheets/${this.state.id}`).form(data).then(function (response) {
+    // Save subsequent daily element data.
+    this.daily_sheets.forEach( (daily_sheet) => {
+      if (daily_sheet.form.refs.formsy.isChanged()) {
+        daily_sheet.form.refs.formsy.submit();
+      }
+    });
+    // Save timesheet data.
+    const self = this;
+    return requestInstance.put(`/api/timesheets/${this.state.id}/`).form(data).then(function (response) {
+      self.setState({saving: false});
       return response;
     }).catch((err) => {
-      self.setState({validationErrors: err.error});
-      self.setState({msg: err.message});
+      self.setState({
+        validationErrors: err.error,
+        msg: err.message,
+        saving: false
+      });
     });
   }
 
@@ -106,6 +126,7 @@ class TimeSheet extends Component {
                 <DailySheet
                     ref={(instance) => {this.daily_sheets[index] = instance} }
                     requestConfig={this.props.requestConfig}
+                    user={this.props.user}
                     dow={DOW[index]}
                     addTotal={this.addTotal.bind(this)}
                     {...daily_data}
@@ -154,14 +175,14 @@ class TimeSheet extends Component {
               <Col sm={2}>
                 <Button bsStyle="warning" className="btn-block" name="submit-button"
                   formNoValidate={true} disabled={this.state.submitted}>
-                  Submit
+                  {this.state.submitted ? 'Submitted' : 'Submit'}
                 </Button>
               </Col>
               <Col sm={3}/>
               <Col sm={3}>
                 <Button bsStyle="primary" className="btn-block" name="save-button"
-                  formNoValidate={true} type="submit">
-                  Save
+                  formNoValidate={true} type="submit" disabled={this.state.saving}>
+                  {this.state.saving ? 'Saving' : 'Save'}
                 </Button>
               </Col>
 

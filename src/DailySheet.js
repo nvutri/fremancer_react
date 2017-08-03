@@ -1,3 +1,4 @@
+import update from 'react-addons-update';
 import React, { Component } from 'react';
 import request from 'request-promise';
 import FRC from 'formsy-react-components';
@@ -11,16 +12,14 @@ class DailySheet extends Component {
       'msg': '',
     };
   }
-  save() {
-    const data = {
+  save(formData) {
+    const data = update(formData, {$merge: {
       timesheet: this.props.timesheet,
-      report_date: this.props.report_date,
-      hours: this.state.hours,
-      summary: this.state.summary
-    };
+      user: this.props.user
+    }});
     const requestInstance = request.defaults(this.props.requestConfig);
     const self = this;
-    return requestInstance.post(`/api/dailysheets/${this.props.id}`).form(data).then(function (response) {
+    return requestInstance.put(`/api/dailysheets/${this.props.id}/`).form(data).then(function (response) {
       return response;
     }).catch(function (err) {
       self.setState({
@@ -29,10 +28,15 @@ class DailySheet extends Component {
       });
     });
   }
+  isPristine() {
+    return this.hoursInput.isPristine() && this.summaryInput.isPristine();
+  }
   render() {
     return (
       <FRC.Form
-        validationErrors={this.state.validationErrors}>
+        validationErrors={this.state.validationErrors}
+        onValidSubmit={this.save.bind(this)}
+        ref={(instance) => {this.form = instance}}>
         <fieldset>
           <legend className="text-center">{this.props.dow}</legend>
           <FRC.Input
@@ -46,13 +50,14 @@ class DailySheet extends Component {
               type="number"
               label="Hours"
               ref={(instance) => {this.hoursInput = instance}}
-              value={this.props.hours}
+              value={this.props.hours ? this.props.hours : ''}
               onKeyUp={ this.props.addTotal }/>
           <FRC.Textarea
               name="summary"
               label="Note"
+              ref={(instance) => {this.summaryInput = instance}}
               placeholder={`${this.props.dow} Note`}
-              value={this.state.summary ? this.state.summary : ''}/>
+              value={this.props.summary ? this.props.summary : ''}/>
         </fieldset>
         { this.state.msg ?
           <Row>
