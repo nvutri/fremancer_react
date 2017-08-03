@@ -32,11 +32,11 @@ class TimeSheet extends Component {
     };
     this.daily_sheets = [];
   }
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
     const self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(nextProps.requestConfig);
     // Get Timesheet data.
-    requestInstance.get(`/api/timesheets/${this.state.id}/`).then(function (response) {
+    requestInstance.get(`/api/timesheets/${nextProps.match.params.id}/`).then(function (response) {
       self.setState(response);
       return response;
     }).catch(function (err) {
@@ -80,16 +80,16 @@ class TimeSheet extends Component {
         <Col sm={10}>
           <Row>
             { this.state.prev_timesheet ?
-              <LinkContainer to={`/timesheets/${this.state.prev_timesheet}/`}>
-                <Button bsStyle="primary" className="pull-left" name="last-week-button">
+              <LinkContainer className="pull-left" to={`/timesheets/${this.state.prev_timesheet}/`}>
+                <Button bsStyle="primary" name="last-week-button">
                   Prev Week
                 </Button>
               </LinkContainer>
               : ''
             }
             { this.state.next_timesheet ?
-              <LinkContainer to={`/timesheets/${this.state.next_timesheet}/`}>
-                <Button bsStyle="primary" className="pull-right" name="next-week-button">
+              <LinkContainer className="pull-right" to={`/timesheets/${this.state.next_timesheet}/`}>
+                <Button bsStyle="primary" name="next-week-button">
                   Next Week
                 </Button>
               </LinkContainer>
