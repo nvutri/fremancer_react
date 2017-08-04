@@ -28,7 +28,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "watch": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/index.js -o ../fremancer/static/js/app.js"
+    "freelancer": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/freelancer/index.js -o ../fremancer/static/js/freelancer.js",
+    "hirer": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/hirer/index.js -o ../fremancer/static/js/hirer.js",
+    "anonymous": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/anonymous/index.js -o ../fremancer/static/js/anonymous.js"
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",

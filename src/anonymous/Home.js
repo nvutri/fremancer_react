@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 import request from 'request-promise'
 
-import LoginForm from './LoginForm'
-
 
 class Home extends Component {
   constructor(props) {
