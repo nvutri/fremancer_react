@@ -4,7 +4,6 @@ import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
 
 import DailySheet from './DailySheet';
-import { RequestConfig } from './TestConfig';
 
 
 describe('DailySheet', () => {
@@ -34,7 +33,6 @@ describe('DailySheet', () => {
   });
   it('Save changes', () => {
     const wrapper = shallow(<DailySheet
-      requestConfig={RequestConfig}
       timesheet={1}
       report_date={'2017-06-16'}
       id={1}

@@ -5,20 +5,15 @@ import request from 'request-promise';
 import sinon from 'sinon';
 
 import Contract from './Contract';
-import { RequestConfig } from './TestConfig';
 
 
 describe('Contract', () => {
   it('Renders Components', () => {
-    const wrapper = shallow(<Contract
-      requestConfig={RequestConfig}
-    />);
+    const wrapper = shallow(<Contract/>);
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
     sinon.spy(Contract.prototype, 'componentWillReceiveProps');
-    var wrapper = mount(<Contract
-      requestConfig={RequestConfig}
-    />);
+    var wrapper = mount(<Contract/>);
   });
 });

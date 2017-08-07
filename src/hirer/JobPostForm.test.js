@@ -6,12 +6,11 @@ import sinon from 'sinon';
 import request from 'request-promise';
 
 import JobPostForm from './JobPostForm';
-import { RequestConfig, TestUser } from './TestConfig';
+import { TestUser } from '../TestConfig';
 
 describe('Job Post Form', () => {
   it('renders three <Input/> components', () => {
     const wrapper = shallow(<JobPostForm
-      requestConfig={RequestConfig}
       user={TestUser}
       id={1}
     />);
@@ -19,7 +18,6 @@ describe('Job Post Form', () => {
   });
   it('Test Form filling', () => {
     var jobForm = shallow(<JobPostForm
-      requestConfig={RequestConfig}
       user={TestUser}
     />);
     const titleInput = jobForm.find({'name': 'title'}).first();
@@ -29,7 +27,6 @@ describe('Job Post Form', () => {
   })
   it('Update Existing Job', async () => {
     const jobForm = shallow(<JobPostForm
-      requestConfig={RequestConfig}
       user={TestUser}
       match={{params: {id: 1}}}
     />);
@@ -55,14 +52,12 @@ describe('Job Post Form', () => {
   it('Load Value from Server', () => {
     sinon.spy(JobPostForm.prototype, 'componentDidMount');
     var wrapper = mount(<JobPostForm
-      requestConfig={RequestConfig}
       params={{id: 1}}
       user={TestUser}
     />);
   });
   it('Test Editability for Owner and non-owner', () => {
     var jobForm = shallow(<JobPostForm
-      requestConfig={RequestConfig}
       user={TestUser}
       params={{id: 1}}
     />);
@@ -72,7 +67,6 @@ describe('Job Post Form', () => {
   });
   it('Load timesheet', async () => {
     const jobForm = shallow(<JobPostForm
-      requestConfig={RequestConfig}
       user={TestUser}
       match={{params: {id: 1}}}
     />);

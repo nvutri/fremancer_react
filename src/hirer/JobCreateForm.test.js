@@ -5,22 +5,18 @@ import sinon from 'sinon';
 import moment from 'moment';
 
 import JobCreateForm from './JobCreateForm';
-import { RequestConfig, TestUser } from './TestConfig';
+import { TestUser } from '../TestConfig';
 
 describe('Job Create Form', () => {
   it('renders three <Input/> components', () => {
     const wrapper = shallow(<JobCreateForm
-      requestConfig={RequestConfig}
       user={TestUser}
       id={1}
     />);
     expect(wrapper.find(Input).exists());
   });
   it('Test Form filling', () => {
-    var jobForm = shallow(<JobCreateForm
-      requestConfig={RequestConfig}
-      user={TestUser}
-    />);
+    var jobForm = shallow(<JobCreateForm user={TestUser} />);
     const titleInput = jobForm.find({'name': 'title'}).first();
     expect(titleInput.exists());
     titleInput.value = 'Test Input Title';
@@ -28,7 +24,6 @@ describe('Job Create Form', () => {
   })
   it('Create New Job', async () => {
     var jobForm = shallow(<JobCreateForm
-      requestConfig={RequestConfig}
       user={TestUser}
       history={[]}
     />);
