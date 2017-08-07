@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Jumbotron } from 'react-bootstrap'
 import { Input, Form, Select } from 'formsy-react-components';
 import request from 'request-promise'
+import { RequestConfig } from './Config'
 
 
 class SignUpForm extends Component {
@@ -12,8 +13,8 @@ class SignUpForm extends Component {
     };
   }
   submit(data) {
-    var self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const self = this;
+    const requestInstance = request.defaults(RequestConfig);
     return requestInstance.post('/api/users/').form(data).then( (response) => {
       if (response.errors) {
         self.setState({validationErrors: response.errors});

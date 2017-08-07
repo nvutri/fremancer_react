@@ -6,6 +6,7 @@ import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
 import { LinkContainer } from 'react-router-bootstrap';
 import Select from 'react-select'
+import { RequestConfig } from '../Config'
 
 
 class JobPostForm extends Component {
@@ -37,7 +38,7 @@ class JobPostForm extends Component {
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
     data['accepted'] = this.state.accepted;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     if (this.state.id) {
       // Update an existing job by PUT request with the ID..
       const url = `/api/contracts/${this.state.id}/`;
@@ -61,7 +62,7 @@ class JobPostForm extends Component {
       start_date: lastMonday,
       user: this.props.user.id
     };
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     return requestInstance.post('/api/timesheets/').form(data).then( (response) => {
       self.setState({timesheet: response.id});
       return response;
@@ -73,7 +74,7 @@ class JobPostForm extends Component {
    * @return {[Promise]} A promise of the AJAX request for opening timesheet.
    */
   loadTimeSheet() {
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     const url = `/api/timesheets/?contract=${this.state.id}`;
     const self = this;
     return requestInstance.get(url).then( (response) => {
@@ -99,7 +100,7 @@ class JobPostForm extends Component {
   componentDidMount() {
     const self = this;
     if (this.state.id) {
-      const requestInstance = request.defaults(this.props.requestConfig);
+      const requestInstance = request.defaults(RequestConfig);
       const url = `/api/contracts/${this.state.id}/`;
       const result = requestInstance.get(url).then( (response) => {
         if (self.props.user) {
@@ -124,7 +125,7 @@ class JobPostForm extends Component {
    * @return {[Object.{'value': String, 'label': String}]} a list of options.
    */
   loadFreelancers() {
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     const url = '/api/profiles/?membership=freelancer';
     return requestInstance.get(url).then(function (response) {
       const options = response.results.map(function(item) {

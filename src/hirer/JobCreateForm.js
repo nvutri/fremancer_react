@@ -1,10 +1,11 @@
 import request from 'request-promise';
 import React, { Component } from 'react';
 import Formsy from 'formsy-react';
-import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import { LinkContainer } from 'react-router-bootstrap';
 import Select from 'react-select'
+import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap';
+import { RequestConfig } from '../Config'
 
 
 class JobCreateForm extends Component {
@@ -29,7 +30,7 @@ class JobCreateForm extends Component {
     // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     // Create a new job.
     const url = '/api/contracts/';
     return requestInstance.post(url).form(data).then(function (response) {
@@ -40,7 +41,7 @@ class JobCreateForm extends Component {
     });
   }
   loadFreelancers() {
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     const url = '/api/profiles/?membership=freelancer';
     return requestInstance.get(url).then(function (response) {
       const options = response.results.map(function(item) {

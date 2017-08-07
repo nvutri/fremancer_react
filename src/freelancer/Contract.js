@@ -3,7 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
-
+import { RequestConfig } from '../Config'
 
 class Contract extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class Contract extends Component {
 
   componentDidMount() {
     const self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     if (this.props.user) {
       const membership = this.props.user.membership;
       const url = `/api/contracts/?${membership}=${this.props.user.id}`

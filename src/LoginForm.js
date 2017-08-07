@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap'
 import { Input, Form } from 'formsy-react-components';
+import { RequestConfig } from './Config'
 
 
 class LoginForm extends Component {
@@ -13,7 +14,6 @@ class LoginForm extends Component {
   handleLogIn(authData) {
     const self = this;
     this.props.authenticate(authData).then( (response) => {
-      console.log(response);
       if (response.error) {
         self.setState({
           validationErrors: response.error

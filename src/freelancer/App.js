@@ -19,7 +19,6 @@ import JobTable from './JobTable';
 import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
-
 class App extends AppBase {
   render() {
     return (
@@ -69,7 +68,6 @@ class App extends AppBase {
           <Route path="/login/" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
-              requestConfig={this.state.requestConfig}
               authenticate={this.authenticate.bind(this)}
               {...props}
             />
@@ -77,19 +75,16 @@ class App extends AppBase {
           <Route path="/signup/" render={ (props) =>
             <SignUpForm
               requestConfig={this.state.requestConfig}
-              authenticate={this.authenticate.bind(this)}
               {...props}
             />
           }/>
           <Route exact path='/jobs/' render={ (props) =>
             <JobTable
-              requestConfig={this.state.requestConfig}
               {...props}
             />
           }/>
           <Route path="/contracts/" render={ (props) =>
             <Contract
-              requestConfig={this.state.requestConfig}
               user={this.state.user}
             />
           }/>
@@ -97,21 +92,18 @@ class App extends AppBase {
             <Switch>
               <Route exact path='/timesheets/' render={ (props) =>
                 <TimeSheetTable
-                  requestConfig={this.state.requestConfig}
                   user={this.state.user}
                   {...props}
                 />
               }/>
               <Route exact path="/timesheets/create/" render={ (props) =>
                 <TimeSheetCreate
-                  requestConfig={this.state.requestConfig}
                   user={this.state.user}
                   {...props}
                 />
               }/>
               <Route path="/timesheets/:id/" render={ (props) =>
                 <TimeSheet
-                  requestConfig={this.state.requestConfig}
                   user={this.state.user}
                   {...props}
                 />

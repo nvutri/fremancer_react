@@ -2,6 +2,7 @@ import update from 'react-addons-update';
 import React, { Component } from 'react';
 import request from 'request-promise';
 import FRC from 'formsy-react-components';
+import { RequestConfig } from '../Config'
 
 
 class DailySheet extends Component {
@@ -17,7 +18,7 @@ class DailySheet extends Component {
       timesheet: this.props.timesheet,
       user: this.props.user
     }});
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     const self = this;
     return requestInstance.put(`/api/dailysheets/${this.props.id}/`).form(data).then(function (response) {
       return response;

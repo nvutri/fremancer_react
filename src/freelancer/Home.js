@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
-import request from 'request-promise'
 
 
 class Home extends Component {

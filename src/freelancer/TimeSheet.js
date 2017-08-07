@@ -9,6 +9,8 @@ import FRC from 'formsy-react-components';
 import DatePicker from 'react-datepicker';
 
 import DailySheet from './DailySheet';
+import { RequestConfig } from '../Config'
+
 
 const DOW = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -42,7 +44,7 @@ class TimeSheet extends Component {
    */
   loadTimeSheet(timesheetID) {
     const self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     // Get Timesheet data.
     requestInstance.get(`/api/timesheets/${timesheetID}/`).then(function (response) {
       self.setState(response);
@@ -73,7 +75,7 @@ class TimeSheet extends Component {
       start_date: this.state.start_date,
       user: this.state.user
     }});
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     // Save subsequent daily element data.
     this.daily_sheets.forEach( (daily_sheet) => {
       if (daily_sheet.form.refs.formsy.isChanged()) {

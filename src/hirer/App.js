@@ -67,14 +67,12 @@ class App extends AppBase {
           <Route path="/login/" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
-              requestConfig={this.state.requestConfig}
               authenticate={this.authenticate.bind(this)}
               {...props}
             />
           }/>
           <Route path="/signup/" render={ (props) =>
             <SignUpForm
-              requestConfig={this.state.requestConfig}
               authenticate={this.authenticate.bind(this)}
               {...props}
             />
@@ -83,20 +81,17 @@ class App extends AppBase {
             <Switch>
               <Route exact path='/jobs/' render={ (props) =>
                 <JobTable
-                  requestConfig={this.state.requestConfig}
                   {...props}
                 />
               }/>
               <Route exact path='/jobs/create/' render={ (props) =>
                 <JobCreateForm
-                  requestConfig={this.state.requestConfig}
                   user={this.state.user}
                   {...props}
                 />
               }/>
               <Route path='/jobs/:id/' render={ (props) =>
                 <JobPostForm
-                    requestConfig={this.state.requestConfig}
                     user={this.state.user}
                     {...props}
                   />
@@ -105,7 +100,6 @@ class App extends AppBase {
           }/>
           <Route path="/contracts/" render={ (props) =>
             <Contract
-              requestConfig={this.state.requestConfig}
               user={this.state.user}
             />
           }/>

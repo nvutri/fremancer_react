@@ -3,6 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
+import { RequestConfig } from '../Config'
 
 
 class JobTable extends Component {
@@ -15,7 +16,7 @@ class JobTable extends Component {
 
   componentDidMount() {
     const self = this;
-    const requestInstance = request.defaults(this.props.requestConfig);
+    const requestInstance = request.defaults(RequestConfig);
     requestInstance.get('/api/contracts/').then(function (response) {
       self.setState({data: response.results});
       return response;
