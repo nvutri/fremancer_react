@@ -10,64 +10,18 @@ import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
 import store from 'store'
 
+import AppBase from '../AppBase'
+import LoginForm from '../LoginForm';
+import SignUpForm from '../SignUpForm';
 import Contract from './Contract';
 import Home from './Home';
-import LoginForm from '../LoginForm';
 import JobTable from './JobTable';
 import JobPostForm from './JobPostForm';
 import JobCreateForm from './JobCreateForm';
-import SignUpForm from '../SignUpForm';
 
 
-class App extends Component {
+class App extends AppBase {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      requestConfig: {
-        baseUrl: 'http://localhost:8000',
-        json: true
-      },
-      authenticated: false
-    }
-  }
-  componentWillMount() {
-    const authData = store.get('auth');
-    if (authData) {
-      this.authenticate(authData);
-    }
-    const userData = store.get('user');
-    if (userData) {
-      this.state.user = userData;
-    }
-  }
-  authenticate(authData) {
-    var requestInstance = request.defaults(this.state.requestConfig);
-    var self = this;
-    return requestInstance.post('/authenticate/').form(authData).then( (res) => {
-      // Save authentication data in the local storage for later re-login.
-      store.set('auth', authData);
-      store.set('user', res);
-      // Set the authentication state.
-      self.state.requestConfig['auth'] = authData;
-      self.setState({
-        authenticated: true,
-        user: res
-      });
-      return res;
-    }).catch( (errors) => {
-      return errors
-    });
-  }
-  removeAuth() {
-    store.remove('auth');
-    store.remove('user');
-    this.setState({
-      authenticated: false,
-      user: null
-    })
-    window.location = '/login/';
-  }
   render() {
     return (
       <Router>

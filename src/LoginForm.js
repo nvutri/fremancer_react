@@ -19,7 +19,8 @@ class LoginForm extends Component {
           validationErrors: response.error
         });
       } else {
-        self.props.history.push('/');
+        // Reload page to load a different app for different types of users.
+        window.location.assign('/');
       }
     });
   }

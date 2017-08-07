@@ -22,7 +22,8 @@ class SignUpForm extends Component {
           'username': data['email'],
           'password': data['password']
         }).then( () => {
-          self.props.history.push('/');
+          // Reload page to get a different app assigned for specific user.
+          window.location.assign('/');
         })
       }
       return response;
