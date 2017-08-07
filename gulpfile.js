@@ -3,8 +3,12 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-clean-css');
 
 gulp.task('default', function () {
-  return gulp.src(['css/*.css'])
-    .pipe(concat('bundle.css'))
-    .pipe(minifyCss())
-    .pipe(gulp.dest('public/'));
+  return gulp.src([
+    'css/bootstrap.min.css',
+    'css/react-bootstrap-table-all.min.css',
+    'css/react-select.min.css',
+    'css/react-datepicker.css',
+    'css/app.css'
+  ]).pipe(concat('bundle.css'))
+    .pipe(gulp.dest('../fremancer/static/'));
 });
