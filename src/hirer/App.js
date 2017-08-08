@@ -18,6 +18,7 @@ import Home from './Home';
 import JobTable from './JobTable';
 import JobPostForm from './JobPostForm';
 import JobCreateForm from './JobCreateForm';
+import Payment from './Payment';
 
 
 class App extends AppBase {
@@ -49,6 +50,9 @@ class App extends AppBase {
                 <Nav pullRight>
                   <NavDropdown eventKey="1" title={this.state.user.username} id="nav-dropdown">
                     <MenuItem eventKey="1.1" onClick={this.removeAuth.bind(this)}>Log Out</MenuItem>
+                    <LinkContainer to="/accounts/payment/">
+                      <MenuItem eventKey="1.2">Payment</MenuItem>
+                    </LinkContainer>
                   </NavDropdown>
                 </Nav>
                   :
@@ -64,6 +68,15 @@ class App extends AppBase {
             </Navbar.Collapse>
           </Navbar>
           <Route exact path="/" component={Home}/>
+          <Route path="/accounts/" render={() =>
+            <Switch>
+              <Route exact path='/accounts/payment/' render={ (props) =>
+                <Payment
+                  user={this.state.user}
+                  {...props}/>
+              }/>
+            </Switch>
+          }/>
           <Route path="/login/" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
@@ -80,9 +93,7 @@ class App extends AppBase {
           <Route path="/jobs/" render={() =>
             <Switch>
               <Route exact path='/jobs/' render={ (props) =>
-                <JobTable
-                  {...props}
-                />
+                <JobTable {...props}/>
               }/>
               <Route exact path='/jobs/create/' render={ (props) =>
                 <JobCreateForm
@@ -92,15 +103,16 @@ class App extends AppBase {
               }/>
               <Route path='/jobs/:id/' render={ (props) =>
                 <JobPostForm
-                    user={this.state.user}
-                    {...props}
-                  />
+                  user={this.state.user}
+                  {...props}
+                />
               }/>
             </Switch>
           }/>
           <Route path="/contracts/" render={ (props) =>
             <Contract
               user={this.state.user}
+              {...props}
             />
           }/>
         </div>

@@ -18,6 +18,7 @@
     "react-router-dom": "^4.1.1",
     "react-scripts": "1.0.10",
     "react-select": "^1.0.0-rc.5",
+    "react-stripe-checkout": "^2.6.3",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "sinon": "^2.3.7",
@@ -30,7 +31,10 @@
     "eject": "react-scripts eject",
     "freelancer": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/freelancer/index.js -o ../fremancer/static/js/freelancer.js",
     "hirer": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/hirer/index.js -o ../fremancer/static/js/hirer.js",
-    "anonymous": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/anonymous/index.js -o ../fremancer/static/js/anonymous.js"
+    "anonymous": "watchify -v -t [ babelify --presets [ es2015 react ] ] src/anonymous/index.js -o ../fremancer/static/js/anonymous.js",
+    "build_anonymous": "browserify -t [ babelify --presets [ es2015 react ] ]  src/anonymous/index.js | uglifyjs -mc > ../fremancer/static/js/anonymous.js",
+    "build_freelancer": "browserify -t [ babelify --presets [ es2015 react ] ]  src/freelancer/index.js | uglifyjs -mc > ../fremancer/static/js/freelancer.js",
+    "build_hirer": "browserify -t [ babelify --presets [ es2015 react ] ]  src/hirer/index.js | uglifyjs -mc > ../fremancer/static/js/hirer.js"
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",
@@ -42,6 +46,7 @@
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.7.0",
     "jest": "^20.0.4",
-    "react-test-renderer": "^15.6.1"
+    "react-test-renderer": "^15.6.1",
+    "uglify-js": "^3.0.27"
   }
 }

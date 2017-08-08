@@ -3,7 +3,9 @@ const RequestConfig = {
   json: true
 };
 
+const StripePublicKey = 'pk_test_oGK6r9tcVMDUJ5jn6dGrWpZJ';
 
 module.exports = {
-  RequestConfig
+  RequestConfig,
+  StripePublicKey
 };

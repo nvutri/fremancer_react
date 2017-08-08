@@ -50,7 +50,7 @@ class LoginForm extends Component {
               placeholder="Choose a password" required/>
         </fieldset>
         <fieldset>
-          <Button className="btn btn-primary" formNoValidate={true} type="submit">Login</Button>
+          <Button className="btn btn-primary center-block" formNoValidate={true} type="submit">Login</Button>
         </fieldset>
       </Form>
     );
