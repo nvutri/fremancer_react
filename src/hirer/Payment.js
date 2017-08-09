@@ -53,8 +53,9 @@ class Payment extends Component {
               striped={true}
               hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true} hidden></TableHeaderColumn>
+                <TableHeaderColumn dataField="brand">Card Type</TableHeaderColumn>
                 <TableHeaderColumn dataField="name">Card Name</TableHeaderColumn>
-                <TableHeaderColumn dataField="last4">Card Number</TableHeaderColumn>
+                <TableHeaderColumn dataField="last4" dataFormat={(cell, row) => `...${cell}`}>Card Number</TableHeaderColumn>
                 <TableHeaderColumn dataField="exp">Expiration</TableHeaderColumn>
             </BootstrapTable>
           }

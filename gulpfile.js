@@ -11,5 +11,5 @@ gulp.task('default', function () {
     'css/font-awesome.min.css',
     'css/app.css'
   ]).pipe(concat('bundle.css'))
-    .pipe(gulp.dest('../fremancer/static/'));
+    .pipe(gulp.dest('../fremancer/static/css/'));
 });
