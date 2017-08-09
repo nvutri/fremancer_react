@@ -49,10 +49,10 @@ class App extends AppBase {
               { this.state.authenticated ?
                 <Nav pullRight>
                   <NavDropdown eventKey="1" title={this.state.user.username} id="nav-dropdown">
-                    <MenuItem eventKey="1.1" onClick={this.removeAuth.bind(this)}>Log Out</MenuItem>
-                    <LinkContainer to="/accounts/payment/">
-                      <MenuItem eventKey="1.2">Payment</MenuItem>
-                    </LinkContainer>
+                  <LinkContainer to="/accounts/payment/">
+                    <MenuItem eventKey="1.2">Payment</MenuItem>
+                  </LinkContainer>
+                  <MenuItem eventKey="1.1" onClick={this.removeAuth.bind(this)}>Log Out</MenuItem>
                   </NavDropdown>
                 </Nav>
                   :

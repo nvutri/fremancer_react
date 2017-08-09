@@ -8,6 +8,7 @@ gulp.task('default', function () {
     'css/react-bootstrap-table-all.min.css',
     'css/react-select.min.css',
     'css/react-datepicker.css',
+    'css/font-awesome.min.css',
     'css/app.css'
   ]).pipe(concat('bundle.css'))
     .pipe(gulp.dest('../fremancer/static/'));
