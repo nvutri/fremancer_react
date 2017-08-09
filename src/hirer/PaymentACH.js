@@ -1,8 +1,7 @@
 import request from 'request-promise'
-import update from 'react-addons-update';
 
 import React, { Component } from 'react';
-import {Row, Jumbotron, Button, Col, Alert} from 'react-bootstrap'
+import {Alert, Button, Col, Jumbotron, Row} from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome';
 import { RequestConfig, StripePublicKey } from '../Config';
 import Stripe from 'stripe-client';
@@ -15,7 +14,7 @@ class PaymentACH extends Component {
     super(props);
     this.state = {
       payments: null,
-      loading: true,
+      loading: false,
       validationErrors: {},
       msg: ''
     };
@@ -24,15 +23,23 @@ class PaymentACH extends Component {
     const requestInstance = request.defaults(RequestConfig);
     const self = this;
     return requestInstance.post('/api/invoices/create_payment/').form(token).then( (res) => {
-      console.log(res);
+      self.setState({
+        loading: false
+      });
+      self.props.loadPaymentOptions();
+    }).catch( (response) => {
+      self.setState({
+        loading: false,
+        msg: response.message
+      });
     });
   }
-  submit(formData) {
+  submit(data) {
     const self = this;
-    const data = update(formData, {$merge: {
-      country: 'US',
-      currency: 'usd'
-    }});
+    this.setState({
+      loading: true,
+      msg: ''
+    });
     return stripe.createToken({'bank_account': data})
       .then( result => result.json())
       .then( result => {
@@ -41,21 +48,35 @@ class PaymentACH extends Component {
         } else {
           self.setState({
             validationErrors: result.error,
-            msg: result.error.message
+            msg: result.error.message,
+            loading: false
           });
         }
         return result;
       }).catch( response => {
-        self.setState(
+        self.setState({
           msg: response.error
-        )
+        });
       });
   }
   render() {
+    const user = this.props.user;
     return <FRC.Form
       onValidSubmit={this.submit.bind(this)}
       validationErrors={this.state.validationErrors}>
       <fieldset>
+        <FRC.Input
+            name="country"
+            label="Country"
+            value="US"
+            disabled
+            required/>
+        <FRC.Input
+            name="currency"
+            label="Currency"
+            value="USD"
+            disabled
+            required/>
         <FRC.Input
             name="account_holder_name"
             label="Account Holder Name"
@@ -67,6 +88,7 @@ class PaymentACH extends Component {
               isWords: 'Please Enter a Valid Name',
               minLength: 'Name minimum length is 6'
             }}
+            value={`${user.first_name} ${user.last_name}`}
             placeholder="What is your account holder name?"
             required/>
         <FRC.Select
@@ -111,20 +133,16 @@ class PaymentACH extends Component {
         <fieldset>
           <Button bsStyle="primary" className="center-block"
             name="submit-button"
-            formNoValidate={true} type="submit">
-            <FontAwesome name='plus' size='lg'/>
-            {' Add Bank Account '}
-            <FontAwesome name='bank' size='lg'/>
+            formNoValidate={true} type="submit"
+            disabled={this.state.loading}>
+            { this.state.loading ? 'Verifying Payment': 'Add Bank Payment'}
           </Button>
         </fieldset>
         { this.state.msg ?
           <Row>
-            <Col sm={3}/>
-            <Col sm={9}>
-              <Alert bsStyle="danger">
-                {this.state.msg}
-              </Alert>
-            </Col>
+            <Alert bsStyle="danger">
+              {this.state.msg}
+            </Alert>
           </Row>
           : ''
         }
