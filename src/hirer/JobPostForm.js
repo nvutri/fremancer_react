@@ -1,7 +1,6 @@
 import request from 'request-promise';
 import moment from 'moment';
 import React, { Component } from 'react';
-import Formsy from 'formsy-react';
 import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
 import { LinkContainer } from 'react-router-bootstrap';

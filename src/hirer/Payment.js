@@ -6,6 +6,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import StripeCheckout from 'react-stripe-checkout';
 import FontAwesome from 'react-fontawesome';
 import { RequestConfig, StripePublicKey } from '../Config';
+import PaymentACH from './PaymentACH';
 
 class Payment extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ class Payment extends Component {
           }
           </Row>
           <Row>
+            <hr/>
             <StripeCheckout
               name="Fremancer" // the pop-in header title
               description="Fremancer Payments" // the pop-in header subtitle
@@ -79,6 +81,10 @@ class Payment extends Component {
                   <FontAwesome name='credit-card' size='lg'/>
                 </button>
             </StripeCheckout>
+          </Row>
+          <hr/>
+          <Row>
+            <PaymentACH/>
           </Row>
         </Col>
       </Row>

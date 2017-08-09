@@ -23,7 +23,8 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "sinon": "^2.3.7",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "stripe-client": "^1.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,8 +39,10 @@
     "build_hirer": "browserify -t [ babelify --presets [ es2015 react ] ]  src/hirer/index.js | uglifyjs -mc > ../fremancer/static/js/hirer.js"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "css-modulesify": "^0.28.0",
