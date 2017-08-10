@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import FRC from 'formsy-react-components';
 import { Button, Col, ControlLabel, Form, FormGroup, Jumbotron, Row } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { RequestConfig } from './Config';
+import { RequestConfig } from '../Config';
 
 class Contract extends Component {
   constructor(props) {
