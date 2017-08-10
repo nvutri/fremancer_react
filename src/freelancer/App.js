@@ -14,8 +14,10 @@ import Home from './Home';
 import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
+
+import ContractTable from '../ContractTable';
 import Contract from './Contract';
-import JobTable from './JobTable';
+
 import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
@@ -34,9 +36,6 @@ class App extends AppBase {
             <Navbar.Collapse>
               { this.state.authenticated ?
               <Nav>
-                <LinkContainer to="/jobs/">
-                 <NavItem eventKey={3}>Job Board</NavItem>
-                </LinkContainer>
                 <LinkContainer to="/contracts/">
                  <NavItem eventKey={4}>Contracts</NavItem>
                 </LinkContainer>
@@ -78,15 +77,20 @@ class App extends AppBase {
               {...props}
             />
           }/>
-          <Route exact path='/jobs/' render={ (props) =>
-            <JobTable
-              {...props}
-            />
-          }/>
           <Route path="/contracts/" render={ (props) =>
-            <Contract
-              user={this.state.user}
-            />
+            <Switch>
+              <Route exact path='/contracts/' render={ (props) =>
+                <ContractTable
+                  user={this.state.user}
+                />
+              }/>
+              <Route path='/contracts/:id/' render={ (props) =>
+                <Contract
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
           }/>
           <Route path="/timesheets/" render={ () =>
             <Switch>

@@ -13,11 +13,8 @@ import store from 'store'
 import AppBase from '../AppBase'
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import Contract from './Contract';
+import ContractTable from '../ContractTable';
 import Home from './Home';
-import JobTable from './JobTable';
-import JobPostForm from './JobPostForm';
-import JobCreateForm from './JobCreateForm';
 import Payment from './Payment';
 
 
@@ -37,9 +34,6 @@ class App extends AppBase {
             <Navbar.Collapse>
               { this.state.authenticated ?
               <Nav>
-                <LinkContainer to="/jobs/">
-                 <NavItem eventKey={3}>Job Board</NavItem>
-                </LinkContainer>
                 <LinkContainer to="/contracts/">
                  <NavItem eventKey={4}>Contracts</NavItem>
                 </LinkContainer>

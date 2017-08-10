@@ -3,10 +3,9 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
-import { RequestConfig } from '../Config'
+import { RequestConfig } from './Config'
 
-
-class Contract extends Component {
+class ContractTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +30,7 @@ class Contract extends Component {
 
   linkFormatter(cell, row) {
     return (
-      <LinkContainer to={`/jobs/${row.id}/`}>
+      <LinkContainer to={`/contracts/${row.id}/`}>
         <a href="#">{row.title}</a>
       </LinkContainer>
     );
@@ -60,4 +59,4 @@ class Contract extends Component {
   }
 }
 
-export default Contract;
+export default ContractTable;

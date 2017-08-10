@@ -5,6 +5,7 @@ import request from 'request-promise';
 import sinon from 'sinon';
 
 import Contract from './Contract';
+import { TestUser } from './TestConfig';
 
 
 describe('Contract', () => {
@@ -13,7 +14,9 @@ describe('Contract', () => {
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
-    sinon.spy(Contract.prototype, 'componentWillReceiveProps');
-    var wrapper = mount(<Contract/>);
+    sinon.spy(Contract.prototype, 'componentDidMount');
+    var wrapper = mount(<Contract
+        user={TestUser}
+      />);
   });
 });
