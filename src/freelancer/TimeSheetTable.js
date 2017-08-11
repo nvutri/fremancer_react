@@ -70,25 +70,27 @@ class TimeSheetTable extends Component {
       sizePerPage: this.state.sizePerPage,
     };
     return (
-      <Jumbotron>
-        <Row>
-          <Col md={2}></Col>
-          <Col md={8}>
-            <LinkContainer to="/timesheets/create/">
-              <Button bsStyle="primary">Create TimeSheet</Button>
-            </LinkContainer>
-            <BootstrapTable
-              data={this.state.data} striped={true} hover={true}>
-                <TableHeaderColumn dataField="id" isKey={true}>TimeSheet ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="contract">Contract ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="start_date" dataFormat={ this.linkFormatter } dataSort={true} >Week</TableHeaderColumn>
-                <TableHeaderColumn dataField="summary" dataSort={true}>Summary</TableHeaderColumn>
-                <TableHeaderColumn dataField="total_hours" dataSort={true}>Total Hours</TableHeaderColumn>
-                <TableHeaderColumn dataField="total_amount" dataSort={true}>Amount</TableHeaderColumn>
-            </BootstrapTable>
-          </Col>
-        </Row>
-      </Jumbotron>
+      <Row>
+        <Col md={2}></Col>
+        <Col md={8}>
+          <BootstrapTable
+            data={this.state.data}
+            remote={true}
+            pagination={true}
+            options={ options }
+            fetchInfo={{dataTotalSize: this.state.dataTotalSize}}
+            striped={true}
+            hover={true}>
+              <TableHeaderColumn dataField="start_date" dataFormat={ this.timesheetLinkFormatter } dataSort={true} >Week</TableHeaderColumn>
+              <TableHeaderColumn dataField="id" isKey={true} hidden>ID</TableHeaderColumn>
+              <TableHeaderColumn dataField="contract_title" dataFormat={ this.contractLinkFormatter }>Contract</TableHeaderColumn>
+              <TableHeaderColumn dataField="summary">Summary</TableHeaderColumn>
+              <TableHeaderColumn dataField="total_hours">Total Hours</TableHeaderColumn>
+              <TableHeaderColumn dataField="total_amount">Amount</TableHeaderColumn>
+              <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
+          </BootstrapTable>
+        </Col>
+      </Row>
     );
   }
 }
