@@ -1,4 +1,5 @@
 import React from 'react';
+import request from 'request-promise'
 
 const TestUser = {
   'username': 'freelancer@gmail.com',
@@ -31,7 +32,18 @@ const RouterContext = {
   childContextTypes: {router: React.PropTypes.object}
 };
 
+function Authenticate(authData) {
+  if (!authData) {
+    authData = TestUser;
+  }
+  const requestInstance = request.defaults(RequestConfig);
+  return requestInstance.post('/api/users/authenticate/').form(authData).then( (res) => {
+    return res;
+  });
+}
+
 module.exports = {
+  Authenticate,
   TestUser,
   RequestConfig,
   RouterContext
