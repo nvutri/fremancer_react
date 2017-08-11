@@ -4,17 +4,16 @@ import { mount, shallow } from 'enzyme';
 import request from 'request-promise';
 import sinon from 'sinon';
 
-import JobTable from './JobTable';
+import ContractTable from './ContractTable';
 
 
-describe('JobTable', () => {
+describe('ContractTable', () => {
   it('Renders Components', () => {
-    const wrapper = shallow(<JobTable/>);
+    const wrapper = shallow(<ContractTable/>);
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
-    sinon.spy(JobTable.prototype, 'componentDidMount');
-    var wrapper = mount(<JobTable/>);
-    expect(JobTable.prototype.componentDidMount.calledOnce).toBe(true);
+    sinon.spy(ContractTable.prototype, 'componentWillReceiveProps');
+    var wrapper = mount(<ContractTable/>);
   });
 });

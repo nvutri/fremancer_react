@@ -8,27 +8,15 @@ import Select from 'react-select'
 import { RequestConfig } from '../Config'
 
 
-class JobPostForm extends Component {
+class ContractPostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       view: true,
-      editable: false,
-      acceptable: false,
-      title: '',
-      description: '',
-      hourly_rate: '',
-      max_weekly_hours: '',
       hirer: this.props.user ? this.props.user.id : null,
-      freelancer: null,
-      total_budget: '',
-      duration: '',
-      budget_type: '',
-      application_type: '',
-      accepted: false,
-      id: this.props.match && this.props.match.params ? this.props.match.params.id : null,
+      id: props.match.params.id,
+      payments: [],
       validationErrors: {},
-      timesheet: ''
     };
   }
   submit(data) {
@@ -36,10 +24,9 @@ class JobPostForm extends Component {
     // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
-    data['accepted'] = this.state.accepted;
     const requestInstance = request.defaults(RequestConfig);
     if (this.state.id) {
-      // Update an existing job by PUT request with the ID..
+      // Update an existing Contract by PUT request with the ID..
       const url = `/api/contracts/${this.state.id}/`;
       return requestInstance.put(url).form(data).then(function (response) {
         self.setState({view : true});
@@ -48,24 +35,6 @@ class JobPostForm extends Component {
         self.setState({validationErrors: err.error});
       });
     }
-  }
-  /**
-   * Create TimeSheet of the latest one.
-   * @param  {String} lastMonday a start_date of the latest Monday.
-   * @return {[type]}            [description]
-   */
-  createLatestTimeSheet(lastMonday) {
-    const self = this;
-    const data = {
-      contract: this.state.id,
-      start_date: lastMonday,
-      user: this.props.user.id
-    };
-    const requestInstance = request.defaults(RequestConfig);
-    return requestInstance.post('/api/timesheets/').form(data).then( (response) => {
-      self.setState({timesheet: response.id});
-      return response;
-    });
   }
   /**
    * Load timesheet ID of this week.
@@ -83,42 +52,39 @@ class JobPostForm extends Component {
         return {};
       }
     }).then( (response) => {
-      const lastMonday = moment().day('Monday').format('YYYY-MM-DD');
-      if (lastMonday === response.start_date) {
+      if (response.start_date) {
         self.setState({timesheet: response.id});
         return response;
-      } else {
-        return self.createLatestTimeSheet(lastMonday);
       }
     });
   }
   /**
-   * Get related data of this job post.
+   * Get related data of this Contract post.
    * @return {Promise} a promise of the given AJAX data.
    */
   componentDidMount() {
     const self = this;
-    if (this.state.id) {
-      const requestInstance = request.defaults(RequestConfig);
-      const url = `/api/contracts/${this.state.id}/`;
-      const result = requestInstance.get(url).then( (response) => {
-        if (self.props.user) {
-          // Make edit switch visible if the user is the job creator.
-          response['editable'] = self.props.user.id == response.hirer;
-          response['is_freelancer'] = self.props.user.id == response.freelancer
-          response['acceptable'] = response.is_freelancer && (!response.accepted);
+    const requestInstance = request.defaults(RequestConfig);
+    requestInstance.get('/api/invoices/list_payments/').then( response => {
+      const paymentOptions = response.data.map( item => {
+        return {
+          value: item.id,
+          label: `${item.name}: ${item.brand} - ${item.last4} ${item.exp}`
         }
-        self.setState(response);
-        if (response.is_freelancer) {
-          self.loadTimeSheet();
-        }
-        return response;
-      }).catch( (err) => {
-        self.setState({validationErrors: err.error});
       });
-      return result;
-    }
+      self.setState({
+        payments: paymentOptions
+      });
+    });
+    return requestInstance.get(`/api/contracts/${this.state.id}/`).then( (response) => {
+      self.setState(response);
+      self.loadTimeSheet();
+      return response;
+    }).catch( (err) => {
+      self.setState({validationErrors: err.error});
+    });
   }
+
   /**
    * Load freelancer to selector input.
    * @return {[Object.{'value': String, 'label': String}]} a list of options.
@@ -142,15 +108,6 @@ class JobPostForm extends Component {
       console.log(err);
     });
   }
-  toggleEdit() {
-    this.setState({
-      view: !this.state.view
-    });
-  }
-  acceptProject() {
-    this.state.accepted = true;
-    this.submit(this.state);
-  }
   render() {
     var self = this;
     var frcForm = <FRC.Form
@@ -158,7 +115,7 @@ class JobPostForm extends Component {
       validationErrors={this.state.validationErrors}>
       <Row>
         {
-          this.state.is_freelancer && this.state.timesheet ?
+          this.state.timesheet ?
             <LinkContainer to={`/timesheets/${this.state.timesheet}/`}>
               <Button bsStyle="primary"
                 name="timesheet-button"
@@ -168,17 +125,14 @@ class JobPostForm extends Component {
             </LinkContainer>
             : ''
         }
-        {
-          this.state.editable ?
-            <Button bsStyle="default"
-              name="edit-button"
-              formNoValidate={true} type="button" onClick={this.toggleEdit.bind(this)}>
-              {
-                this.state.view ? 'Edit': 'View'
-              }
-            </Button>
-          : ''
-        }
+        <Button bsStyle="default"
+          name="edit-button"
+          formNoValidate={true} type="button"
+          onClick={ e => this.setState({view: !this.state.view}) }>
+          {
+            this.state.view ? 'Edit': 'View'
+          }
+        </Button>
       </Row>
       <fieldset>
         <FRC.Input
@@ -279,9 +233,30 @@ class JobPostForm extends Component {
                 name="freelancer"
                 value={this.state.freelancer}
                 loadOptions={this.loadFreelancers.bind(this)}
-                onChange={ (selectedOption) => { this.setState({freelancer: selectedOption.value})} }
+                onChange={ (value) => { this.setState({freelancer: value})} }
                 disabled={this.state.view}
             />
+          </Col>
+        </FRC.Row>
+        <FRC.Row>
+          <Col sm={9}>
+            <FRC.Select
+                name="default_payment"
+                label="Default Payment"
+                labelClassName={[{'col-sm-3': false}, 'col-sm-4']}
+                elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
+                options={this.state.payments}
+                value={this.state.budget_type}
+                disabled={this.state.view}/>
+          </Col>
+          <Col sm={3}>
+            <LinkContainer to={`/accounts/payment/`}>
+              <Button bsStyle="primary"
+                name="timesheet-button"
+                formNoValidate={true} type="button">
+                Add Payment
+              </Button>
+            </LinkContainer>
           </Col>
         </FRC.Row>
         <FRC.Input
@@ -299,19 +274,6 @@ class JobPostForm extends Component {
         </fieldset>
         : ''
       }
-      {
-        this.state.acceptable && !this.state.accepted ?
-          <fieldset>
-            <Button bsStyle="primary" className="center-block"
-              name="accept-button"
-              formNoValidate={true} type="submit"
-              onClick={this.acceptProject.bind(this)}
-              disabled={this.state.accepted}>
-              Accept Project Contract
-            </Button>
-          </fieldset>
-          : ''
-      }
     </FRC.Form>;
     return (
       <Row>
@@ -324,4 +286,4 @@ class JobPostForm extends Component {
   }
 }
 
-export default JobPostForm;
+export default ContractPostForm;

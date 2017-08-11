@@ -5,39 +5,39 @@ import { Input } from 'formsy-react-components';
 import sinon from 'sinon';
 import request from 'request-promise';
 
-import JobPostForm from './JobPostForm';
+import ContractPostForm from './ContractPostForm';
 import { TestUser } from '../TestConfig';
 
-describe('Job Post Form', () => {
+describe('Contract Post Form', () => {
   it('renders three <Input/> components', () => {
-    const wrapper = shallow(<JobPostForm
+    const wrapper = shallow(<ContractPostForm
       user={TestUser}
       id={1}
     />);
     expect(wrapper.find(Input).exists());
   });
   it('Test Form filling', () => {
-    var jobForm = shallow(<JobPostForm
+    var ContractForm = shallow(<ContractPostForm
       user={TestUser}
     />);
-    const titleInput = jobForm.find({'name': 'title'}).first();
+    const titleInput = ContractForm.find({'name': 'title'}).first();
     expect(titleInput.exists());
     titleInput.value = 'Test Input Title';
     expect(titleInput.value).toBe('Test Input Title');
   })
-  it('Update Existing Job', async () => {
-    const jobForm = shallow(<JobPostForm
+  it('Update Existing Contract', async () => {
+    const ContractForm = shallow(<ContractPostForm
       user={TestUser}
       match={{params: {id: 1}}}
     />);
-    jobForm.setState({
+    ContractForm.setState({
       freelancer: 6,
       hirer: 6,
       accepted: true
     });
-    const submitResult = await jobForm.instance().submit({
-      'title': 'This is update the exiting job',
-      'description': 'This job is updated',
+    const submitResult = await ContractForm.instance().submit({
+      'title': 'This is update the exiting Contract',
+      'description': 'This Contract is updated',
       'hourly_rate': '20',
       'max_weekly_hours': '20',
       'total_budget': '2000',
@@ -47,30 +47,30 @@ describe('Job Post Form', () => {
       'hirer': 6
     });
     expect(submitResult.id).toBe(1);
-    expect(submitResult.title).toBe('This is update the exiting job');
+    expect(submitResult.title).toBe('This is update the exiting Contract');
   });
   it('Load Value from Server', () => {
-    sinon.spy(JobPostForm.prototype, 'componentDidMount');
-    var wrapper = mount(<JobPostForm
+    sinon.spy(ContractPostForm.prototype, 'componentDidMount');
+    var wrapper = mount(<ContractPostForm
       params={{id: 1}}
       user={TestUser}
     />);
   });
   it('Test Editability for Owner and non-owner', () => {
-    var jobForm = shallow(<JobPostForm
+    var ContractForm = shallow(<ContractPostForm
       user={TestUser}
       params={{id: 1}}
     />);
-    expect(jobForm.find({'name': 'edit-button'}).exists());
-    expect(jobForm.find({'name': 'accept-button'}).exists());
-    expect(jobForm.find({'name': 'submit-button'}).exists());
+    expect(ContractForm.find({'name': 'edit-button'}).exists());
+    expect(ContractForm.find({'name': 'accept-button'}).exists());
+    expect(ContractForm.find({'name': 'submit-button'}).exists());
   });
   it('Load timesheet', async () => {
-    const jobForm = shallow(<JobPostForm
+    const ContractForm = shallow(<ContractPostForm
       user={TestUser}
       match={{params: {id: 1}}}
     />);
-    const createResult = await jobForm.instance().loadTimeSheet();
+    const createResult = await ContractForm.instance().loadTimeSheet();
     expect(createResult.contract).toBe(1);
     const lastMonday = moment().day('Monday').format('YYYY-MM-DD');
     expect(createResult.start_date).toBe(lastMonday);

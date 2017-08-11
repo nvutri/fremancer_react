@@ -8,21 +8,11 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
 
-class JobCreateForm extends Component {
+class ContractCreateForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      description: '',
-      hourly_rate: '',
-      max_weekly_hours: '',
-      hirer: this.props.user.id,
-      freelancer: null,
-      total_budget: '',
-      duration: '',
-      budget_type: '',
-      application_type: '',
-      accepted: false
+      hirer: this.props.user.id
     };
   }
   submit(data) {
@@ -31,10 +21,10 @@ class JobCreateForm extends Component {
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
     const requestInstance = request.defaults(RequestConfig);
-    // Create a new job.
+    // Create a new Contract.
     const url = '/api/contracts/';
     return requestInstance.post(url).form(data).then(function (response) {
-      self.props.history.push('/jobs/');
+      self.props.history.push('/Contracts/');
       return response;
     }).catch(function (err) {
       console.log(err);
@@ -186,4 +176,4 @@ class JobCreateForm extends Component {
   }
 }
 
-export default JobCreateForm;
+export default ContractCreateForm;

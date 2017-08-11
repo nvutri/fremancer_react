@@ -15,7 +15,7 @@ import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
 
-import ContractTable from '../ContractTable';
+import ContractTable from './ContractTable';
 import Contract from './Contract';
 
 import TimeSheet from './TimeSheet';

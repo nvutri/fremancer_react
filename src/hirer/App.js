@@ -13,10 +13,11 @@ import store from 'store'
 import AppBase from '../AppBase'
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import ContractTable from '../ContractTable';
+import ContractTable from './ContractTable';
 import Home from './Home';
 import Payment from './Payment';
-
+import ContractPostForm from './ContractPostForm';
+import ContractCreateForm from './ContractCreateForm';
 
 class App extends AppBase {
 
@@ -84,30 +85,26 @@ class App extends AppBase {
               {...props}
             />
           }/>
-          <Route path="/jobs/" render={() =>
+          <Route path="/contracts/" render={() =>
             <Switch>
-              <Route exact path='/jobs/' render={ (props) =>
-                <JobTable {...props}/>
+              <Route exact path='/contracts/' render={ (props) =>
+                <ContractTable
+                  user={this.state.user}
+                  {...props}/>
               }/>
-              <Route exact path='/jobs/create/' render={ (props) =>
-                <JobCreateForm
+              <Route exact path='/contracts/create/' render={ (props) =>
+                <ContractCreateForm
                   user={this.state.user}
                   {...props}
                 />
               }/>
-              <Route path='/jobs/:id/' render={ (props) =>
-                <JobPostForm
+              <Route path='/contracts/:id/' render={ (props) =>
+                <ContractPostForm
                   user={this.state.user}
                   {...props}
                 />
               }/>
             </Switch>
-          }/>
-          <Route path="/contracts/" render={ (props) =>
-            <Contract
-              user={this.state.user}
-              {...props}
-            />
           }/>
         </div>
       </Router>

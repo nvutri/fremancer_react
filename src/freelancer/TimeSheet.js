@@ -18,21 +18,11 @@ class TimeSheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      total_hours: 0,
-      total_amount: 0,
-      summary: '',
-      start_date: '',
-      submitted: false,
-      invoiced: false,
-      contract: null,
       daily_sheets: [],
       id: this.props.match ? this.props.match.params.id : null,
-      prev_timesheet: '',
-      next_timesheet: '',
-      msg: null,
-      focused_id: null,
       contract: {},
-      saving: false
+      saving: false,
+      changed: false
     };
     this.daily_sheets = [];
   }
@@ -215,11 +205,11 @@ class TimeSheet extends Component {
               <Col sm={3}>
                 <Button bsStyle="primary" className="btn-block"
                   id="save-button"
-                  formNoValidate={true} type="submit" disabled={this.state.saving}>
+                  formNoValidate={true} type="submit"
+                  disabled={ this.state.saving }>
                   {this.state.saving ? 'Saving' : 'Save'}
                 </Button>
               </Col>
-
             </Row>
           </FRC.Form>
           { this.state.msg ?

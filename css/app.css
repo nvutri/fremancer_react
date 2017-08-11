@@ -28,3 +28,7 @@
   border-left-color: #ccc;
   right: 1em;
 }
+
+.Select-value .Select-value-label {
+  color: #333;
+}

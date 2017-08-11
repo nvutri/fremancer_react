@@ -4,33 +4,33 @@ import { Input } from 'formsy-react-components';
 import sinon from 'sinon';
 import moment from 'moment';
 
-import JobCreateForm from './JobCreateForm';
+import ContractCreateForm from './ContractCreateForm';
 import { TestUser } from '../TestConfig';
 
-describe('Job Create Form', () => {
+describe('Contract Create Form', () => {
   it('renders three <Input/> components', () => {
-    const wrapper = shallow(<JobCreateForm
+    const wrapper = shallow(<ContractCreateForm
       user={TestUser}
       id={1}
     />);
     expect(wrapper.find(Input).exists());
   });
   it('Test Form filling', () => {
-    var jobForm = shallow(<JobCreateForm user={TestUser} />);
-    const titleInput = jobForm.find({'name': 'title'}).first();
+    var ContractForm = shallow(<ContractCreateForm user={TestUser} />);
+    const titleInput = ContractForm.find({'name': 'title'}).first();
     expect(titleInput.exists());
     titleInput.value = 'Test Input Title';
     expect(titleInput.value).toBe('Test Input Title');
   })
-  it('Create New Job', async () => {
-    var jobForm = shallow(<JobCreateForm
+  it('Create New Contract', async () => {
+    var ContractForm = shallow(<ContractCreateForm
       user={TestUser}
       history={[]}
     />);
-    var jobInstance = jobForm.instance();
-    const createResult = await jobInstance.submit({
-      'title': 'This is a new job',
-      'description': `This is a new Job tested at ${moment.now()}`,
+    var ContractInstance = ContractForm.instance();
+    const createResult = await ContractInstance.submit({
+      'title': 'This is a new Contract',
+      'description': `This is a new Contract tested at ${moment.now()}`,
       'hourly_rate': '20',
       'max_weekly_hours': '20',
       'total_budget': '2000',
