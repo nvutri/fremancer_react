@@ -38,23 +38,21 @@ class ContractTable extends Component {
 
   render() {
     return (
-      <Jumbotron>
-        <Row>
-          <Col md={2}></Col>
-          <Col md={8}>
-            <BootstrapTable
-              data={this.state.data} striped={true} hover={true}>
-                <TableHeaderColumn dataField="id" isKey={true}>Contract ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="title" dataSort={true} dataFormat={ this.linkFormatter }>Name</TableHeaderColumn>
-                <TableHeaderColumn dataField="description" dataSort={true}>Description</TableHeaderColumn>
-                <TableHeaderColumn dataField="hourly_rate" dataSort={true}>Rate</TableHeaderColumn>
-                <TableHeaderColumn dataField="total_budget" dataSort={true}>Budget</TableHeaderColumn>
-                <TableHeaderColumn dataField="hirer" dataSort={true}>Hirer</TableHeaderColumn>
-                <TableHeaderColumn dataField="freelancer" dataSort={true}>Freelancer</TableHeaderColumn>
-            </BootstrapTable>
-          </Col>
-        </Row>
-      </Jumbotron>
+      <Row>
+        <Col md={2}></Col>
+        <Col md={8}>
+          <BootstrapTable
+            data={this.state.data} striped={true} hover={true}>
+              <TableHeaderColumn dataField="id" isKey={true}>Contract ID</TableHeaderColumn>
+              <TableHeaderColumn dataField="title" dataSort={true} dataFormat={ this.linkFormatter }>Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="description" dataSort={true}>Description</TableHeaderColumn>
+              <TableHeaderColumn dataField="hourly_rate" dataSort={true}>Rate</TableHeaderColumn>
+              <TableHeaderColumn dataField="total_budget" dataSort={true}>Budget</TableHeaderColumn>
+              <TableHeaderColumn dataField="hirer" dataSort={true}>Hirer</TableHeaderColumn>
+              <TableHeaderColumn dataField="freelancer" dataSort={true}>Freelancer</TableHeaderColumn>
+          </BootstrapTable>
+        </Col>
+      </Row>
     );
   }
 }
