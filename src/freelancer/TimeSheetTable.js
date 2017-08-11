@@ -10,30 +10,65 @@ class TimeSheetTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      page: 1,
+      dataTotalSize: 0,
+      sizePerPage: 10
     };
   }
 
   componentDidMount() {
+    this.loadData(this.state.page, this.state.sizePerPage);
+  }
+
+  /**
+   * Load remote data to fill table.
+   * @return {[type]} [description]
+   */
+  loadData(page, sizePerPage) {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
-    requestInstance.get('/api/timesheets/').then(function (response) {
-      self.setState({data: response.results});
+    requestInstance.get(`/api/timesheets/?page=${page}&page_size=${sizePerPage}`).then(function (response) {
+      self.setState({
+        data: response.results,
+        dataTotalSize: response.count,
+        page: page,
+        sizePerPage: sizePerPage
+      });
       return response;
     }).catch(function (err) {
       console.log(err);
     });
   }
 
-  linkFormatter(cell, row) {
-    return (
-      <LinkContainer to={`/timesheets/${row.id}/`}>
+  handlePageChange(page, sizePerPage) {
+    this.loadData(page, sizePerPage);
+  }
+
+  handleSizePerPageChange(sizePerPage) {
+    // When changing the size per page always navigating to the first page
+    this.loadData(1, sizePerPage);
+  }
+
+  timesheetLinkFormatter(cell, row) {
+    return <LinkContainer to={`/timesheets/${row.id}/`}>
         <a href="#">{row.start_date}</a>
       </LinkContainer>
-    );
+  }
+
+  contractLinkFormatter(cell, row) {
+    return <LinkContainer to={`/contracts/${row.contract}/`}>
+      <a href="#">{cell}</a>
+    </LinkContainer>
   }
 
   render() {
+    const options = {
+      onPageChange: this.handlePageChange.bind(this),
+      onSizePerPageList: this.handleSizePerPageChange.bind(this),
+      page: this.state.page,
+      sizePerPage: this.state.sizePerPage,
+    };
     return (
       <Jumbotron>
         <Row>
