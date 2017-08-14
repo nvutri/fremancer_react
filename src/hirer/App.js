@@ -14,7 +14,7 @@ import FontAwesome from 'react-fontawesome';
 import AppBase from '../AppBase'
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import ContractTable from './ContractTable';
+import ContractList from './ContractList';
 import Home from './Home';
 import Payment from './Payment';
 import ContractPostForm from './ContractPostForm';
@@ -91,7 +91,7 @@ class App extends AppBase {
           <Route path="/contracts/" render={() =>
             <Switch>
               <Route exact path='/contracts/' render={ (props) =>
-                <ContractTable
+                <ContractList
                   user={this.state.user}
                   {...props}/>
               }/>

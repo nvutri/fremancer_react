@@ -12,7 +12,6 @@ class ContractPostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: true,
       hirer: this.props.user ? this.props.user.id : null,
       id: props.match.params.id,
       payments: [],
@@ -29,7 +28,6 @@ class ContractPostForm extends Component {
       // Update an existing Contract by PUT request with the ID..
       const url = `/api/contracts/${this.state.id}/`;
       return requestInstance.put(url).form(data).then(function (response) {
-        self.setState({view : true});
         return response;
       }).catch(function (err) {
         self.setState({validationErrors: err.error});
@@ -125,14 +123,6 @@ class ContractPostForm extends Component {
             </LinkContainer>
             : ''
         }
-        <Button bsStyle="default"
-          name="edit-button"
-          formNoValidate={true} type="button"
-          onClick={ e => this.setState({view: !this.state.view}) }>
-          {
-            this.state.view ? 'Edit': 'View'
-          }
-        </Button>
       </Row>
       <fieldset>
         <FRC.Input
@@ -148,7 +138,6 @@ class ContractPostForm extends Component {
             }}
             placeholder="What is your project title?"
             value={this.state.title}
-            disabled={this.state.view}
             required/>
         <FRC.Textarea
             name="description"
@@ -163,7 +152,6 @@ class ContractPostForm extends Component {
             placeholder="What is your project description?"
             label="Description"
             value={this.state.description}
-            disabled={this.state.view}
             required/>
         <FRC.Input
             name="hourly_rate"
@@ -176,7 +164,6 @@ class ContractPostForm extends Component {
             placeholder="Project hourly rate? (20, 30 ..)"
             label="Hourly Rate"
             value={this.state.hourly_rate}
-            disabled={this.state.view}
             required/>
         <FRC.Input
             name="max_weekly_hours"
@@ -189,7 +176,6 @@ class ContractPostForm extends Component {
             placeholder="Project Weekly Hours Cap"
             label="Max Weekly Hours"
             value={this.state.max_weekly_hours}
-            disabled={this.state.view}
             required/>
         <br/>
         <FRC.Input
@@ -203,7 +189,6 @@ class ContractPostForm extends Component {
             placeholder="Project Budget? (20,000, 30,000 ..)"
             label="Project Budget"
             value={this.state.total_budget}
-            disabled={this.state.view}
             required/>
         <FRC.Select
             name="duration"
@@ -213,7 +198,6 @@ class ContractPostForm extends Component {
               {value: 'long', label: 'Long Term (More than 1 month)'}
             ]}
             value={this.state.duration}
-            disabled={this.state.view}
         />
         <FRC.Select
             name="budget_type"
@@ -222,7 +206,6 @@ class ContractPostForm extends Component {
               {value: 'hourly', label: 'Hourly - Pay by Hour'},
             ]}
             value={this.state.budget_type}
-            disabled={this.state.view}
         />
         <FRC.Row>
           <label className="control-label col-sm-3">
@@ -234,7 +217,6 @@ class ContractPostForm extends Component {
                 value={this.state.freelancer}
                 loadOptions={this.loadFreelancers.bind(this)}
                 onChange={ (option) => { this.setState({freelancer: option.value})} }
-                disabled={this.state.view}
             />
           </Col>
         </FRC.Row>
@@ -246,8 +228,7 @@ class ContractPostForm extends Component {
                 labelClassName={[{'col-sm-3': false}, 'col-sm-4']}
                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                 options={this.state.payments}
-                value={this.state.budget_type}
-                disabled={this.state.view}/>
+                value={this.state.budget_type}/>
           </Col>
           <Col sm={3}>
             <LinkContainer to={`/accounts/payment/`}>
@@ -259,20 +240,13 @@ class ContractPostForm extends Component {
             </LinkContainer>
           </Col>
         </FRC.Row>
-        <FRC.Input
-            name="accepted"
-            label="Accept Status"
-            value={this.state.accepted}
-            disabled/>
       <br/>
       </fieldset>
-      { !this.state.view ?
-        <fieldset>
-          <Button bsStyle="primary" className="center-block"
-            name="submit-button"
-            formNoValidate={true} type="submit">Submit</Button>
-        </fieldset>
-        : ''
+      <fieldset>
+        <Button bsStyle="primary" className="center-block"
+          name="submit-button"
+          formNoValidate={true} type="submit">Submit</Button>
+      </fieldset>
       }
     </FRC.Form>;
     return (
