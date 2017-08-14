@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
 import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
+import FontAwesome from 'react-fontawesome';
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
@@ -39,6 +40,14 @@ class ContractTable extends Component {
       <Row>
         <Col md={2}></Col>
         <Col md={8}>
+          <LinkContainer to={'/contracts/create/'}>
+            <Button
+              bsStyle="primary"
+              className="block-center">
+              <FontAwesome name='plus' size='lg'/>
+              {' Create Contract '}
+            </Button>
+          </LinkContainer>
           <BootstrapTable
             data={this.state.data} striped={true} hover={true}>
               <TableHeaderColumn dataField="id" isKey={true} hidden>Contract ID</TableHeaderColumn>

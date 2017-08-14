@@ -9,6 +9,7 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
 import store from 'store'
+import FontAwesome from 'react-fontawesome';
 
 import AppBase from '../AppBase'
 import LoginForm from '../LoginForm';
@@ -36,7 +37,9 @@ class App extends AppBase {
               { this.state.authenticated ?
               <Nav>
                 <LinkContainer to="/contracts/">
-                 <NavItem eventKey={4}>Contracts</NavItem>
+                  <NavItem eventKey={4}>
+                    <FontAwesome name='briefcase' size='lg'/> Contracts
+                  </NavItem>
                 </LinkContainer>
               </Nav>
               : ''
@@ -93,7 +96,7 @@ class App extends AppBase {
                   {...props}/>
               }/>
               <Route exact path='/contracts/create/' render={ (props) =>
-                <ContractCreateForm
+                <ContractPostForm
                   user={this.state.user}
                   {...props}
                 />

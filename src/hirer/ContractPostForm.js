@@ -233,7 +233,7 @@ class ContractPostForm extends Component {
                 name="freelancer"
                 value={this.state.freelancer}
                 loadOptions={this.loadFreelancers.bind(this)}
-                onChange={ (value) => { this.setState({freelancer: value})} }
+                onChange={ (option) => { this.setState({freelancer: option.value})} }
                 disabled={this.state.view}
             />
           </Col>
