@@ -3,17 +3,18 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import request from 'request-promise';
 import sinon from 'sinon';
+import { RouterContext } from '../TestConfig';
 
-import ContractTable from './ContractTable';
+import ContractList from './ContractList';
 
 
-describe('ContractTable', () => {
+describe('ContractList', () => {
   it('Renders Components', () => {
-    const wrapper = shallow(<ContractTable/>);
+    const wrapper = shallow(<ContractList/>);
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
-    sinon.spy(ContractTable.prototype, 'componentWillReceiveProps');
-    var wrapper = mount(<ContractTable/>);
+    sinon.spy(ContractList.prototype, 'componentDidMount');
+    var wrapper = mount(<ContractList/>, RouterContext);
   });
 });

@@ -31,16 +31,7 @@ class ContractList extends Component {
   render() {
     return (
       <Row>
-        <Col md={2}>
-          <LinkContainer to={'/contracts/create/'}>
-            <Button
-              bsStyle="primary"
-              className="block-center">
-              <FontAwesome name='plus' size='lg'/>
-              {' Create Contract '}
-            </Button>
-          </LinkContainer>
-        </Col>
+        <Col md={2}/>
         <Col md={8}>
           {
             this.state.contracts.map( contract => <ContractListItem key={`contract_${contract.id}`} {...contract}/>)

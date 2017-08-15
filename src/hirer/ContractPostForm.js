@@ -28,6 +28,7 @@ class ContractPostForm extends Component {
       // Update an existing Contract by PUT request with the ID..
       const url = `/api/contracts/${this.state.id}/`;
       return requestInstance.put(url).form(data).then(function (response) {
+        self.props.history.push('/contracts/');
         return response;
       }).catch(function (err) {
         self.setState({validationErrors: err.error});
@@ -63,6 +64,7 @@ class ContractPostForm extends Component {
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
+    this.loadTimeSheet();
     requestInstance.get('/api/invoices/list_payments/').then( response => {
       const paymentOptions = response.data.map( item => {
         return {
@@ -247,7 +249,6 @@ class ContractPostForm extends Component {
           name="submit-button"
           formNoValidate={true} type="submit">Submit</Button>
       </fieldset>
-      }
     </FRC.Form>;
     return (
       <Row>

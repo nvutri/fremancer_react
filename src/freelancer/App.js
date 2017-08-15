@@ -15,7 +15,7 @@ import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
 
-import ContractTable from './ContractTable';
+import ContractList from './ContractList';
 import Contract from './Contract';
 
 import TimeSheet from './TimeSheet';
@@ -80,7 +80,7 @@ class App extends AppBase {
           <Route path="/contracts/" render={ (props) =>
             <Switch>
               <Route exact path='/contracts/' render={ (props) =>
-                <ContractTable
+                <ContractList
                   user={this.state.user}
                 />
               }/>
