@@ -19,6 +19,7 @@ import Home from './Home';
 import Payment from './Payment';
 import ContractPostForm from './ContractPostForm';
 import ContractCreateForm from './ContractCreateForm';
+import TimeSheetView from './TimeSheetView';
 
 class App extends AppBase {
 
@@ -103,6 +104,16 @@ class App extends AppBase {
               }/>
               <Route path='/contracts/:id/' render={ (props) =>
                 <ContractPostForm
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
+          }/>
+          <Route path="/timesheets/" render={ () =>
+            <Switch>
+              <Route path="/timesheets/:id/" render={ (props) =>
+                <TimeSheetView
                   user={this.state.user}
                   {...props}
                 />
