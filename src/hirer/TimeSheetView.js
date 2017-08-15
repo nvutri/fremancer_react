@@ -1,12 +1,8 @@
 import request from 'request-promise';
-import moment from 'moment';
-import update from 'react-addons-update';
-
 import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Alert, Button, Row, Col, ControlLabel, Form, FormControl, FormGroup, InputGroup, Well } from 'react-bootstrap'
+import { Button, Row, Col, ControlLabel, Form, FormControl, FormGroup, InputGroup, Label, Well } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import DatePicker from 'react-datepicker';
 
 import DailySheetView from './DailySheetView';
 import { RequestConfig } from '../Config'
@@ -45,36 +41,51 @@ class TimeSheetView extends Component {
     });
   }
 
-  componentDidMount() {
-    this.loadTimeSheet(this.state.id);
-  }
-
   componentWillReceiveProps(nextProps) {
     this.loadTimeSheet(nextProps.match.params.id);
   }
 
+  dateRange() {
+    if (this.state.daily_sheets.length > 0) {
+      const firstDay = this.state.daily_sheets[0].report_date;
+      const lastDay = this.state.daily_sheets[6].report_date;
+      return `${firstDay} - ${lastDay}`;
+    }
+    return '';
+  }
   render() {
+    const headerLabel = this.state.paid ? 'success' : this.state.invoiced ? 'primary' : 'info'
     return (
       <Row>
         <Col sm={1}/>
         <Col sm={10}>
           <Row>
-            { this.state.prev_timesheet ?
-              <LinkContainer className="pull-left" to={`/timesheets/${this.state.prev_timesheet}/`}>
-                <Button bsStyle="primary" name="last-week-button">
-                  Prev Week
-                </Button>
-              </LinkContainer>
-              : ''
-            }
-            { this.state.next_timesheet ?
-              <LinkContainer className="pull-right" to={`/timesheets/${this.state.next_timesheet}/`}>
-                <Button bsStyle="primary" name="next-week-button">
-                  Next Week
-                </Button>
-              </LinkContainer>
-              : ''
-            }
+            <Col sm={2}>
+              { this.state.prev_timesheet ?
+                <LinkContainer to={`/timesheets/${this.state.prev_timesheet}/`}>
+                  <Button bsStyle="primary" name="last-week-button" block>
+                    <i className="fa fa-arrow-left fa-lg" aria-hidden="true"></i> Previous Week
+                  </Button>
+                </LinkContainer>
+                : ''
+              }
+            </Col>
+            <Col sm={8}>
+              <h4 className="text-center">
+                Week {this.dateRange()}
+                <Label bsStyle={headerLabel} className="pull-right">{this.state.status}</Label>
+              </h4>
+            </Col>
+            <Col sm={2}>
+              { this.state.next_timesheet ?
+                <LinkContainer to={`/timesheets/${this.state.next_timesheet}/`}>
+                  <Button bsStyle="primary" name="next-week-button" block>
+                    Next Week <i className="fa fa-arrow-right fa-lg" aria-hidden="true"></i>
+                  </Button>
+                </LinkContainer>
+                : ''
+              }
+            </Col>
           </Row>
           <Row>
             {
