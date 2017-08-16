@@ -13,7 +13,7 @@ describe('TimeSheetView', () => {
     expect(wrapper.find('input').exists());
   });
   it('Load Value from Server', () => {
-    sinon.spy(TimeSheetView.prototype, 'componentDidMount');
+    sinon.spy(TimeSheetView.prototype, 'componentWillReceiveProps');
     var wrapper = mount(<TimeSheetView/>, RouterContext);
   });
 });

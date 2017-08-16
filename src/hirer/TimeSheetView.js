@@ -41,6 +41,10 @@ class TimeSheetView extends Component {
     });
   }
 
+  componentDidMount() {
+    this.loadTimeSheet(this.props.match.params.id);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.loadTimeSheet(nextProps.match.params.id);
   }
