@@ -75,7 +75,7 @@ class TimeSheet extends Component {
     // Save timesheet data.
     const self = this;
     return requestInstance.put(`/api/timesheets/${this.state.id}/`).form(data).then(function (response) {
-      self.setState({saving: false});
+      response['saving'] = false;
       self.setState(response);
       return response;
     }).catch((err) => {
@@ -185,23 +185,8 @@ class TimeSheet extends Component {
                 label="Summary"
                 value={this.state.summary}
             />
-            <FRC.Input
-              ref={ instance => this.submittedInput = instance }
-              name="submitted"
-              label="Submit Status"
-              value={this.state.submitted}
-              disabled
-              />
             <Row>
-              <Col sm={2}>
-                <Button bsStyle="warning" className="btn-block"
-                  id="submit-button" type="submit"
-                  onClick={ e => this.submittedInput.setValue(true) }
-                  formNoValidate={true} disabled={this.state.submitted}>
-                  {this.state.submitted ? 'Submitted' : 'Submit'}
-                </Button>
-              </Col>
-              <Col sm={3}/>
+              <Col sm={5}/>
               <Col sm={3}>
                 <Button bsStyle="primary" className="btn-block"
                   id="save-button"
