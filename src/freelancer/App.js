@@ -17,7 +17,8 @@ import SignUpForm from '../SignUpForm';
 
 import ContractList from './ContractList';
 import Contract from './Contract';
-
+import InvoiceForm from './InvoiceForm';
+import InvoiceTable from './InvoiceTable';
 import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
@@ -41,6 +42,9 @@ class App extends AppBase {
                 </LinkContainer>
                 <LinkContainer to="/timesheets/">
                  <NavItem eventKey={5}>TimeSheets</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/invoices/">
+                 <NavItem eventKey={6}>Invoices</NavItem>
                 </LinkContainer>
               </Nav>
               : ''
@@ -108,6 +112,28 @@ class App extends AppBase {
               }/>
               <Route path="/timesheets/:id/" render={ (props) =>
                 <TimeSheet
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
+          }/>
+          <Route path="/invoices/" render={ () =>
+            <Switch>
+              <Route exact path='/invoices/' render={ (props) =>
+                <InvoiceTable
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route exact path="/invoices/create/" render={ (props) =>
+                <InvoiceForm
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route path="/invoices/:id/" render={ (props) =>
+                <InvoiceForm
                   user={this.state.user}
                   {...props}
                 />
