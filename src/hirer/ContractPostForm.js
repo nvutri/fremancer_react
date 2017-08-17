@@ -230,7 +230,7 @@ class ContractPostForm extends Component {
                 labelClassName={[{'col-sm-3': false}, 'col-sm-4']}
                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                 options={this.state.payments}
-                value={this.state.budget_type}/>
+                value={this.state.default_payment}/>
           </Col>
           <Col sm={3}>
             <LinkContainer to={`/accounts/payment/`}>
@@ -247,7 +247,7 @@ class ContractPostForm extends Component {
       <fieldset>
         <Button bsStyle="primary" className="center-block"
           name="submit-button"
-          formNoValidate={true} type="submit">Submit</Button>
+          formNoValidate={true} type="submit">Save</Button>
       </fieldset>
     </FRC.Form>;
     return (

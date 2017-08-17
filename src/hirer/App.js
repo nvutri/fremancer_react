@@ -14,11 +14,16 @@ import FontAwesome from 'react-fontawesome';
 import AppBase from '../AppBase'
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import ContractList from './ContractList';
 import Home from './Home';
 import Payment from './Payment';
-import ContractPostForm from './ContractPostForm';
+
+import InvoiceTable from './InvoiceTable';
+import InvoiceView from './InvoiceView';
+
 import ContractCreateForm from './ContractCreateForm';
+import ContractList from './ContractList';
+import ContractPostForm from './ContractPostForm';
+
 import TimeSheetView from './TimeSheetView';
 
 class App extends AppBase {
@@ -40,6 +45,11 @@ class App extends AppBase {
                 <LinkContainer to="/contracts/">
                   <NavItem eventKey={4}>
                     <FontAwesome name='briefcase' size='lg'/> Contracts
+                  </NavItem>
+                </LinkContainer>
+                <LinkContainer to="/invoices/">
+                  <NavItem eventKey={6}>
+                    <FontAwesome name='credit-card' size='lg'/> Invoices
                   </NavItem>
                 </LinkContainer>
               </Nav>
@@ -114,6 +124,22 @@ class App extends AppBase {
             <Switch>
               <Route path="/timesheets/:id/" render={ (props) =>
                 <TimeSheetView
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
+          }/>
+          <Route path="/invoices/" render={ () =>
+            <Switch>
+              <Route exact path='/invoices/' render={ (props) =>
+                <InvoiceTable
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route path="/invoices/:id/" render={ (props) =>
+                <InvoiceView
                   user={this.state.user}
                   {...props}
                 />
