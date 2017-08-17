@@ -63,7 +63,7 @@ class InvoiceTable extends Component {
 
   contractLinkFormatter(cell, row) {
     return <LinkContainer to={`/contracts/${cell}/`}>
-      <a href="#">{row.contract_title}</a>
+      <a href="#">{row.contract_data.title}</a>
     </LinkContainer>
   }
 

@@ -27,13 +27,13 @@ class InvoiceForm extends Component {
       'freelancer': this.state.contract.freelancer,
       'timesheets': this.timesheetTable.state.selectedRowKeys
     }});
+    // Query String is a must for a list of timesheets.
     const requestConfig = update(RequestConfig, {$merge: {
       useQuerystring: true
     }});
     const requestInstance = request.defaults(requestConfig);
-    // Update an existing Contract by PUT request with the ID..
-    const url = `/api/invoices/${this.state.id}/`;
-    return requestInstance.put(url).form(data).then( (response) => {
+    // Create a new invoice.
+    return requestInstance.post('/api/invoices/').form(data).then( (response) => {
       self.props.history.push('/invoices/');
       return response;
     }).catch(function (err) {
