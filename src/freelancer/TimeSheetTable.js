@@ -81,7 +81,7 @@ class TimeSheetTable extends Component {
             fetchInfo={{dataTotalSize: this.state.dataTotalSize}}
             striped={true}
             hover={true}>
-              <TableHeaderColumn dataField="start_date" dataFormat={ this.timesheetLinkFormatter } dataSort={true} >Week</TableHeaderColumn>
+              <TableHeaderColumn dataField="start_date" dataFormat={ this.timesheetLinkFormatter }>Week</TableHeaderColumn>
               <TableHeaderColumn dataField="id" isKey={true} hidden>ID</TableHeaderColumn>
               <TableHeaderColumn dataField="contract_title" dataFormat={ this.contractLinkFormatter }>Contract</TableHeaderColumn>
               <TableHeaderColumn dataField="summary">Summary</TableHeaderColumn>

@@ -13,21 +13,24 @@ class InvoiceForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hirer: this.props.user ? this.props.user.id : null,
-      id: props.match && props.match.params ? props.match.params.id : undefined,
       validationErrors: {},
       contract : {},
       contractOptions : [],
-      timesheetOptions: []
+      timesheetData: []
     };
     this.timesheetTable = {};
   }
-  createInvoice(data) {
+  submit(formData) {
+    const self = this;
+    const data = update(formData, {$merge: {
+      'hirer': this.state.contract.hirer,
+      'freelancer': this.state.contract.freelancer,
+      'timesheets': this.timesheetTable.state.selectedRowKeys
+    }});
     const requestConfig = update(RequestConfig, {$merge: {
       useQuerystring: true
     }});
     const requestInstance = request.defaults(requestConfig);
-    const self = this;
     // Update an existing Contract by PUT request with the ID..
     const url = `/api/invoices/${this.state.id}/`;
     return requestInstance.put(url).form(data).then( (response) => {
@@ -40,57 +43,38 @@ class InvoiceForm extends Component {
       });
     });
   }
-  updateInvoice(data) {
-    const self = this;
-    const requestConfig = update(RequestConfig, {$merge: {
-      useQuerystring: true
-    }});
-    const requestInstance = request.defaults(requestConfig);
-    return requestInstance.post('/api/invoices/').form(data).then( (response) => {
-      self.props.history.push('/invoices/');
-      return response
-    }).catch(function (err) {
-      self.setState({
-        validationErrors: err.error,
-        msg: err.message
-      });
-    });
-  }
-  submit(formData) {
-    const self = this;
-    const data = update(formData, {$merge: {
-      'hirer': this.state.contract.hirer,
-      'freelancer': this.state.contract.freelancer,
-      'timesheets': this.timesheetTable.state.selectedRowKeys
-    }});
-    if (this.state.id) {
-      this.createInvoice(data);
-    } else {
-      this.updateInvoice(data);
-    }
-  }
 
   /**
-   * Load timesheet ID of this week.
-   * Create a new timesheet if needs to.
-   * @return {[Promise]} A promise of the AJAX request for opening timesheet.
+   * Load un paid timesheets of this contract.
+   * @param  {Object} contract Contract data
+   * @return {Promise} a request promise.
    */
   loadTimeSheets(contract) {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
     const url = `/api/timesheets/unpaid/?contract=${contract.id}`;
     return requestInstance.get(url).then(function (response) {
-      self.setState({timesheetOptions: response});
+      self.setState({timesheetData: response});
       return response;
     }).catch(function (err) {
       self.setState({msg: err.error});
     });
   }
 
+  timesheetLinkFormatter(cell, row) {
+    return <LinkContainer to={`/timesheets/${row.id}/`}>
+        <a href="#">{row.start_date}</a>
+      </LinkContainer>
+  }
+
+  /**
+   * Load accepted contracts of this user.
+   * @return {[type]} [description]
+   */
   loadContracts() {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
-    return requestInstance.get('/api/contracts/').then( (response) => {
+    return requestInstance.get('/api/contracts/?accepted=true').then( (response) => {
       if (response.length > 0) {
         const options = response.map( (option) => {
           return {
@@ -112,23 +96,8 @@ class InvoiceForm extends Component {
     });
   }
 
-  /**
-   * Get related data of this Contract post.
-   * @return {Promise} a promise of the given AJAX data.
-   */
   componentDidMount() {
-    if (this.state.id) {
-      const self = this;
-      const requestInstance = request.defaults(RequestConfig);
-      requestInstance.get(`/api/invoices/${this.state.id}/`).then( (response) => {
-        self.setState(response);
-        return response;
-      }).catch( (err) => {
-        self.setState({msg: err.error});
-      });
-    } else {
-      this.loadContracts();
-    }
+    this.loadContracts();
   }
 
   handleSelectChange(name, selectedID) {
@@ -145,7 +114,7 @@ class InvoiceForm extends Component {
    */
   calculateHours() {
     const selectedKeys = this.timesheetTable.state.selectedRowKeys;
-    const selectedRows = this.state.timesheetOptions.filter((item) => selectedKeys.indexOf(item.id) > -1);
+    const selectedRows = this.state.timesheetData.filter((item) => selectedKeys.indexOf(item.id) > -1);
     var total_hours = 0.0;
     selectedRows.forEach( (row) => {
       total_hours += parseFloat(row.total_hours)
@@ -202,7 +171,7 @@ class InvoiceForm extends Component {
               <Row>
                 <BootstrapTable
                   ref={ (instance) => {this.timesheetTable = instance} }
-                  data={this.state.timesheetOptions}
+                  data={this.state.timesheetData}
                   pagination={false}
                   striped={true}
                   hover={true}
@@ -213,6 +182,7 @@ class InvoiceForm extends Component {
                     onSelectAll: this.onRowSelect.bind(this)
                   }}>
                   <TableHeaderColumn dataField="id" isKey={true} hidden>ID</TableHeaderColumn>
+                  <TableHeaderColumn dataField="start_date" dataFormat={ this.timesheetLinkFormatter }>Timesheet Week</TableHeaderColumn>
                   <TableHeaderColumn dataField="summary">Summary</TableHeaderColumn>
                   <TableHeaderColumn dataField="total_hours">Hours</TableHeaderColumn>
                   <TableHeaderColumn dataField="total_amount">Amount</TableHeaderColumn>

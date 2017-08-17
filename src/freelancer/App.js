@@ -15,10 +15,13 @@ import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
 
-import ContractList from './ContractList';
 import Contract from './Contract';
+import ContractList from './ContractList';
+
 import InvoiceForm from './InvoiceForm';
 import InvoiceTable from './InvoiceTable';
+import InvoiceView from './InvoiceView';
+
 import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
@@ -133,7 +136,7 @@ class App extends AppBase {
                 />
               }/>
               <Route path="/invoices/:id/" render={ (props) =>
-                <InvoiceForm
+                <InvoiceView
                   user={this.state.user}
                   {...props}
                 />
