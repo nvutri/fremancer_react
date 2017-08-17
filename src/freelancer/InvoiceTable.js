@@ -50,15 +50,19 @@ class InvoiceTable extends Component {
     this.loadData(1, sizePerPage);
   }
 
-  invoiceLinkFormatter(cell, row) {
+  dateFormatter(cell, row) {
     const options = {
         weekday: "short", year: "numeric", month: "short",
         day: "numeric", hour: "2-digit"
     };
     const d = new Date(row.date_created);
-    return <LinkContainer to={`/invoices/${row.id}/`}>
-        <a href="#">{d.toLocaleDateString("en-US", options)}</a>
-      </LinkContainer>
+    return d.toLocaleDateString("en-US", options);
+  }
+
+  idLinkFormatter(cell, row) {
+    return <LinkContainer to={`/invoices/${cell}/`}>
+      <a href="#">Invoice #{cell}</a>
+    </LinkContainer>
   }
 
   contractLinkFormatter(cell, row) {
@@ -96,12 +100,12 @@ class InvoiceTable extends Component {
             fetchInfo={{dataTotalSize: this.state.dataTotalSize}}
             striped={true}
             hover={true}>
-              <TableHeaderColumn dataField="id" isKey={true} hidden>ID</TableHeaderColumn>
-              <TableHeaderColumn dataField="date_created" dataFormat={ this.invoiceLinkFormatter }>Created</TableHeaderColumn>
-              <TableHeaderColumn dataField="contract" dataFormat={ this.contractLinkFormatter }>Contract</TableHeaderColumn>
+              <TableHeaderColumn dataField="id" isKey={true} dataFormat={ this.idLinkFormatter }>Invoice ID</TableHeaderColumn>
               <TableHeaderColumn dataField="total_hours">Total Hours</TableHeaderColumn>
               <TableHeaderColumn dataField="total_amount">Amount</TableHeaderColumn>
               <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
+              <TableHeaderColumn dataField="date_created" dataFormat={ this.dateFormatter }>Created</TableHeaderColumn>
+              <TableHeaderColumn dataField="contract" dataFormat={ this.contractLinkFormatter }>Contract</TableHeaderColumn>
           </BootstrapTable>
         </Col>
       </Row>
