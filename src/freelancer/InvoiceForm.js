@@ -22,6 +22,40 @@ class InvoiceForm extends Component {
     };
     this.timesheetTable = {};
   }
+  createInvoice(data) {
+    const requestConfig = update(RequestConfig, {$merge: {
+      useQuerystring: true
+    }});
+    const requestInstance = request.defaults(requestConfig);
+    const self = this;
+    // Update an existing Contract by PUT request with the ID..
+    const url = `/api/invoices/${this.state.id}/`;
+    return requestInstance.put(url).form(data).then( (response) => {
+      self.props.history.push('/invoices/');
+      return response;
+    }).catch(function (err) {
+      self.setState({
+        validationErrors: err.error,
+        msg: err.message
+      });
+    });
+  }
+  updateInvoice(data) {
+    const self = this;
+    const requestConfig = update(RequestConfig, {$merge: {
+      useQuerystring: true
+    }});
+    const requestInstance = request.defaults(requestConfig);
+    return requestInstance.post('/api/invoices/').form(data).then( (response) => {
+      self.props.history.push('/invoices/');
+      return response
+    }).catch(function (err) {
+      self.setState({
+        validationErrors: err.error,
+        msg: err.message
+      });
+    });
+  }
   submit(formData) {
     const self = this;
     const data = update(formData, {$merge: {
@@ -29,32 +63,10 @@ class InvoiceForm extends Component {
       'freelancer': this.state.contract.freelancer,
       'timesheets': this.timesheetTable.state.selectedRowKeys
     }});
-    const requestConfig = update(RequestConfig, {$merge: {
-      useQuerystring: true
-    }});
-    const requestInstance = request.defaults(requestConfig);
     if (this.state.id) {
-      // Update an existing Contract by PUT request with the ID..
-      const url = `/api/invoices/${this.state.id}/`;
-      return requestInstance.put(url).form(data).then( (response) => {
-        self.props.history.push('/invoices/');
-        return response;
-      }).catch(function (err) {
-        self.setState({
-          validationErrors: err.error,
-          msg: err.message
-        });
-      });
+      this.createInvoice(data);
     } else {
-      return requestInstance.post('/api/invoices/').form(data).then( (response) => {
-        self.props.history.push('/invoices/');
-        return response
-      }).catch(function (err) {
-        self.setState({
-          validationErrors: err.error,
-          msg: err.message
-        });
-      });
+      this.updateInvoice(data);
     }
   }
 
