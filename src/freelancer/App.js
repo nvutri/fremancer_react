@@ -25,6 +25,8 @@ import InvoiceView from './InvoiceView';
 import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
+import WithdrawalTable from './WithdrawalTable';
+
 class App extends AppBase {
   render() {
     return (
@@ -48,6 +50,9 @@ class App extends AppBase {
                 </LinkContainer>
                 <LinkContainer to="/invoices/">
                  <NavItem eventKey={6}>Invoices</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/withdrawals/">
+                 <NavItem eventKey={7}>Withdrawals</NavItem>
                 </LinkContainer>
               </Nav>
               : ''
@@ -137,6 +142,16 @@ class App extends AppBase {
               }/>
               <Route path="/invoices/:id/" render={ (props) =>
                 <InvoiceView
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+            </Switch>
+          }/>
+          <Route path="/withdrawals/" render={ () =>
+            <Switch>
+              <Route exact path='/withdrawals/' render={ (props) =>
+                <WithdrawalTable
                   user={this.state.user}
                   {...props}
                 />
