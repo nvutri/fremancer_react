@@ -101,9 +101,9 @@ class InvoiceTable extends Component {
             striped={true}
             hover={true}>
               <TableHeaderColumn dataField="id" isKey={true} dataFormat={ this.idLinkFormatter }>Invoice ID</TableHeaderColumn>
+              <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
               <TableHeaderColumn dataField="total_hours">Total Hours</TableHeaderColumn>
               <TableHeaderColumn dataField="total_amount">Amount</TableHeaderColumn>
-              <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
               <TableHeaderColumn dataField="date_created" dataFormat={ this.dateFormatter }>Created</TableHeaderColumn>
               <TableHeaderColumn dataField="contract" dataFormat={ this.contractLinkFormatter }>Contract</TableHeaderColumn>
           </BootstrapTable>
