@@ -17,17 +17,15 @@ class ContractListItem extends Component {
     return <Panel header={titleElem} bsStyle={this.props.freelancer ? "info" : "default"}>
       <Row>
         <Col componentClass={ControlLabel} sm={2}>
-          Freelancer:
+          Hirer:
         </Col>
         <Col sm={4}>
         {
-          this.props.freelancer ?
+          this.props.hirer ?
           <Label bsStyle="success">
-            {this.props.freelancer_name}
+            {this.props.hirer_name}
           </Label> :
-          <Label bsStyle="warning">
-            Not Selected
-          </Label>
+          ''
         }
         </Col>
         <Col componentClass={ControlLabel} sm={2}>
