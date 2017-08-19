@@ -194,18 +194,22 @@ class InvoiceForm extends Component {
                 name="total_hours"
                 label="Total Hours"
                 value={this.state.total_hours}
+                addonAfter="hours"
                 disabled
               />
               <FRC.Input
                 name="hourly_rate"
                 label="Hourly Rate"
                 value={this.state.contract.hourly_rate}
+                addonBefore="$"
+                addonAfter="an hour"
                 disabled
               />
               <FRC.Input
                 name="total_amount"
                 label="Total Amount"
                 value={this.state.total_amount}
+                addonBefore="$"
                 disabled
               />
               <Button bsStyle="primary"
@@ -213,7 +217,7 @@ class InvoiceForm extends Component {
                 block={true}
                 formNoValidate={true}
                 type="submit"
-                disabled={ this.state.saving }>
+                disabled={ this.state.saving || !this.state.total_amount }>
                 {this.state.saving ? 'Saving' : this.state.id ? 'Save' : 'Create'}
               </Button>
             </FRC.Form>

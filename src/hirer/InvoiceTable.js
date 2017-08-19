@@ -28,7 +28,7 @@ class InvoiceTable extends Component {
   loadData(page, sizePerPage) {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
-    requestInstance.get(`/api/invoices/?page=${page}&page_size=${sizePerPage}`).then(function (response) {
+    return requestInstance.get(`/api/invoices/?page=${page}&page_size=${sizePerPage}`).then(function (response) {
       self.setState({
         data: response.results,
         dataTotalSize: response.count,

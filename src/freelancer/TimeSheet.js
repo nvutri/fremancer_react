@@ -37,6 +37,7 @@ class TimeSheet extends Component {
     const requestInstance = request.defaults(RequestConfig);
     // Get Timesheet data.
     requestInstance.get(`/api/timesheets/${timesheetID}/`).then(function (response) {
+      response['msg'] = '';
       self.setState(response);
       return response;
     }).catch(function (err) {

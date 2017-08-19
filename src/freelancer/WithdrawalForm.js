@@ -1,8 +1,8 @@
 import request from 'request-promise';
-import update from 'react-addons-update'; // ES6
+import update from 'react-addons-update';
 
 import React, { Component } from 'react';
-import { Alert, Badge, Row, Button, Col, Label, Panel } from 'react-bootstrap'
+import { Alert, Badge, Row, Button, Col, Label, Panel, Well } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import FRC from 'formsy-react-components';
 
@@ -45,7 +45,7 @@ class WithdrawalForm extends Component {
   }
 
   render() {
-    const panelHeader = <h3 className="text-center">Withdrawal Create</h3>
+    const panelHeader = <h2 className="text-center">Withdrawal Create</h2>
     return (
       <Row>
         <Col md={3}/>
@@ -74,9 +74,51 @@ class WithdrawalForm extends Component {
               <FRC.Input
                 name="amount"
                 label="Amount"
+                type="number"
                 placeholder="Amount"
+                validations="isNumeric"
+                addonBefore="$"
                 value={this.state.available}
               />
+              <FRC.Input
+                name="fee"
+                label="Fee"
+                placeholder="Withdrawal Fee"
+                value="5.00"
+                addonBefore="$"
+                disabled
+              />
+              <hr/>
+              <Well>
+                <p className="text-center"><strong>Recipient Information</strong></p>
+                <FRC.Input
+                  name="first_name"
+                  label="First Name"
+                  placeholder="First Name"
+                  value={this.props.user.first_name}
+                  validations="minLength:2"
+                />
+                <FRC.Input
+                  name="last_name"
+                  label="Last Name"
+                  placeholder="Last Name"
+                  value={this.props.user.last_name}
+                  validations="minLength:2"
+                />
+                <FRC.Input
+                  name="email"
+                  label="Email"
+                  placeholder="Email"
+                  value={this.props.user.email}
+                  validations="isEmail"
+                />
+                <FRC.Input
+                  name="phone_number"
+                  label="Phone Number"
+                  placeholder="Phone Number"
+                  value={this.props.user.phone_number}
+                />
+              </Well>
               <Button bsStyle="primary"
                 id="save-button"
                 block={true}
