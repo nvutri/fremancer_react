@@ -15,20 +15,15 @@ class WithdrawalTable extends Component {
       dataTotalSize: 0,
       sizePerPage: 10,
       msg: '',
+      account: {}
     };
   }
 
   componentDidMount() {
     const requestInstance = request.defaults(RequestConfig);
     const self = this;
-    requestInstance.get('/api/withdrawals/total/').then( (response) => {
-      self.setState({'totalWithdraw': response.total})
-    });
-    requestInstance.get('/api/invoices/balance/').then( (response) => {
-      self.setState({
-        'totalEarn': response.total,
-        'totalPending': response.pending
-      });
+    requestInstance.get('/api/withdrawals/balance/').then( (response) => {
+      self.setState({'account': response})
     });
     this.loadData(this.state.page, this.state.sizePerPage);
   }
@@ -81,27 +76,26 @@ class WithdrawalTable extends Component {
       page: this.state.page,
       sizePerPage: this.state.sizePerPage,
     };
-    const availableBalance = this.state.totalEarn - this.state.totalPending - this.state.totalWithdraw;
     return (
       <Row>
         <Col md={1}/>
         <Col md={10}>
-          <h3 className="text-center">Withdrawals</h3>
+          <h2 className="text-center">Withdrawals</h2>
           <Row>
             <Col sm={4}>
-              <h4><Label bsStyle="info">Earned: <Badge>${this.state.totalEarn}</Badge></Label></h4>
+              <h3><Label bsStyle="info">Balance: <Badge>${this.state.account.balance}</Badge></Label></h3>
             </Col>
             <Col sm={4}>
-              <h4><Label bsStyle="warning">Pending: <Badge>${this.state.totalPending}</Badge></Label></h4>
+              <h3><Label bsStyle="warning">Pending: <Badge>${this.state.account.pending}</Badge></Label></h3>
             </Col>
             <Col sm={4}>
-              <h4><Label bsStyle="success">Available: <Badge>${availableBalance ? availableBalance : 0}</Badge></Label></h4>
+              <h3><Label bsStyle="success">Available: <Badge>${this.state.account.available}</Badge></Label></h3>
             </Col>
           </Row>
           <Row>
             <Col sm={2}>
               <LinkContainer to={'/withdrawals/create/'}>
-                <Button bsStyle="primary" block disabled={!(availableBalance > 0)}>
+                <Button bsStyle="primary" block disabled={!(this.state.account.available > 0)}>
                   <i className='fa fa-plus fa-lg'/> Create Withdrawal
                 </Button>
               </LinkContainer>
