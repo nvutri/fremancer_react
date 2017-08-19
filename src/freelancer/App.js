@@ -26,6 +26,7 @@ import TimeSheet from './TimeSheet';
 import TimeSheetTable from './TimeSheetTable';
 
 import WithdrawalTable from './WithdrawalTable';
+import WithdrawalForm from './WithdrawalForm';
 
 class App extends AppBase {
   render() {
@@ -152,6 +153,12 @@ class App extends AppBase {
             <Switch>
               <Route exact path='/withdrawals/' render={ (props) =>
                 <WithdrawalTable
+                  user={this.state.user}
+                  {...props}
+                />
+              }/>
+              <Route exact path="/withdrawals/create/" render={ (props) =>
+                <WithdrawalForm
                   user={this.state.user}
                   {...props}
                 />

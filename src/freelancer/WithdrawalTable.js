@@ -113,7 +113,7 @@ class WithdrawalTable extends Component {
               <TableHeaderColumn dataField="id" isKey={true} dataFormat={ this.idLinkFormatter }>Withdrawal ID</TableHeaderColumn>
               <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
               <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
-              <TableHeaderColumn dataField="method">Method</TableHeaderColumn>
+              <TableHeaderColumn dataField="method_name">Method</TableHeaderColumn>
               <TableHeaderColumn dataField="date_created" dataFormat={ this.dateFormatter }>Created</TableHeaderColumn>
           </BootstrapTable>
           { this.state.msg ?
