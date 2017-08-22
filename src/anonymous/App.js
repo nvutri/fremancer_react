@@ -13,7 +13,7 @@ import store from 'store'
 import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import Home from './Home';
+import Home from '../Home';
 
 
 class App extends AppBase {

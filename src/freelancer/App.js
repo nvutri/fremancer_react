@@ -10,7 +10,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
 import store from 'store'
 
-import Home from './Home';
+import Home from '../Home';
 import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
