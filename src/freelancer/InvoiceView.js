@@ -109,18 +109,36 @@ class InvoiceForm extends Component {
                 name="total_hours"
                 label="Total Hours"
                 value={this.state.total_hours}
+                addonAfter="hours"
                 disabled
               />
               <FRC.Input
                 name="hourly_rate"
                 label="Hourly Rate"
                 value={this.state.contract.hourly_rate}
+                addonBefore="$"
+                addonAfter="per hour"
+                disabled
+              />
+              <FRC.Input
+                name="amount"
+                label="Amount"
+                value={this.state.amount}
+                addonBefore="$"
+                disabled
+              />
+              <FRC.Input
+                name="fee"
+                label="Fee"
+                value={this.state.fee}
+                addonBefore="$"
                 disabled
               />
               <FRC.Input
                 name="total_amount"
                 label="Total Amount"
                 value={this.state.total_amount}
+                addonBefore="$"
                 disabled
               />
             </FRC.Form>

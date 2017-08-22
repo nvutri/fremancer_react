@@ -29,7 +29,7 @@ class InvoiceForm extends Component {
   loadInvoice() {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
-    requestInstance.get(`/api/invoices/${this.state.id}/`).then( (response) => {
+    return requestInstance.get(`/api/invoices/${this.state.id}/`).then( (response) => {
       const newState = update(response, {$merge: {
         contract: response.contract_data,
         timesheets: response.timesheets_data
@@ -80,9 +80,10 @@ class InvoiceForm extends Component {
   }
 
   render() {
+    const labelStyle = this.state.paid ? "success" : this.state.saving || this.state.pending ? "warning": "primary";
     const panelHeader = <h3 className="text-center">
       Invoice #{this.state.id ? this.state.id : ''}
-      <Label bsStyle="info" className="pull-right">{this.state.status}</Label>
+      <Label bsStyle={labelStyle} className="pull-right">{this.state.status}</Label>
     </h3>
     return (
       <Row>
@@ -135,29 +136,47 @@ class InvoiceForm extends Component {
                 name="total_hours"
                 label="Total Hours"
                 value={this.state.total_hours}
+                addonAfter="hours"
                 disabled
               />
               <FRC.Input
                 name="hourly_rate"
                 label="Hourly Rate"
                 value={this.state.contract.hourly_rate}
+                addonBefore="$"
+                addonAfter="per hour"
+                disabled
+              />
+              <FRC.Input
+                name="amount"
+                label="Amount"
+                value={this.state.amount}
+                addonBefore="$"
+                disabled
+              />
+              <FRC.Input
+                name="fee"
+                label="Fee"
+                value={this.state.fee}
+                addonBefore="$"
                 disabled
               />
               <FRC.Input
                 name="total_amount"
                 label="Total Amount"
                 value={this.state.total_amount}
+                addonBefore="$"
                 disabled
               />
             </FRC.Form>
             <Button
               onClick={this.submitPayment.bind(this)}
-              bsStyle="primary"
+              bsStyle={labelStyle}
               bsSize="large"
-              disabled={this.state.saving || this.state.paid}
+              disabled={this.state.saving || this.state.paid || this.state.pending}
               block={true}>
                 {
-                  this.state.paid ? 'Invoice Paid' : this.state.saving ?
+                  this.state.paid || this.state.pending ? this.state.status : this.state.saving ?
                     'Processing Payment' :
                     `Pay Invoice: $${this.state.total_amount}`
                 }
