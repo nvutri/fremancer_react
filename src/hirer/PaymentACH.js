@@ -22,7 +22,7 @@ class PaymentACH extends Component {
   createACHSource(token) {
     const requestInstance = request.defaults(RequestConfig);
     const self = this;
-    return requestInstance.post('/api/invoices/create_payment/').form(token).then( (res) => {
+    return requestInstance.post('/api/payments/').form(token).then( (res) => {
       self.setState({
         loading: false
       });

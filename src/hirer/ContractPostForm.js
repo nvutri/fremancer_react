@@ -65,7 +65,7 @@ class ContractPostForm extends Component {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
     this.loadTimeSheet();
-    requestInstance.get('/api/invoices/list_payments/').then( response => {
+    requestInstance.get('/api/payments/').then( response => {
       const paymentOptions = response.data.map( item => {
         return {
           value: item.id,

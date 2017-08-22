@@ -22,7 +22,7 @@ class Payment extends Component {
   }
   loadPaymentOptions() {
     const requestInstance = request.defaults(RequestConfig);
-    const url = '/api/invoices/list_payments/';
+    const url = '/api/payments/';
     const self = this;
     this.setState({loading:true});
     return requestInstance.get(url).then( (response) => {
@@ -36,7 +36,7 @@ class Payment extends Component {
   onToken(token) {
     const requestInstance = request.defaults(RequestConfig);
     const self = this;
-    return requestInstance.post('/api/invoices/create_payment/').form(token).then( (res) => {
+    return requestInstance.post('/api/payments/').form(token).then( (res) => {
       self.loadPaymentOptions();
     });
   }

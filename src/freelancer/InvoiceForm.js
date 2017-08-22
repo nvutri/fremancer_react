@@ -121,7 +121,7 @@ class InvoiceForm extends Component {
     });
     this.setState({
       total_hours: total_hours,
-      total_amount: parseFloat(this.state.contract.hourly_rate) * total_hours
+      amount: parseFloat(this.state.contract.hourly_rate) * total_hours
     });
   }
 
@@ -185,7 +185,7 @@ class InvoiceForm extends Component {
                   <TableHeaderColumn dataField="start_date" dataFormat={ this.timesheetLinkFormatter }>Timesheet Week</TableHeaderColumn>
                   <TableHeaderColumn dataField="summary">Summary</TableHeaderColumn>
                   <TableHeaderColumn dataField="total_hours">Hours</TableHeaderColumn>
-                  <TableHeaderColumn dataField="total_amount">Amount</TableHeaderColumn>
+                  <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
                   <TableHeaderColumn dataField="status">Status</TableHeaderColumn>
                 </BootstrapTable>
               </Row>
@@ -206,9 +206,9 @@ class InvoiceForm extends Component {
                 disabled
               />
               <FRC.Input
-                name="total_amount"
-                label="Total Amount"
-                value={this.state.total_amount}
+                name="amount"
+                label="Amount"
+                value={this.state.amount}
                 addonBefore="$"
                 disabled
               />
@@ -217,7 +217,7 @@ class InvoiceForm extends Component {
                 block={true}
                 formNoValidate={true}
                 type="submit"
-                disabled={ this.state.saving || !this.state.total_amount }>
+                disabled={ this.state.saving || !this.state.amount }>
                 {this.state.saving ? 'Saving' : this.state.id ? 'Save' : 'Create'}
               </Button>
             </FRC.Form>
