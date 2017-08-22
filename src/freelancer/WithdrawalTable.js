@@ -69,6 +69,10 @@ class WithdrawalTable extends Component {
     return d.toLocaleDateString("en-US", options);
   }
 
+  moneyFormatter(cell, row) {
+    return cell != null ?  '$' + cell : 'TBD';
+  }
+
   render() {
     const options = {
       onPageChange: this.handlePageChange.bind(this),
@@ -112,7 +116,9 @@ class WithdrawalTable extends Component {
             hover={true}>
               <TableHeaderColumn dataField="id" isKey={true} dataFormat={ this.idLinkFormatter }>Withdrawal ID</TableHeaderColumn>
               <TableHeaderColumn dataField="status_title">Status</TableHeaderColumn>
-              <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
+              <TableHeaderColumn dataField="total_amount" dataFormat={ this.moneyFormatter }>Total Amount</TableHeaderColumn>
+              <TableHeaderColumn dataField="fee" dataFormat={ this.moneyFormatter }>Fee</TableHeaderColumn>
+              <TableHeaderColumn dataField="receive" dataFormat={ this.moneyFormatter }>Receive Amount</TableHeaderColumn>
               <TableHeaderColumn dataField="method_name">Method</TableHeaderColumn>
               <TableHeaderColumn dataField="date_created" dataFormat={ this.dateFormatter }>Created</TableHeaderColumn>
           </BootstrapTable>

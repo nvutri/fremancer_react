@@ -11,6 +11,7 @@
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.1",
     "react-bootstrap-table": "^3.4.3",
+    "react-country-region-selector": "^1.1.0",
     "react-datepicker": "^0.52.0",
     "react-dom": "^15.6.1",
     "react-fontawesome": "^1.6.1",

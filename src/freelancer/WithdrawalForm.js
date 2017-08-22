@@ -2,8 +2,9 @@ import request from 'request-promise';
 import update from 'react-addons-update';
 
 import React, { Component } from 'react';
-import { Alert, Badge, Row, Button, Col, Label, Panel, Well } from 'react-bootstrap'
+import { Alert, Badge, Row, Button, Col, ControlLabel, Label, Panel, Well } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import FRC from 'formsy-react-components';
 
 import { LinkContainer } from 'react-router-bootstrap';
@@ -16,18 +17,20 @@ class WithdrawalForm extends Component {
     this.MAX_AMOUNT = 5000;
     this.state = {
       validationErrors: {},
-      fee: this.MIN_AMOUNT,
       isValid: true,
       method: 'wu',
+      country: props.user.country,
+      region: props.user.region
     };
+    this.UNKNOWN_FEE = 'TBD';
     this.methodConfig = {
       'wu': {
         'label': 'Western Union',
-        'fee': 5.00
+        'fee': this.UNKNOWN_FEE
       },
       'paypal': {
         'label': 'PayPal',
-        'fee': 3.00
+        'fee': this.UNKNOWN_FEE
       }
     }
     this.withdrawalMethods = [
@@ -40,14 +43,18 @@ class WithdrawalForm extends Component {
     const self = this;
     requestInstance.get('/api/withdrawals/balance/').then( (response) => {
       const newState = update(response, {$merge: {
-        'amount': response.available - self.state.fee,
         'total_amount': response.available
       }});
       self.setState(newState)
     });
   }
-  submit(data) {
-    data['freelancer'] = this.props.user.id;
+  submit(formData) {
+    const data = update(formData, {$merge: {
+      freelancer: this.props.user.id,
+      country: this.state.country,
+      region: this.state.region,
+      fee: this.state.fee === this.UNKNOWN_FEE ? '' : this.state.fee
+    }});
     // Create a new withdrawal.
     this.setState({saving: true});
     const self = this;
@@ -62,23 +69,6 @@ class WithdrawalForm extends Component {
         msg: err.message
       });
     });
-  }
-
-  handleAmountChange(e) {
-    const newAmount = parseFloat(e.target.value);
-    if (newAmount) {
-      this.setState({
-        amount: newAmount,
-        total_amount: newAmount + this.state.fee,
-        isValid: newAmount >= this.MIN_AMOUNT && newAmount <= this.MAX_AMOUNT
-      })
-    } else {
-      this.setState({
-        amount: e.target.value,
-        total_amount: this.state.fee,
-        isValid: false
-      })
-    }
   }
 
   handleSelectChange(name, value) {
@@ -119,32 +109,19 @@ class WithdrawalForm extends Component {
                 onChange={this.handleSelectChange.bind(this)}
               />
               <FRC.Input
-                name="amount"
-                label="Amount"
+                name="total_amount"
+                label="Total Amount"
                 type="number"
-                placeholder="Amount"
                 validations="isNumeric"
                 addonBefore="$"
                 min={this.MIN_AMOUNT}
                 max={this.state.available}
-                onKeyUp={this.handleAmountChange.bind(this)}
-                value={this.state.amount}
+                value={this.state.total_amount}
               />
               <FRC.Input
                 name="fee"
                 label={`${this.methodConfig[this.state.method].label} Fee`}
-                type="number"
-                value={this.state.fee}
-                addonBefore="$"
-                disabled
-              />
-              <FRC.Input
-                name="total_amount"
-                label="Total Amount"
-                type="number"
-                min={this.MIN_AMOUNT}
-                max={this.state.available}
-                value={this.state.total_amount}
+                value={this.state.fee ? this.state.fee : this.UNKNOWN_FEE}
                 addonBefore="$"
                 disabled
               />
@@ -178,6 +155,29 @@ class WithdrawalForm extends Component {
                   placeholder="Phone Number"
                   value={this.props.user.phone_number}
                 />
+                <FRC.Row>
+                  <Col sm={3} componentClass={ControlLabel}>
+                    Country
+                  </Col>
+                  <Col sm={9}>
+                    <CountryDropdown
+                      classes="form-control"
+                      value={this.state.country}
+                      onChange={(val) => this.setState({country: val})}/>
+                  </Col>
+                </FRC.Row>
+                <FRC.Row>
+                  <Col sm={3} componentClass={ControlLabel}>
+                    Region
+                  </Col>
+                  <Col sm={9}>
+                    <RegionDropdown
+                      classes="form-control"
+                      country={this.state.country}
+                      value={this.state.region}
+                      onChange={(val) => this.setState({region: val})}/>
+                  </Col>
+                </FRC.Row>
               </Well>
               <Button bsStyle={this.state.saving || !this.state.isValid ? "warning" : "primary"}
                 id="save-button"
