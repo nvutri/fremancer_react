@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap'
+import { Button, Row, Col, Panel } from 'react-bootstrap'
 import { Input, Form } from 'formsy-react-components';
 import { RequestConfig } from './Config'
 
@@ -26,33 +26,40 @@ class LoginForm extends Component {
   }
   render() {
     return (
-      <Form
-        onSubmit={this.handleLogIn.bind(this)} validationErrors={this.state.validationErrors}>
-        <fieldset>
-          <Input
-              name="username"
-              label="Email"
-              validations={{
-                isEmail: true
-              }}
-              validationErrors={{
-                isEmail: 'Please enter a valid email address'
-              }}
-              placeholder="What is email address?"
-              required/>
-          <br/>
-          <Input
-              name="password"
-              label="Password"
-              type="password"
-              validations="minLength:8"
-              validationError="Your password must be at least 8 characters long."
-              placeholder="Choose a password" required/>
-        </fieldset>
-        <fieldset>
-          <Button className="btn btn-primary center-block" formNoValidate={true} type="submit">Login</Button>
-        </fieldset>
-      </Form>
+      <Row>
+        <Col sm={2}/>
+        <Col sm={8}>
+          <Panel header={<h3 className="text-center">Fremancer Login</h3>} bsStyle="info">
+            <Form
+              onSubmit={this.handleLogIn.bind(this)} validationErrors={this.state.validationErrors}>
+              <fieldset>
+                <Input
+                    name="username"
+                    label="Email"
+                    validations={{
+                      isEmail: true
+                    }}
+                    validationErrors={{
+                      isEmail: 'Please enter a valid email address'
+                    }}
+                    placeholder="What is email address?"
+                    required/>
+                <br/>
+                <Input
+                    name="password"
+                    label="Password"
+                    type="password"
+                    validations="minLength:8"
+                    validationError="Your password must be at least 8 characters long."
+                    placeholder="Choose a password" required/>
+              </fieldset>
+              <fieldset>
+                <Button className="btn btn-primary center-block" formNoValidate={true} type="submit">Login</Button>
+              </fieldset>
+            </Form>
+          </Panel>
+        </Col>
+      </Row>
     );
   }
 }
