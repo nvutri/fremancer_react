@@ -40,8 +40,8 @@ class WithdrawalForm extends Component {
     const self = this;
     requestInstance.get('/api/withdrawals/balance/').then( (response) => {
       const newState = update(response, {$merge: {
-        'amount': response.available,
-        'total_amount': response.available + self.state.fee,
+        'amount': response.available - self.state.fee,
+        'total_amount': response.available
       }});
       self.setState(newState)
     });
@@ -126,7 +126,7 @@ class WithdrawalForm extends Component {
                 validations="isNumeric"
                 addonBefore="$"
                 min={this.MIN_AMOUNT}
-                max={this.MAX_AMOUNT}
+                max={this.state.available}
                 onKeyUp={this.handleAmountChange.bind(this)}
                 value={this.state.amount}
               />
@@ -143,7 +143,7 @@ class WithdrawalForm extends Component {
                 label="Total Amount"
                 type="number"
                 min={this.MIN_AMOUNT}
-                max={this.MAX_AMOUNT}
+                max={this.state.available}
                 value={this.state.total_amount}
                 addonBefore="$"
                 disabled
