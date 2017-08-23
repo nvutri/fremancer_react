@@ -1,14 +1,5 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch
-} from 'react-router-dom'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap';
 import request from 'request-promise'
-import store from 'store'
 
 import { RequestConfig } from './Config';
 

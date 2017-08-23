@@ -13,7 +13,7 @@ import store from 'store'
 import AppBase from '../AppBase';
 import LoginForm from '../LoginForm';
 import SignUpForm from '../SignUpForm';
-import Home from '../Home';
+import Home from './Home';
 
 
 class App extends AppBase {
@@ -24,6 +24,9 @@ class App extends AppBase {
         <div>
           <Navbar inverse collapseOnSelect>
             <Navbar.Header>
+              <Navbar.Brand>
+                <a href="/"><img style={{maxHeight: '50px', marginTop: '-15px'}} src="/static/assets/img/png/dark_logo_only.png"/></a>
+              </Navbar.Brand>
               <Navbar.Brand>
                 <a href="/">Fremancer</a>
               </Navbar.Brand>
@@ -44,14 +47,12 @@ class App extends AppBase {
           <Route path="/login/" render={ (props) =>
             <LoginForm
               ref={ (instance) => { this.loginForm = instance; } }
-              requestConfig={this.state.requestConfig}
               authenticate={this.authenticate.bind(this)}
               {...props}
             />
           }/>
           <Route path="/signup/" render={ (props) =>
             <SignUpForm
-              requestConfig={this.state.requestConfig}
               authenticate={this.authenticate.bind(this)}
               {...props}
             />
