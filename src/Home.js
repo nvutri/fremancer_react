@@ -11,6 +11,7 @@ class Home extends Component {
 
   render() {
     return (
+      <Row></Row>
     );
   }
 }

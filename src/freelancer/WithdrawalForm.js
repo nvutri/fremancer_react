@@ -35,8 +35,11 @@ class WithdrawalForm extends Component {
     }
     this.withdrawalMethods = [
       {'value': 'wu', 'label': 'Western Union'},
-      {'value': 'paypal', 'label': 'PayPal'},
     ];
+    this.receiveMethodOptions = [
+      {'value': 'cash', 'label': 'Cash At Location'},
+      {'value': 'bank', 'label': 'Bank Account'}
+    ]
   }
   componentDidMount() {
     const requestInstance = request.defaults(RequestConfig);
@@ -71,7 +74,7 @@ class WithdrawalForm extends Component {
     });
   }
 
-  handleSelectChange(name, value) {
+  handleMethodChange(name, value) {
     const newFee = this.methodConfig[value].fee;
     this.setState({
       'method': value,
@@ -101,13 +104,6 @@ class WithdrawalForm extends Component {
             <FRC.Form
               onSubmit={this.submit.bind(this)}
               validationErrors={this.state.validationErrors}>
-              <FRC.Select
-                name="method"
-                label="Method"
-                options={this.withdrawalMethods}
-                value={this.state.method}
-                onChange={this.handleSelectChange.bind(this)}
-              />
               <FRC.Input
                 name="total_amount"
                 label="Total Amount"
@@ -125,6 +121,41 @@ class WithdrawalForm extends Component {
                 addonBefore="$"
                 disabled
               />
+              <FRC.Select
+                name="method"
+                label="Method"
+                options={this.withdrawalMethods}
+                value={this.state.method}
+                onChange={this.handleMethodChange.bind(this)}
+              />
+              <FRC.Select
+                name="receive_method"
+                label="Receive Method"
+                options={this.receiveMethodOptions}
+                value={this.state.receive_method}
+                onChange={ (name, value) => this.setState({receive_method: value})}
+              />
+              {
+                this.state.receive_method === 'bank' ?
+                  <fieldset>
+                    <FRC.Input
+                      name="bank_iban"
+                      label="Bank IBAN"
+                      placeholder="Bank IBAN"
+                    />
+                    <FRC.Input
+                      name="bank_swift"
+                      label="Bank SWIFT/BIC"
+                      placeholder="Bank SWIFT/BIC"
+                    />
+                    <FRC.Input
+                      name="bank_number"
+                      label="Account Number"
+                      placeholder="Bank Account Number"
+                    />
+                  </fieldset>:
+                  ''
+              }
               <hr/>
               <Well>
                 <p className="text-center"><strong>Recipient Information</strong></p>
@@ -155,7 +186,7 @@ class WithdrawalForm extends Component {
                   placeholder="Phone Number"
                   value={this.props.user.phone_number}
                 />
-                <FRC.Row>
+                <Row>
                   <Col sm={3} componentClass={ControlLabel}>
                     Country
                   </Col>
@@ -165,8 +196,8 @@ class WithdrawalForm extends Component {
                       value={this.state.country}
                       onChange={(val) => this.setState({country: val})}/>
                   </Col>
-                </FRC.Row>
-                <FRC.Row>
+                </Row>
+                <Row>
                   <Col sm={3} componentClass={ControlLabel}>
                     Region
                   </Col>
@@ -177,7 +208,7 @@ class WithdrawalForm extends Component {
                       value={this.state.region}
                       onChange={(val) => this.setState({region: val})}/>
                   </Col>
-                </FRC.Row>
+                </Row>
               </Well>
               <Button bsStyle={this.state.saving || !this.state.isValid ? "warning" : "primary"}
                 id="save-button"
