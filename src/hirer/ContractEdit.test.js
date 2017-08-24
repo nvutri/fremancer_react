@@ -5,19 +5,19 @@ import { Input } from 'formsy-react-components';
 import sinon from 'sinon';
 import request from 'request-promise';
 
-import ContractPostForm from './ContractPostForm';
+import ContractEdit from './ContractEdit';
 import { TestUser } from '../TestConfig';
 
 describe('Contract Post Form', () => {
   it('renders three <Input/> components', () => {
-    const wrapper = shallow(<ContractPostForm
+    const wrapper = shallow(<ContractEdit
       user={TestUser}
       id={1}
     />);
     expect(wrapper.find(Input).exists());
   });
   it('Test Form filling', () => {
-    var ContractForm = shallow(<ContractPostForm
+    var ContractForm = shallow(<ContractEdit
       user={TestUser}
     />);
     const titleInput = ContractForm.find({'name': 'title'}).first();
@@ -26,7 +26,7 @@ describe('Contract Post Form', () => {
     expect(titleInput.value).toBe('Test Input Title');
   })
   it('Update Existing Contract', async () => {
-    const ContractForm = shallow(<ContractPostForm
+    const ContractForm = shallow(<ContractEdit
       user={TestUser}
       match={{params: {id: 1}}}
     />);
@@ -50,14 +50,14 @@ describe('Contract Post Form', () => {
     expect(submitResult.title).toBe('This is update the exiting Contract');
   });
   it('Load Value from Server', () => {
-    sinon.spy(ContractPostForm.prototype, 'componentDidMount');
-    var wrapper = mount(<ContractPostForm
+    sinon.spy(ContractEdit.prototype, 'componentDidMount');
+    var wrapper = mount(<ContractEdit
       params={{id: 1}}
       user={TestUser}
     />);
   });
   it('Test Editability for Owner and non-owner', () => {
-    var ContractForm = shallow(<ContractPostForm
+    var ContractForm = shallow(<ContractEdit
       user={TestUser}
       params={{id: 1}}
     />);
@@ -66,7 +66,7 @@ describe('Contract Post Form', () => {
     expect(ContractForm.find({'name': 'submit-button'}).exists());
   });
   it('Load timesheet', async () => {
-    const ContractForm = shallow(<ContractPostForm
+    const ContractForm = shallow(<ContractEdit
       user={TestUser}
       match={{params: {id: 1}}}
     />);

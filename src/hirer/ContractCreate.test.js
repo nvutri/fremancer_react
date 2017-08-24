@@ -4,26 +4,26 @@ import { Input } from 'formsy-react-components';
 import sinon from 'sinon';
 import moment from 'moment';
 
-import ContractCreateForm from './ContractCreateForm';
+import ContractCreate from './ContractCreate';
 import { TestUser } from '../TestConfig';
 
 describe('Contract Create Form', () => {
   it('renders three <Input/> components', () => {
-    const wrapper = shallow(<ContractCreateForm
+    const wrapper = shallow(<ContractCreate
       user={TestUser}
       id={1}
     />);
     expect(wrapper.find(Input).exists());
   });
   it('Test Form filling', () => {
-    var ContractForm = shallow(<ContractCreateForm user={TestUser} />);
+    var ContractForm = shallow(<ContractCreate user={TestUser} />);
     const titleInput = ContractForm.find({'name': 'title'}).first();
     expect(titleInput.exists());
     titleInput.value = 'Test Input Title';
     expect(titleInput.value).toBe('Test Input Title');
   })
   it('Create New Contract', async () => {
-    var ContractForm = shallow(<ContractCreateForm
+    var ContractForm = shallow(<ContractCreate
       user={TestUser}
       history={[]}
     />);

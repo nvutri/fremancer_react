@@ -95,7 +95,7 @@ class ContractCreateForm extends Component {
               maxLength: 'Title maximum length is 100'
             }}
             placeholder="What is your project title?"
-            disabled={this.state.view}
+            disabled={this.state.saving}
             required/>
         <FRC.Textarea
             name="description"
@@ -107,7 +107,7 @@ class ContractCreateForm extends Component {
             }}
             placeholder="What is your project description?"
             label="Description"
-            disabled={this.state.view}
+            disabled={this.state.saving}
             required/>
         <br/>
         <FRC.Input
@@ -120,7 +120,7 @@ class ContractCreateForm extends Component {
             }}
             placeholder="Project Budget? (20,000, 30,000 ..)"
             label="Project Budget"
-            disabled={this.state.view}
+            disabled={this.state.saving}
             addonBefore="$"
             required/>
         <FRC.Select
@@ -131,7 +131,7 @@ class ContractCreateForm extends Component {
               {value: 'short', label: 'Short Term (About 1 month or less)'}
             ]}
             value='long'
-            disabled={this.state.view}
+            disabled={this.state.saving}
         />
         <FRC.Select
             name="contract_type"
@@ -143,7 +143,7 @@ class ContractCreateForm extends Component {
             ]}
             value='wage'
             onChange={ (name, value) => this.setState({contract_type: value})}
-            disabled={this.state.view}
+            disabled={this.state.saving}
         />
         {
           this.state.contract_type === 'hourly' ?
@@ -160,7 +160,7 @@ class ContractCreateForm extends Component {
                   label="Hourly Rate"
                   addonBefore="$"
                   addonAfter="an hour"
-                  disabled={this.state.view}
+                  disabled={this.state.saving}
                   required/>
               <FRC.Input
                   name="max_weekly_hours"
@@ -173,7 +173,7 @@ class ContractCreateForm extends Component {
                   placeholder="Project Weekly Hours Cap"
                   label="Max Weekly Hours"
                   addonAfter="hours"
-                  disabled={this.state.view}
+                  disabled={this.state.saving}
                   required/>
             </fieldset>
           : this.state.contract_type === 'wage' ?
@@ -188,7 +188,7 @@ class ContractCreateForm extends Component {
                 placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
                 addonBefore="$"
                 label="Weekly Wage Amount"
-                disabled={this.state.view}
+                disabled={this.state.saving}
                 required/>
           :  <FRC.Input
                 name="fixed_amount"
@@ -201,7 +201,7 @@ class ContractCreateForm extends Component {
                 placeholder="Fixed Project Amount? ($200.0, $300.0 ..)"
                 addonBefore="$"
                 label="Fixed Project Amount"
-                disabled={this.state.view}
+                disabled={this.state.saving}
                 required/>
         }
         <FRC.Row>
@@ -235,7 +235,7 @@ class ContractCreateForm extends Component {
                 value={this.state.freelancer}
                 loadOptions={this.loadFreelancers.bind(this)}
                 onChange={ (selectedOption) => { this.setState({freelancer: selectedOption.value})} }
-                disabled={this.state.view}
+                disabled={this.state.saving}
                 required
             />
           </Col>
@@ -245,9 +245,10 @@ class ContractCreateForm extends Component {
       <fieldset>
         <Button bsStyle="primary" className="center-block"
           name="submit-button"
+          bsSize="large"
           formNoValidate={true} type="submit"
           disabled={this.state.saving}>
-          {this.state.saving ? 'Saving' : 'Create Contract'}</Button>
+          {this.state.saving ? 'Saving' : 'Update Contract'}</Button>
       </fieldset>
     </FRC.Form>;
     return (

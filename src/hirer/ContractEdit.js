@@ -1,14 +1,14 @@
 import request from 'request-promise';
 import moment from 'moment';
 import React, { Component } from 'react';
-import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
+import { Button, Col, Row, Panel } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
 import { LinkContainer } from 'react-router-bootstrap';
 import Select from 'react-select'
 import { RequestConfig } from '../Config'
 
 
-class ContractPostForm extends Component {
+class ContractEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,24 +16,27 @@ class ContractPostForm extends Component {
       id: props.match.params.id,
       payments: [],
       validationErrors: {},
+      saving: false
     };
   }
   submit(data) {
     var self = this;
+    this.setState({saving: true});
     // Assign the user profile as the hiring person.
     data['hirer'] = this.state.hirer;
     data['freelancer'] = this.state.freelancer;
     const requestInstance = request.defaults(RequestConfig);
-    if (this.state.id) {
-      // Update an existing Contract by PUT request with the ID..
-      const url = `/api/contracts/${this.state.id}/`;
-      return requestInstance.put(url).form(data).then(function (response) {
-        self.props.history.push('/contracts/');
-        return response;
-      }).catch(function (err) {
-        self.setState({validationErrors: err.error});
+    // Update an existing Contract by PUT request with the ID..
+    const url = `/api/contracts/${this.state.id}/`;
+    return requestInstance.put(url).form(data).then(function (response) {
+      self.props.history.push('/contracts/');
+      return response;
+    }).catch(function (err) {
+      self.setState({
+        validationErrors: err.error,
+        saving: false
       });
-    }
+    });
   }
   /**
    * Load timesheet ID of this week.
@@ -131,53 +134,28 @@ class ContractPostForm extends Component {
             name="title"
             label="Title"
             validations={{
-              isWords: true,
-              minLength: 8
+              minLength: 8,
+              maxLength: 100
             }}
             validationErrors={{
-              isWords: 'Only use alphanumeric characters',
               minLength: 'Title minimum length is 8'
             }}
             placeholder="What is your project title?"
             value={this.state.title}
+            disabled={this.state.saving}
             required/>
         <FRC.Textarea
             name="description"
             validations={{
-              isWords: true,
               minLength: 50
             }}
             validationErrors={{
-              isWords: 'Only use alphanumeric characters',
               minLength: 'Description minimum length is 50'
             }}
             placeholder="What is your project description?"
             label="Description"
             value={this.state.description}
-            required/>
-        <FRC.Input
-            name="hourly_rate"
-            validations={{
-              isNumeric: true,
-            }}
-            validationErrors={{
-              isNumeric: 'Only use number.',
-            }}
-            placeholder="Project hourly rate? (20, 30 ..)"
-            label="Hourly Rate"
-            value={this.state.hourly_rate}
-            required/>
-        <FRC.Input
-            name="max_weekly_hours"
-            validations={{
-              isNumeric: true,
-            }}
-            validationErrors={{
-              isNumeric: 'Only use number.',
-            }}
-            placeholder="Project Weekly Hours Cap"
-            label="Max Weekly Hours"
-            value={this.state.max_weekly_hours}
+            disabled={this.state.saving}
             required/>
         <br/>
         <FRC.Input
@@ -191,6 +169,8 @@ class ContractPostForm extends Component {
             placeholder="Project Budget? (20,000, 30,000 ..)"
             label="Project Budget"
             value={this.state.total_budget}
+            addonBefore="$"
+            disabled={this.state.saving}
             required/>
         <FRC.Select
             name="duration"
@@ -202,13 +182,80 @@ class ContractPostForm extends Component {
             value={this.state.duration}
         />
         <FRC.Select
-            name="budget_type"
-            label="Budget Type"
+            name="contract_type"
+            label="Contract Type"
             options={[
+              {value: 'wage', label: 'Wage - Pay Fixed Amount Weekly'},
               {value: 'hourly', label: 'Hourly - Pay by Hour'},
+              {value: 'fixed', label: 'Fixed Project - Pay an amount once'},
             ]}
-            value={this.state.budget_type}
+            value={this.state.contract_type}
+            onChange={ (name, value) => this.setState({contract_type: value})}
+            disabled
         />
+        {
+          this.state.contract_type === 'hourly' ?
+            <fieldset>
+              <FRC.Input
+                  name="hourly_rate"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Project hourly rate? (20, 30 ..)"
+                  label="Hourly Rate"
+                  addonBefore="$"
+                  addonAfter="an hour"
+                  value={this.state.hourly_rate}
+                  disabled={this.state.saving}
+                  required/>
+              <FRC.Input
+                  name="max_weekly_hours"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Project Weekly Hours Cap"
+                  label="Max Weekly Hours"
+                  addonAfter="hours"
+                  value={this.state.max_weekly_hours}
+                  disabled={this.state.saving}
+                  required/>
+            </fieldset>
+          : this.state.contract_type === 'wage' ?
+            <FRC.Input
+                name="wage_amount"
+                validations={{
+                  isNumeric: true,
+                }}
+                validationErrors={{
+                  isNumeric: 'Only use number.',
+                }}
+                placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
+                addonBefore="$"
+                value={this.state.wage_amount}
+                label="Weekly Wage Amount"
+                disabled={this.state.saving}
+                required/>
+          :  <FRC.Input
+                name="fixed_amount"
+                validations={{
+                  isNumeric: true,
+                }}
+                validationErrors={{
+                  isNumeric: 'Only use number.',
+                }}
+                placeholder="Fixed Project Amount? ($200.0, $300.0 ..)"
+                addonBefore="$"
+                value={this.state.fixed_amount}
+                label="Fixed Project Amount"
+                disabled
+                required/>
+        }
         <FRC.Row>
           <label className="control-label col-sm-3">
             Freelancer
@@ -219,6 +266,7 @@ class ContractPostForm extends Component {
                 value={this.state.freelancer}
                 loadOptions={this.loadFreelancers.bind(this)}
                 onChange={ (option) => { this.setState({freelancer: option.value})} }
+                disabled
             />
           </Col>
         </FRC.Row>
@@ -230,6 +278,7 @@ class ContractPostForm extends Component {
                 labelClassName={[{'col-sm-3': false}, 'col-sm-4']}
                 elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
                 options={this.state.payments}
+                disabled={this.state.saving}
                 value={this.state.default_payment}/>
           </Col>
           <Col sm={3}>
@@ -247,18 +296,24 @@ class ContractPostForm extends Component {
       <fieldset>
         <Button bsStyle="primary" className="center-block"
           name="submit-button"
-          formNoValidate={true} type="submit">Save</Button>
+          bsSize="large"
+          disabled={this.state.saving}
+          formNoValidate={true} type="submit">
+          {this.state.saving ? 'Updating Contract ...' : 'Update Contract'}
+        </Button>
       </fieldset>
     </FRC.Form>;
     return (
       <Row>
         <Col md={1}></Col>
         <Col md={10}>
-          {frcForm}
+          <Panel header={<h3 className="text-center">Contract Edit Form</h3>} bsStyle="info">
+            {frcForm}
+          </Panel>
         </Col>
       </Row>
     );
   }
 }
 
-export default ContractPostForm;
+export default ContractEdit;

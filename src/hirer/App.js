@@ -20,9 +20,9 @@ import Payment from './Payment';
 import InvoiceTable from './InvoiceTable';
 import InvoiceView from './InvoiceView';
 
-import ContractCreateForm from './ContractCreateForm';
+import ContractCreate from './ContractCreate';
+import ContractEdit from './ContractEdit';
 import ContractList from './ContractList';
-import ContractPostForm from './ContractPostForm';
 
 import TimeSheetView from './TimeSheetView';
 
@@ -85,13 +85,13 @@ class App extends AppBase {
                   {...props}/>
               }/>
               <Route exact path='/contracts/create/' render={ (props) =>
-                <ContractCreateForm
+                <ContractCreate
                   user={this.state.user}
                   {...props}
                 />
               }/>
               <Route path='/contracts/:id/' render={ (props) =>
-                <ContractPostForm
+                <ContractEdit
                   user={this.state.user}
                   {...props}
                 />
