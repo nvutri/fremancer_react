@@ -116,19 +116,6 @@ class ContractEdit extends Component {
     var frcForm = <FRC.Form
       onValidSubmit={this.submit.bind(this)}
       validationErrors={this.state.validationErrors}>
-      <Row>
-        {
-          this.state.timesheet ?
-            <LinkContainer to={`/timesheets/${this.state.timesheet}/`}>
-              <Button bsStyle="primary"
-                name="timesheet-button"
-                formNoValidate={true} type="button">
-                Open TimeSheet
-              </Button>
-            </LinkContainer>
-            : ''
-        }
-      </Row>
       <fieldset>
         <FRC.Input
             name="title"
@@ -227,20 +214,37 @@ class ContractEdit extends Component {
                   required/>
             </fieldset>
           : this.state.contract_type === 'wage' ?
-            <FRC.Input
-                name="wage_amount"
-                validations={{
-                  isNumeric: true,
-                }}
-                validationErrors={{
-                  isNumeric: 'Only use number.',
-                }}
-                placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
-                addonBefore="$"
-                value={this.state.wage_amount}
-                label="Weekly Wage Amount"
-                disabled={this.state.saving}
-                required/>
+            <fieldset>
+              <FRC.Input
+                  name="wage_amount"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
+                  addonBefore="$"
+                  value={this.state.wage_amount}
+                  label="Weekly Wage Amount"
+                  disabled={this.state.saving}
+                  required/>
+              <FRC.Input
+                  name="max_weekly_hours"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Expecting number of work hours weekly."
+                  help="40 hours or more for Full-Time Position. 20-30 hours for Part-Time."
+                  label="Weekly Hours"
+                  addonAfter="hours"
+                  value={this.state.max_weekly_hours}
+                  disabled={this.state.saving}
+                  required/>
+              </fieldset>
           :  <FRC.Input
                 name="fixed_amount"
                 validations={{
@@ -307,6 +311,17 @@ class ContractEdit extends Component {
       <Row>
         <Col md={1}></Col>
         <Col md={10}>
+          {
+            this.state.timesheet ?
+              <LinkContainer to={`/timesheets/${this.state.timesheet}/`}>
+                <Button bsStyle="primary"
+                  name="timesheet-button"
+                  formNoValidate={true} type="button">
+                  Open TimeSheet
+                </Button>
+              </LinkContainer>
+              : ''
+          }
           <Panel header={<h3 className="text-center">Contract Edit Form</h3>} bsStyle="info">
             {frcForm}
           </Panel>

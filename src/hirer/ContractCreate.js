@@ -177,19 +177,35 @@ class ContractCreateForm extends Component {
                   required/>
             </fieldset>
           : this.state.contract_type === 'wage' ?
-            <FRC.Input
-                name="wage_amount"
-                validations={{
-                  isNumeric: true,
-                }}
-                validationErrors={{
-                  isNumeric: 'Only use number.',
-                }}
-                placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
-                addonBefore="$"
-                label="Weekly Wage Amount"
-                disabled={this.state.saving}
-                required/>
+            <fieldset>
+              <FRC.Input
+                  name="wage_amount"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
+                  addonBefore="$"
+                  label="Weekly Wage Amount"
+                  disabled={this.state.saving}
+                  required/>
+              <FRC.Input
+                  name="max_weekly_hours"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Expecting number of work hours weekly."
+                  help="40 hours or more for Full-Time Position. 20-30 hours for Part-Time."
+                  label="Weekly Hours"
+                  addonAfter="hours"
+                  disabled={this.state.saving}
+                  required/>
+             </fieldset>
           :  <FRC.Input
                 name="fixed_amount"
                 validations={{
@@ -248,7 +264,7 @@ class ContractCreateForm extends Component {
           bsSize="large"
           formNoValidate={true} type="submit"
           disabled={this.state.saving}>
-          {this.state.saving ? 'Saving' : 'Update Contract'}</Button>
+          {this.state.saving ? 'Saving Contract ...' : 'Create Contract'}</Button>
       </fieldset>
     </FRC.Form>;
     return (
