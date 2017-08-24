@@ -46,8 +46,17 @@ class ContractListItem extends Component {
         <Col sm={4}>
           <Label bsStyle="primary">{this.props.max_weekly_hours} hours/week</Label>
         </Col>
-        <Col componentClass={ControlLabel} sm={2}>Hourly Rate:</Col>
-        <Col sm={4}><Badge>${this.props.hourly_rate}/hour</Badge></Col>
+        {
+          this.props.is_hourly ?
+            <div>
+              <Col componentClass={ControlLabel} sm={2}>Hourly Rate:</Col>
+              <Col sm={4}><Badge>${this.props.hourly_rate}/hour</Badge></Col>
+            </div>
+          : <div>
+              <Col componentClass={ControlLabel} sm={2}>Weekly Wage:</Col>
+              <Col sm={4}><Badge>${this.props.wage_amount}</Badge></Col>
+            </div>
+        }
       </Row>
       <Row>
         <Col componentClass={ControlLabel} sm={2}>Total Budget:</Col>
