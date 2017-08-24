@@ -27,7 +27,7 @@ class Home extends Component {
             <ListGroupItem header="Weekly Report" bsStyle="info">Report and Summarize Your Work</ListGroupItem>
             <ListGroupItem header="Simple Invoice">Create Invoice of one or multiple timesheets</ListGroupItem>
             <ListGroupItem header="Quick Invoice Payment" bsStyle="info">Super Easy Payment and low fee for Client. Integrated with Stripe for best service and lowest fee.</ListGroupItem>
-            <ListGroupItem header="Super Payout">Use Western Union to give you the best exchange rate. Support both Cash at Location and direct bank transfer.</ListGroupItem>
+            <ListGroupItem header="Best Payout Option">Use Western Union (and soon other great options) to give you the best exchange rate. Support both Cash at Location and direct bank transfer.</ListGroupItem>
           </ListGroup>
         </Col>
       </Row>
