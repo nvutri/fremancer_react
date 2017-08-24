@@ -46,13 +46,18 @@ class DailySheet extends Component {
               type="date"
               value={this.props.report_date}
               disabled/>
-          <FRC.Input
-              name="hours"
-              type="number"
-              label="Hours"
-              ref={(instance) => {this.hoursInput = instance}}
-              value={this.props.hours ? this.props.hours : ''}
-              onKeyUp={ this.props.addTotal }/>
+          {
+            this.props.is_hourly ?
+              <FRC.Input
+                  name="hours"
+                  type="number"
+                  label="Hours"
+                  ref={(instance) => {this.hoursInput = instance}}
+                  value={this.props.hours ? this.props.hour : ''}
+                  addonAfter="hours"
+                  onKeyUp={ this.props.addTotal }/>
+              : ''
+          }
           <FRC.Textarea
               name="summary"
               label="Note"

@@ -144,6 +144,7 @@ class TimeSheet extends Component {
                     user={this.props.user}
                     dow={DOW[index]}
                     addTotal={this.addTotal.bind(this)}
+                    is_hourly={this.state.contract.is_hourly}
                     {...daily_data}
                   />
               </Col>
@@ -153,34 +154,42 @@ class TimeSheet extends Component {
           <FRC.Form
             onValidSubmit={this.save.bind(this)}
             validationErrors={this.state.validationErrors}>
-            <FRC.Input
-              name="total_hours"
-              label="Total Hours"
-              type="number"
-              value={this.state.total_hours}
-              disabled
-              />
-            <FRC.Input
-              name="hourly_rate"
-              label="Hourly Rate"
-              type="number"
-              value={this.state.contract.hourly_rate}
-              disabled
-              />
+            {
+              this.state.contract.is_hourly ?
+                <fieldset>
+                  <FRC.Input
+                    name="total_hours"
+                    label="Total Hours"
+                    type="number"
+                    value={this.state.total_hours}
+                    addonAfter="hours"
+                    disabled
+                    />
+                  <FRC.Input
+                    name="hourly_rate"
+                    label="Hourly Rate"
+                    type="number"
+                    addonAfter="an hour"
+                    addonBefore="$"
+                    value={this.state.contract && this.state.contract.hourly_rate ? this.state.contract.hourly_rate : ''}
+                    disabled
+                    />
+                </fieldset> : ''
+            }
             <FRC.Input
               name="total_amount"
               label="Total Amount"
               type="number"
+              addonBefore="$"
               value={this.state.total_amount}
-              disabled
-              />
+              disabled/>
             <FRC.Textarea
                 name="summary"
                 validations={{
-                  minLength: 50
+                  minLength: 20
                 }}
                 validationErrors={{
-                  minLength: 'Summary minimum length is 50'
+                  minLength: 'Summary minimum length is 20'
                 }}
                 placeholder="Weekly Summary"
                 label="Summary"
