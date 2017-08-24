@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
 import Select from 'react-select'
-import { Button, Col, Row, Jumbotron } from 'react-bootstrap'
+import { Alert, Button, Col, Row, Jumbotron, Panel } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
@@ -12,26 +12,57 @@ class ContractCreateForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hirer: this.props.user.id
+      hirer: this.props.user.id,
+      contract_type: 'wage',
+      saving: false,
+      payments: [],
+      validationErrors: {}
     };
   }
   submit(data) {
-    var self = this;
+    const self = this;
+    this.setState({saving: true})
     // Assign the user profile as the hiring person.
-    data['hirer'] = this.state.hirer;
+    data['hirer'] = this.props.user.id;
     data['freelancer'] = this.state.freelancer;
     const requestInstance = request.defaults(RequestConfig);
     // Create a new Contract.
     const url = '/api/contracts/';
     return requestInstance.post(url).form(data).then(function (response) {
-      self.props.history.push('/Contracts/');
+      self.setState({saving: false});
+      setTimeout( () => self.props.history.push('/contracts/'), 1000);
       return response;
     }).catch(function (err) {
-      console.log(err);
+      self.setState({
+        validationErrors: err.error,
+        saving: false,
+      });
+    });
+  }
+
+  componentDidMount() {
+    this.loadPayments();
+  }
+
+  loadPayments() {
+    const self = this;
+    const requestInstance = request.defaults(RequestConfig);
+    return requestInstance.get('/api/payments/').then( response => {
+      const paymentOptions = response.data.map( item => {
+        return {
+          value: item.id,
+          label: `${item.name}: ${item.brand} - ${item.last4} ${item.exp}`
+        }
+      });
+      self.setState({
+        payments: paymentOptions,
+        default_payment: paymentOptions.length > 0 ? paymentOptions[0].value : ''
+      });
     });
   }
   loadFreelancers() {
     const requestInstance = request.defaults(RequestConfig);
+    const self = this;
     const url = '/api/profiles/?membership=freelancer';
     return requestInstance.get(url).then(function (response) {
       const options = response.results.map(function(item) {
@@ -45,8 +76,6 @@ class ContractCreateForm extends Component {
         options: options,
         complete: true
       }
-    }).catch(function (err) {
-      console.log(err);
     });
   }
   render() {
@@ -58,56 +87,26 @@ class ContractCreateForm extends Component {
             name="title"
             label="Title"
             validations={{
-              isWords: true,
-              minLength: 8
+              minLength: 8,
+              maxLength: 100
             }}
             validationErrors={{
-              isWords: 'Only use alphanumeric characters',
-              minLength: 'Title minimum length is 8'
+              minLength: 'Title minimum length is 8',
+              maxLength: 'Title maximum length is 100'
             }}
             placeholder="What is your project title?"
-            value={this.state.title}
             disabled={this.state.view}
             required/>
         <FRC.Textarea
             name="description"
             validations={{
-              isWords: true,
               minLength: 50
             }}
             validationErrors={{
-              isWords: 'Only use alphanumeric characters',
               minLength: 'Description minimum length is 50'
             }}
             placeholder="What is your project description?"
             label="Description"
-            value={this.state.description}
-            disabled={this.state.view}
-            required/>
-        <FRC.Input
-            name="hourly_rate"
-            validations={{
-              isNumeric: true,
-            }}
-            validationErrors={{
-              isNumeric: 'Only use number.',
-            }}
-            placeholder="Project hourly rate? (20, 30 ..)"
-            label="Hourly Rate"
-            value={this.state.hourly_rate}
-            disabled={this.state.view}
-            required/>
-        <FRC.Input
-            name="max_weekly_hours"
-            validations={{
-              isNumeric: true,
-            }}
-            validationErrors={{
-              isNumeric: 'Only use number.',
-            }}
-            placeholder="Project Weekly Hours Cap"
-            label="Max Weekly Hours"
-            value={this.state.max_weekly_hours}
             disabled={this.state.view}
             required/>
         <br/>
@@ -121,28 +120,111 @@ class ContractCreateForm extends Component {
             }}
             placeholder="Project Budget? (20,000, 30,000 ..)"
             label="Project Budget"
-            value={this.state.total_budget}
             disabled={this.state.view}
+            addonBefore="$"
             required/>
         <FRC.Select
             name="duration"
             label="Anticipating Duration"
             options={[
-              {value: 'short', label: 'Short Term (About 1 month or less)'},
-              {value: 'long', label: 'Long Term (More than 1 month)'}
+              {value: 'long', label: 'Long Term (More than 1 month)'},
+              {value: 'short', label: 'Short Term (About 1 month or less)'}
             ]}
-            value={this.state.duration}
+            value='long'
             disabled={this.state.view}
         />
         <FRC.Select
-            name="budget_type"
-            label="Budget Type"
+            name="contract_type"
+            label="Contract Type"
             options={[
+              {value: 'wage', label: 'Wage - Pay Fixed Amount Weekly'},
               {value: 'hourly', label: 'Hourly - Pay by Hour'},
+              {value: 'fixed', label: 'Fixed Project - Pay an amount once'},
             ]}
-            value={this.state.budget_type}
+            value='wage'
+            onChange={ (name, value) => this.setState({contract_type: value})}
             disabled={this.state.view}
         />
+        {
+          this.state.contract_type === 'hourly' ?
+            <fieldset>
+              <FRC.Input
+                  name="hourly_rate"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Project hourly rate? (20, 30 ..)"
+                  label="Hourly Rate"
+                  addonBefore="$"
+                  addonAfter="an hour"
+                  disabled={this.state.view}
+                  required/>
+              <FRC.Input
+                  name="max_weekly_hours"
+                  validations={{
+                    isNumeric: true,
+                  }}
+                  validationErrors={{
+                    isNumeric: 'Only use number.',
+                  }}
+                  placeholder="Project Weekly Hours Cap"
+                  label="Max Weekly Hours"
+                  addonAfter="hours"
+                  disabled={this.state.view}
+                  required/>
+            </fieldset>
+          : this.state.contract_type === 'wage' ?
+            <FRC.Input
+                name="wage_amount"
+                validations={{
+                  isNumeric: true,
+                }}
+                validationErrors={{
+                  isNumeric: 'Only use number.',
+                }}
+                placeholder="Weekly Wage Amount? ($200.0, $300.0 ..)"
+                addonBefore="$"
+                label="Weekly Wage Amount"
+                disabled={this.state.view}
+                required/>
+          :  <FRC.Input
+                name="fixed_amount"
+                validations={{
+                  isNumeric: true,
+                }}
+                validationErrors={{
+                  isNumeric: 'Only use number.',
+                }}
+                placeholder="Fixed Project Amount? ($200.0, $300.0 ..)"
+                addonBefore="$"
+                label="Fixed Project Amount"
+                disabled={this.state.view}
+                required/>
+        }
+        <FRC.Row>
+          <Col sm={9}>
+            <FRC.Select
+                name="default_payment"
+                label="Default Payment"
+                labelClassName={[{'col-sm-3': false}, 'col-sm-4']}
+                elementWrapperClassName={[{'col-sm-9': false}, 'col-sm-8']}
+                options={this.state.payments}
+                value={this.state.default_payment}
+                required/>
+          </Col>
+          <Col sm={3}>
+            <LinkContainer to={`/accounts/payment/`}>
+              <Button bsStyle="primary"
+                name="timesheet-button"
+                formNoValidate={true} type="button">
+                Add Payment
+              </Button>
+            </LinkContainer>
+          </Col>
+        </FRC.Row>
         <FRC.Row>
           <label className="control-label col-sm-3">
             Freelancer
@@ -154,6 +236,7 @@ class ContractCreateForm extends Component {
                 loadOptions={this.loadFreelancers.bind(this)}
                 onChange={ (selectedOption) => { this.setState({freelancer: selectedOption.value})} }
                 disabled={this.state.view}
+                required
             />
           </Col>
         </FRC.Row>
@@ -162,14 +245,18 @@ class ContractCreateForm extends Component {
       <fieldset>
         <Button bsStyle="primary" className="center-block"
           name="submit-button"
-          formNoValidate={true} type="submit">Submit</Button>
+          formNoValidate={true} type="submit"
+          disabled={this.state.saving}>
+          {this.state.saving ? 'Saving' : 'Create Contract'}</Button>
       </fieldset>
     </FRC.Form>;
     return (
       <Row>
         <Col md={1}></Col>
         <Col md={10}>
-          {frcForm}
+          <Panel header={<h3 className="text-center">Contract Create Form</h3>} bsStyle="info">
+            {frcForm}
+          </Panel>
         </Col>
       </Row>
     );

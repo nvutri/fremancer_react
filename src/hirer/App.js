@@ -85,7 +85,7 @@ class App extends AppBase {
                   {...props}/>
               }/>
               <Route exact path='/contracts/create/' render={ (props) =>
-                <ContractPostForm
+                <ContractCreateForm
                   user={this.state.user}
                   {...props}
                 />
