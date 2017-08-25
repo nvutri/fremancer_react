@@ -92,11 +92,12 @@ class SignUpForm extends Component {
                     name="membership"
                     label="Membership"
                     help="Select your membership type."
-                    value="worker"
+                    value="hirer"
                     options={[
                       {'value': 'hirer', 'label': 'Hirer'},
                       {'value': 'freelancer', 'label': 'Freelancer'}
                     ]}
+                    required
                 />
               </fieldset>
               <fieldset>
