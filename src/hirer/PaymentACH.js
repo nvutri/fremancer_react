@@ -3,10 +3,10 @@ import request from 'request-promise'
 import React, { Component } from 'react';
 import { Alert, Button, Row } from 'react-bootstrap'
 import { RequestConfig, StripePublicKey } from '../Config';
-import Stripe from './StripeClient';
+import StripeClient from './StripeClient';
 import FRC from 'formsy-react-components';
 
-const stripe = Stripe(StripePublicKey);
+const stripe = new StripeClient(StripePublicKey);
 
 class PaymentACH extends Component {
   constructor(props) {
