@@ -1,5 +1,5 @@
 const RequestConfig = {
-  baseUrl: 'http://localhost:8000',
+  baseUrl: 'http://fremancer.com',
   json: true
 };
 
