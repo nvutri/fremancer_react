@@ -1,8 +1,7 @@
 import request from 'request-promise';
 import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Row, Col, ControlLabel, Form, FormControl, FormGroup, InputGroup, Label, Well } from 'react-bootstrap'
-import FRC from 'formsy-react-components';
+import { Button, Row, Col, ControlLabel, FormControl, FormGroup, InputGroup, Label, Well } from 'react-bootstrap'
 
 import DailySheetView from './DailySheetView';
 import { RequestConfig } from '../Config'

@@ -2,7 +2,7 @@ import request from 'request-promise';
 import update from 'react-addons-update'; // ES6
 
 import React, { Component } from 'react';
-import { Alert, Button, Col, ControlLabel, Jumbotron, Label, Panel, Row } from 'react-bootstrap'
+import { Col, ControlLabel, Label, Panel, Row } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import FRC from 'formsy-react-components';
 
@@ -49,7 +49,7 @@ class InvoiceForm extends Component {
 
   timesheetLinkFormatter(cell, row) {
     return <LinkContainer to={`/timesheets/${row.id}/`}>
-        <a href="#">{row.start_date}</a>
+        <a href="#timesheet">{row.start_date}</a>
       </LinkContainer>
   }
 
@@ -70,7 +70,7 @@ class InvoiceForm extends Component {
                 </Col>
                 <Col sm={9}>
                   <LinkContainer className="form-control" to={`/contracts/${this.state.contract.id}/`}>
-                    <a href="#">{this.state.contract.title}</a>
+                    <a href="#contract">{this.state.contract.title}</a>
                   </LinkContainer>
                 </Col>
               </FRC.Row>

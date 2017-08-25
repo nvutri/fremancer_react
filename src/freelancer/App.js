@@ -1,19 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Link,
   Switch
 } from 'react-router-dom'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
-import request from 'request-promise'
-import store from 'store'
 
 import AppBase from '../AppBase';
-import LoginForm from '../LoginForm';
-import SignUpForm from '../SignUpForm';
 
 import Contract from './Contract';
 import ContractList from './ContractList';
@@ -36,7 +31,12 @@ class App extends AppBase {
           <Navbar inverse collapseOnSelect>
             <Navbar.Header>
               <Navbar.Brand>
-                <a href="/"><img style={{maxHeight: '50px', marginTop: '-15px'}} src="/static/assets/img/png/dark_logo_only.png"/></a>
+                <a href="/">
+                  <img
+                    alt="F"
+                    style={{maxHeight: '50px', marginTop: '-15px'}}
+                    src="/static/assets/img/png/dark_logo_only.png"/>
+                </a>
               </Navbar.Brand>
               <Navbar.Brand>
                 <a href="/">Fremancer</a>
@@ -85,12 +85,6 @@ class App extends AppBase {
             <Switch>
               <Route exact path='/timesheets/' render={ (props) =>
                 <TimeSheetTable
-                  user={this.state.user}
-                  {...props}
-                />
-              }/>
-              <Route exact path="/timesheets/create/" render={ (props) =>
-                <TimeSheetCreate
                   user={this.state.user}
                   {...props}
                 />

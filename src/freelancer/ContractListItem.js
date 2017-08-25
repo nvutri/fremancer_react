@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Badge, Col, ControlLabel, Label, Panel, Row } from 'react-bootstrap'
-import FontAwesome from 'react-fontawesome';
 import { LinkContainer } from 'react-router-bootstrap';
-
 
 class ContractListItem extends Component {
   constructor(props) {
@@ -12,7 +10,7 @@ class ContractListItem extends Component {
 
   render() {
     const titleElem = <LinkContainer to={`/contracts/${this.props.id}/`}>
-      <a href="#">{this.props.title}</a>
+      <a href="#contract">{this.props.title}</a>
     </LinkContainer>;
     return <Panel header={titleElem} bsStyle={this.props.freelancer ? "info" : "default"}>
       <Row>

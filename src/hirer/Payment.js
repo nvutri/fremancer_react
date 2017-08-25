@@ -1,7 +1,7 @@
 import request from 'request-promise'
 
 import React, { Component } from 'react';
-import {Alert, Button, Col, Jumbotron, Modal, Row} from 'react-bootstrap'
+import {Alert, Button, Col, Modal, Row} from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import StripeCheckout from 'react-stripe-checkout';
 import FontAwesome from 'react-fontawesome';

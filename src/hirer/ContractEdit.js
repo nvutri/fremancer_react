@@ -1,5 +1,4 @@
 import request from 'request-promise';
-import moment from 'moment';
 import React, { Component } from 'react';
 import { Button, Col, Row, Panel } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
@@ -112,8 +111,7 @@ class ContractEdit extends Component {
     });
   }
   render() {
-    var self = this;
-    var frcForm = <FRC.Form
+    const frcForm = <FRC.Form
       onValidSubmit={this.submit.bind(this)}
       validationErrors={this.state.validationErrors}>
       <fieldset>

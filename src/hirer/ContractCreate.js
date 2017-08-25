@@ -1,9 +1,8 @@
 import request from 'request-promise';
 import React, { Component } from 'react';
-import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
 import Select from 'react-select'
-import { Alert, Button, Col, Row, Jumbotron, Panel } from 'react-bootstrap'
+import { Button, Col, Row, Panel } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
@@ -62,7 +61,6 @@ class ContractCreateForm extends Component {
   }
   loadFreelancers() {
     const requestInstance = request.defaults(RequestConfig);
-    const self = this;
     const url = '/api/profiles/?membership=freelancer';
     return requestInstance.get(url).then(function (response) {
       const options = response.results.map(function(item) {
@@ -79,8 +77,7 @@ class ContractCreateForm extends Component {
     });
   }
   render() {
-    var self = this;
-    var frcForm = <FRC.Form
+    const frcForm = <FRC.Form
       onValidSubmit={this.submit.bind(this)}>
       <fieldset>
         <FRC.Input

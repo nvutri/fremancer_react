@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import request from 'request-promise'
 
 import { RequestConfig } from './Config';

@@ -1,10 +1,9 @@
 import request from 'request-promise'
 
 import React, { Component } from 'react';
-import {Alert, Button, Col, Jumbotron, Row} from 'react-bootstrap'
-import FontAwesome from 'react-fontawesome';
+import { Alert, Button, Row } from 'react-bootstrap'
 import { RequestConfig, StripePublicKey } from '../Config';
-import Stripe from 'stripe-client';
+import Stripe from './StripeClient';
 import FRC from 'formsy-react-components';
 
 const stripe = Stripe(StripePublicKey);

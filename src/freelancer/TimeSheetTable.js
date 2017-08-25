@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
-import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
@@ -52,13 +52,13 @@ class TimeSheetTable extends Component {
 
   timesheetLinkFormatter(cell, row) {
     return <LinkContainer to={`/timesheets/${row.id}/`}>
-        <a href="#">{row.start_date}</a>
+        <a href="#timesheet">{row.start_date}</a>
       </LinkContainer>
   }
 
   contractLinkFormatter(cell, row) {
     return <LinkContainer to={`/contracts/${row.contract}/`}>
-      <a href="#">{cell}</a>
+      <a href="#contract">{cell}</a>
     </LinkContainer>
   }
 

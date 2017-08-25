@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Row, Col, Panel } from 'react-bootstrap'
 import { Input, Form } from 'formsy-react-components';
-import { RequestConfig } from './Config'
 
 
 class LoginForm extends Component {

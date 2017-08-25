@@ -2,7 +2,7 @@ import moment from 'moment';
 import request from 'request-promise';
 import React, { Component } from 'react';
 import FRC from 'formsy-react-components';
-import { Button, Col, ControlLabel, Form, FormGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config';
 
@@ -18,7 +18,6 @@ class Contract extends Component {
   componentDidMount() {
     const self = this;
     const requestInstance = request.defaults(RequestConfig);
-    const membership = this.props.user.membership;
     const url = `/api/contracts/${this.state.id}/`
     requestInstance.get(url).then(function (response) {
       self.setState(response);

@@ -1,12 +1,10 @@
 import request from 'request-promise';
-import moment from 'moment';
 import update from 'react-addons-update';
 
 import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Alert, Button, Row, Col } from 'react-bootstrap'
 import FRC from 'formsy-react-components';
-import DatePicker from 'react-datepicker';
 
 import DailySheet from './DailySheet';
 import { RequestConfig } from '../Config'

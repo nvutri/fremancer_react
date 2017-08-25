@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
-import { Button, Col, Jumbotron, Row } from 'react-bootstrap'
-import FontAwesome from 'react-fontawesome';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Col, Row } from 'react-bootstrap'
 import { RequestConfig } from '../Config';
 import ContractListItem from './ContractListItem';
 

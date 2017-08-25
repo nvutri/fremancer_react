@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import request from 'request-promise'
-import {Row, Jumbotron, Button, Col, Modal} from 'react-bootstrap'
+import { Col, Modal, Row } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import { RequestConfig } from '../Config'
 
@@ -61,13 +61,13 @@ class InvoiceTable extends Component {
 
   idLinkFormatter(cell, row) {
     return <LinkContainer to={`/invoices/${cell}/`}>
-      <a href="#">Invoice #{cell}</a>
+      <a href="#invoice">Invoice #{cell}</a>
     </LinkContainer>
   }
 
   contractLinkFormatter(cell, row) {
     return <LinkContainer to={`/contracts/${cell}/`}>
-      <a href="#">{row.contract_data.title}</a>
+      <a href="#contract">{row.contract_data.title}</a>
     </LinkContainer>
   }
 

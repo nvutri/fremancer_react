@@ -2,7 +2,7 @@ import request from 'request-promise';
 import update from 'react-addons-update'; // ES6
 
 import React, { Component } from 'react';
-import { Alert, Button, Col, ControlLabel, Row, Jumbotron, Panel } from 'react-bootstrap'
+import { Alert, Button, Col, ControlLabel, Row, Panel } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import FRC from 'formsy-react-components';
 
@@ -63,7 +63,7 @@ class InvoiceForm extends Component {
 
   timesheetLinkFormatter(cell, row) {
     return <LinkContainer to={`/timesheets/${row.id}/`}>
-        <a href="#">{row.start_date}</a>
+        <a href={`/timesheets/${row.id}/`}>{row.start_date}</a>
       </LinkContainer>
   }
 
@@ -101,7 +101,7 @@ class InvoiceForm extends Component {
   }
 
   handleSelectChange(name, selectedID) {
-    const selectedContract = this.state.contracts.find( item => item.id == selectedID );
+    const selectedContract = this.state.contracts.find( item => item.id === selectedID );
     this.setState({
       contract: selectedContract
     });
